@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'presentation/theme/app_theme.dart';
-import 'presentation/pages/home_page.dart';
+import 'presentation/pages/main_tab_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +23,7 @@ class H2OSimpleApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       locale: const Locale('pt', 'BR'),
-      home: const HomePage(),
+      home: const MainTabView(),
     );
   }
 }
