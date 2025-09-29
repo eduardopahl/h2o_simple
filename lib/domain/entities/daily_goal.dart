@@ -1,8 +1,8 @@
 class DailyGoal {
-  final int targetAmount; // em ml
+  final int targetAmount;
   final DateTime date;
-  final int currentAmount; // em ml
-  final List<String> intakeIds; // IDs dos registros de água do dia
+  final int currentAmount;
+  final List<String> intakeIds;
 
   const DailyGoal({
     required this.targetAmount,

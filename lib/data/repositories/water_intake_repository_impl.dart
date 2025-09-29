@@ -15,13 +15,11 @@ class WaterIntakeRepositoryImpl implements WaterIntakeRepository {
     final prefs = await _prefs;
     final model = WaterIntakeModel.fromEntity(intake);
 
-    // Salva intake individual
     await prefs.setString(
       '${_keyPrefix}_${intake.id}',
       jsonEncode(model.toJson()),
     );
 
-    // Atualiza lista de todos os IDs
     final allIds = await _getAllIntakeIds();
     allIds.add(intake.id);
     await prefs.setStringList(_allIntakesKey, allIds);
@@ -31,10 +29,8 @@ class WaterIntakeRepositoryImpl implements WaterIntakeRepository {
   Future<void> removeWaterIntake(String id) async {
     final prefs = await _prefs;
 
-    // Remove intake individual
     await prefs.remove('${_keyPrefix}_$id');
 
-    // Atualiza lista de todos os IDs
     final allIds = await _getAllIntakeIds();
     allIds.remove(id);
     await prefs.setStringList(_allIntakesKey, allIds);
@@ -84,13 +80,11 @@ class WaterIntakeRepositoryImpl implements WaterIntakeRepository {
           final model = WaterIntakeModel.fromJson(json);
           intakes.add(model.toEntity());
         } catch (e) {
-          // Remove ID inválido
           await removeWaterIntake(id);
         }
       }
     }
 
-    // Ordena por timestamp
     intakes.sort((a, b) => a.timestamp.compareTo(b.timestamp));
     return intakes;
   }
@@ -106,12 +100,10 @@ class WaterIntakeRepositoryImpl implements WaterIntakeRepository {
     final prefs = await _prefs;
     final allIds = await _getAllIntakeIds();
 
-    // Remove todos os intakes individuais
     for (final id in allIds) {
       await prefs.remove('${_keyPrefix}_$id');
     }
 
-    // Limpa lista de IDs
     await prefs.remove(_allIntakesKey);
   }
 

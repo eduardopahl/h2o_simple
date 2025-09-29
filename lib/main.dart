@@ -7,7 +7,6 @@ import 'presentation/pages/main_tab_view.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Inicializa localização para português brasileiro
   await initializeDateFormatting('pt_BR', null);
 
   runApp(const ProviderScope(child: H2OSimpleApp()));

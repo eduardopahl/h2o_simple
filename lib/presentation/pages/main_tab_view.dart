@@ -21,7 +21,6 @@ class _MainTabViewState extends ConsumerState<MainTabView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundLight,
-      appBar: AppBar(title: const Text('H2O Simple'), elevation: 0),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,

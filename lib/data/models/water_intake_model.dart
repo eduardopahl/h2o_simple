@@ -27,7 +27,6 @@ class WaterIntakeModel {
 
   Map<String, dynamic> toJson() => _$WaterIntakeModelToJson(this);
 
-  /// Converte o modelo para entidade de domínio
   WaterIntake toEntity() {
     return WaterIntake(
       id: id,
@@ -37,7 +36,6 @@ class WaterIntakeModel {
     );
   }
 
-  /// Cria modelo a partir de entidade de domínio
   factory WaterIntakeModel.fromEntity(WaterIntake entity) {
     return WaterIntakeModel(
       id: entity.id,

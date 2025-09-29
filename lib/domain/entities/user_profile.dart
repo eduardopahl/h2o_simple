@@ -1,11 +1,11 @@
 class UserProfile {
   final String id;
   final String name;
-  final int weight; // em kg
-  final int defaultDailyGoal; // em ml
-  final int wakeUpTime; // hora em minutos (ex: 7:00 = 420)
-  final int sleepTime; // hora em minutos (ex: 23:00 = 1380)
-  final List<int> reminderIntervals; // intervalos em minutos
+  final int weight;
+  final int defaultDailyGoal;
+  final int wakeUpTime;
+  final int sleepTime;
+  final List<int> reminderIntervals;
   final bool notificationsEnabled;
 
   const UserProfile({
@@ -13,16 +13,14 @@ class UserProfile {
     required this.name,
     required this.weight,
     required this.defaultDailyGoal,
-    this.wakeUpTime = 420, // 7:00 AM
-    this.sleepTime = 1380, // 11:00 PM
-    this.reminderIntervals = const [60, 120, 180], // 1h, 2h, 3h
+    this.wakeUpTime = 420,
+    this.sleepTime = 1380,
+    this.reminderIntervals = const [60, 120, 180],
     this.notificationsEnabled = true,
   });
 
-  /// Calcula meta de água baseada no peso (35ml por kg)
   int get recommendedDailyGoal => weight * 35;
 
-  /// Converte minutos para hora formatada (ex: 420 -> "07:00")
   String minutesToTimeString(int minutes) {
     final hours = minutes ~/ 60;
     final mins = minutes % 60;

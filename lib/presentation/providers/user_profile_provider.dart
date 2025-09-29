@@ -58,8 +58,6 @@ final userProfileProvider =
       return UserProfileNotifier(repository);
     });
 
-// Provider para acessar dados do perfil diretamente
 final currentUserProfileProvider = Provider<UserProfile?>((ref) {
-  final userProfileAsync = ref.watch(userProfileProvider);
-  return userProfileAsync.value;
+  return ref.watch(userProfileProvider).valueOrNull;
 });

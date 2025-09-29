@@ -33,7 +33,6 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<List<WaterIntake>>> {
   Future<void> addWaterIntake(WaterIntake intake) async {
     try {
       await _repository.addWaterIntake(intake);
-      // Recarrega os dados
       await loadTodayIntakes();
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
@@ -43,7 +42,6 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<List<WaterIntake>>> {
   Future<void> removeWaterIntake(String id) async {
     try {
       await _repository.removeWaterIntake(id);
-      // Recarrega os dados
       await loadTodayIntakes();
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
@@ -63,12 +61,10 @@ final waterIntakeProvider =
       return WaterIntakeNotifier(repository);
     });
 
-// Provider simples para acessar a lista sem AsyncValue
 final waterIntakeListProvider = Provider<List<WaterIntake>>((ref) {
   return ref.watch(waterIntakeProvider).valueOrNull ?? [];
 });
 
-// Provider para total de água do dia atual - agora reativo aos dados
 final todayWaterTotalProvider = Provider<int>((ref) {
   final intakes = ref.watch(waterIntakeListProvider);
   return intakes.fold<int>(0, (total, intake) => total + intake.amount);

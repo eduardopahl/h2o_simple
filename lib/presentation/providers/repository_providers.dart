@@ -6,7 +6,6 @@ import '../../data/repositories/water_intake_repository_impl.dart';
 import '../../data/repositories/daily_goal_repository_impl.dart';
 import '../../data/repositories/user_profile_repository_impl.dart';
 
-// Providers dos repositórios
 final waterIntakeRepositoryProvider = Provider<WaterIntakeRepository>((ref) {
   return WaterIntakeRepositoryImpl();
 });

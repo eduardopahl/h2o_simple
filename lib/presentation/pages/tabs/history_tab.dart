@@ -96,7 +96,6 @@ class HistoryTab extends ConsumerWidget {
           ),
         ),
 
-        // Estatísticas resumidas
         Card(
           child: Padding(
             padding: const EdgeInsets.all(16.0),

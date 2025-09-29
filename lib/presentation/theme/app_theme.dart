@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Cores principais inspiradas em água
-  static const Color primaryBlue = Color(0xFF2196F3);
-  static const Color lightBlue = Color(0xFF64B5F6);
-  static const Color darkBlue = Color(0xFF1976D2);
-  static const Color accentCyan = Color(0xFF00BCD4);
+  static const Color primaryBlue = Color(0xFF1565C0);
+  static const Color lightBlue = Color(0xFF42A5F5);
+  static const Color darkBlue = Color(0xFF0D47A1);
+  static const Color accentCyan = Color(0xFF00ACC1);
   static const Color backgroundLight = Color(0xFFF5F9FF);
   static const Color cardBackground = Color(0xFFFFFFFF);
 
-  // Cores de progresso
   static const Color progressEmpty = Color(0xFFE3F2FD);
   static const Color progressFilled = Color(0xFF2196F3);
   static const Color progressCompleted = Color(0xFF4CAF50);
 
-  // Cores de texto
   static const Color textPrimary = Color(0xFF212121);
   static const Color textSecondary = Color(0xFF757575);
   static const Color textLight = Color(0xFFBDBDBD);
@@ -27,10 +24,9 @@ class AppTheme {
       primary: primaryBlue,
       secondary: accentCyan,
       surface: cardBackground,
-      background: backgroundLight,
+      onSurface: backgroundLight,
     ),
 
-    // AppBar
     appBarTheme: const AppBarTheme(
       backgroundColor: primaryBlue,
       foregroundColor: Colors.white,
@@ -43,21 +39,18 @@ class AppTheme {
       ),
     ),
 
-    // Cards
     cardTheme: CardTheme(
       color: cardBackground,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),
 
-    // Floating Action Button
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: primaryBlue,
       foregroundColor: Colors.white,
       elevation: 4,
     ),
 
-    // Elevated Button
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: primaryBlue,
@@ -68,7 +61,6 @@ class AppTheme {
       ),
     ),
 
-    // Text Button
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         foregroundColor: primaryBlue,
@@ -76,7 +68,6 @@ class AppTheme {
       ),
     ),
 
-    // Outlined Button
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: primaryBlue,
@@ -86,7 +77,6 @@ class AppTheme {
       ),
     ),
 
-    // Input Decoration
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: Colors.grey[50],
@@ -106,7 +96,6 @@ class AppTheme {
       hintStyle: TextStyle(color: Colors.grey[500]),
     ),
 
-    // Text Theme
     textTheme: const TextTheme(
       displayLarge: TextStyle(
         color: textPrimary,
@@ -161,7 +150,6 @@ class AppTheme {
     ),
   );
 
-  // Gradientes úteis para elementos visuais
   static const LinearGradient waterGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,

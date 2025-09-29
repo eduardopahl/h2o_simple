@@ -30,7 +30,6 @@ class UserProfileModel {
 
   Map<String, dynamic> toJson() => _$UserProfileModelToJson(this);
 
-  /// Converte o modelo para entidade de domínio
   UserProfile toEntity() {
     return UserProfile(
       id: id,
@@ -44,7 +43,6 @@ class UserProfileModel {
     );
   }
 
-  /// Cria modelo a partir de entidade de domínio
   factory UserProfileModel.fromEntity(UserProfile entity) {
     return UserProfileModel(
       id: entity.id,

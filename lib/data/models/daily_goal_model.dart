@@ -27,7 +27,6 @@ class DailyGoalModel {
 
   Map<String, dynamic> toJson() => _$DailyGoalModelToJson(this);
 
-  /// Converte o modelo para entidade de domínio
   DailyGoal toEntity() {
     return DailyGoal(
       targetAmount: targetAmount,
@@ -37,7 +36,6 @@ class DailyGoalModel {
     );
   }
 
-  /// Cria modelo a partir de entidade de domínio
   factory DailyGoalModel.fromEntity(DailyGoal entity) {
     return DailyGoalModel(
       targetAmount: entity.targetAmount,

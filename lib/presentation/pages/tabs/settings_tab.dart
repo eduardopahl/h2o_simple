@@ -24,7 +24,6 @@ class SettingsTab extends ConsumerWidget {
             ),
             const SizedBox(height: 24),
 
-            // Meta diária
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -63,7 +62,6 @@ class SettingsTab extends ConsumerWidget {
 
             const SizedBox(height: 16),
 
-            // Notificações
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -89,12 +87,7 @@ class SettingsTab extends ConsumerWidget {
                       contentPadding: EdgeInsets.zero,
                       title: const Text('Lembrete para beber água'),
                       subtitle: const Text('Receba notificações regulares'),
-                      trailing: Switch(
-                        value: false, // TODO: implementar persistência
-                        onChanged: (value) {
-                          // TODO: implementar lógica de notificações
-                        },
-                      ),
+                      trailing: Switch(value: false, onChanged: (value) {}),
                     ),
                   ],
                 ),
@@ -103,7 +96,6 @@ class SettingsTab extends ConsumerWidget {
 
             const SizedBox(height: 16),
 
-            // Sobre o app
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -135,7 +127,6 @@ class SettingsTab extends ConsumerWidget {
 
             const Spacer(),
 
-            // Botão de reset
             SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
@@ -222,7 +213,6 @@ class SettingsTab extends ConsumerWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  // TODO: implementar reset de dados
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(

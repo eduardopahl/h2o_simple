@@ -1,6 +1,6 @@
 class WaterIntake {
   final String id;
-  final int amount; // em ml
+  final int amount;
   final DateTime timestamp;
   final String? note;
 

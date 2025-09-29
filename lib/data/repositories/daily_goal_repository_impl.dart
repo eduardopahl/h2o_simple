@@ -20,10 +20,8 @@ class DailyGoalRepositoryImpl implements DailyGoalRepository {
     final model = DailyGoalModel.fromEntity(goal);
     final dateKey = _dateToKey(goal.date);
 
-    // Salva goal individual
     await prefs.setString('${_keyPrefix}_$dateKey', jsonEncode(model.toJson()));
 
-    // Atualiza lista de todas as datas
     final allDates = await _getAllGoalDates();
     if (!allDates.contains(dateKey)) {
       allDates.add(dateKey);
@@ -44,7 +42,6 @@ class DailyGoalRepositoryImpl implements DailyGoalRepository {
       final model = DailyGoalModel.fromJson(json);
       return model.toEntity();
     } catch (e) {
-      // Remove entrada inválida
       await removeDailyGoal(date);
       return null;
     }
@@ -119,10 +116,8 @@ class DailyGoalRepositoryImpl implements DailyGoalRepository {
     final prefs = await _prefs;
     final dateKey = _dateToKey(date);
 
-    // Remove goal individual
     await prefs.remove('${_keyPrefix}_$dateKey');
 
-    // Atualiza lista de datas
     final allDates = await _getAllGoalDates();
     allDates.remove(dateKey);
     await prefs.setStringList(_allGoalsKey, allDates);
@@ -133,12 +128,10 @@ class DailyGoalRepositoryImpl implements DailyGoalRepository {
     final prefs = await _prefs;
     final allDates = await _getAllGoalDates();
 
-    // Remove todos os goals individuais
     for (final dateKey in allDates) {
       await prefs.remove('${_keyPrefix}_$dateKey');
     }
 
-    // Limpa lista de datas
     await prefs.remove(_allGoalsKey);
   }
 

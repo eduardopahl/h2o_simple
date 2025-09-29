@@ -20,10 +20,8 @@ class DailyGoalNotifier extends StateNotifier<AsyncValue<DailyGoal?>> {
       final goal = await _repository.getDailyGoalByDate(today);
 
       if (goal == null) {
-        // Cria goal padrão baseado no perfil do usuário
         await _createDefaultGoalForToday();
       } else {
-        // Atualiza com o total atual de água
         await _updateGoalWithCurrentTotal(goal);
       }
     } catch (error, stackTrace) {
@@ -35,7 +33,7 @@ class DailyGoalNotifier extends StateNotifier<AsyncValue<DailyGoal?>> {
     final userProfile = _ref.read(currentUserProfileProvider);
     final today = DateTime.now();
 
-    final defaultTarget = userProfile?.defaultDailyGoal ?? 2000; // 2L padrão
+    final defaultTarget = userProfile?.defaultDailyGoal ?? 2000;
     final currentTotal = _ref.read(todayWaterTotalProvider);
 
     final newGoal = DailyGoal(
@@ -80,7 +78,6 @@ final dailyGoalProvider =
       return DailyGoalNotifier(repository, ref);
     });
 
-// Provider que atualiza automaticamente a meta quando o total de água muda
 final currentDailyGoalProvider = Provider<DailyGoal?>((ref) {
   final goalAsync = ref.watch(dailyGoalProvider);
   final waterTotal = ref.watch(todayWaterTotalProvider);
@@ -88,11 +85,9 @@ final currentDailyGoalProvider = Provider<DailyGoal?>((ref) {
   final goal = goalAsync.value;
   if (goal == null) return null;
 
-  // Retorna a meta com o total atual atualizado
   return goal.copyWith(currentAmount: waterTotal);
 });
 
-// Provider que combina goal com progresso em tempo real
 final dailyProgressProvider = Provider<double>((ref) {
   final goal = ref.watch(currentDailyGoalProvider);
 
