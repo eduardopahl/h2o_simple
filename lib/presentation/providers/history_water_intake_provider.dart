@@ -3,13 +3,15 @@ import '../../domain/entities/water_intake.dart';
 import '../../domain/repositories/water_intake_repository.dart';
 import 'repository_providers.dart';
 import '../widgets/period_selector.dart';
+import 'daily_water_intake_provider.dart';
 
 class HistoryWaterIntakeNotifier
     extends StateNotifier<AsyncValue<List<WaterIntake>>> {
-  HistoryWaterIntakeNotifier(this._repository)
+  HistoryWaterIntakeNotifier(this._repository, this._ref)
     : super(const AsyncValue.loading());
 
   final WaterIntakeRepository _repository;
+  final Ref _ref;
 
   Future<void> loadIntakesByDate(DateTime date) async {
     state = const AsyncValue.loading();
@@ -64,7 +66,38 @@ class HistoryWaterIntakeNotifier
     TimePeriod? period,
   }) async {
     try {
+      // Primeiro, verificar se o item sendo deletado é do dia atual
+      final today = DateTime.now();
+      bool shouldInvalidateDaily = false;
+
+      // Verificar se temos dados carregados e se o item existe
+      final currentData = state.valueOrNull;
+      if (currentData != null) {
+        final itemToDelete = currentData.firstWhere(
+          (intake) => intake.id == id,
+          orElse:
+              () => WaterIntake(
+                id: '',
+                amount: 0,
+                timestamp: DateTime(2000), // Data dummy para não dar match
+              ),
+        );
+
+        // Se o item é do dia atual, marcar para invalidar
+        if (itemToDelete.id.isNotEmpty &&
+            itemToDelete.timestamp.day == today.day &&
+            itemToDelete.timestamp.month == today.month &&
+            itemToDelete.timestamp.year == today.year) {
+          shouldInvalidateDaily = true;
+        }
+      }
+
       await _repository.removeWaterIntake(id);
+
+      // Invalidar o provider da Daily se necessário
+      if (shouldInvalidateDaily) {
+        _ref.invalidate(dailyWaterIntakeProvider);
+      }
 
       // Recarregar dados baseado no período e data atual
       if (reloadDate != null && period != null) {
@@ -96,7 +129,7 @@ final historyWaterIntakeProvider = StateNotifierProvider<
   AsyncValue<List<WaterIntake>>
 >((ref) {
   final repository = ref.watch(waterIntakeRepositoryProvider);
-  return HistoryWaterIntakeNotifier(repository);
+  return HistoryWaterIntakeNotifier(repository, ref);
 });
 
 // Provider derivado para lista de intakes da aba History
