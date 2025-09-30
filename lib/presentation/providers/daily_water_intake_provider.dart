@@ -3,6 +3,7 @@ import '../../domain/entities/water_intake.dart';
 import '../../domain/repositories/water_intake_repository.dart';
 import '../../domain/use_cases/add_water_intake_use_case.dart';
 import '../../core/extensions/extensions.dart';
+import '../../core/services/notification_service.dart';
 import 'repository_providers.dart';
 import 'use_case_providers.dart';
 
@@ -38,6 +39,9 @@ class DailyWaterIntakeNotifier
         note: note,
       );
       await loadTodayIntakes();
+
+      // Verifica se a meta foi alcançada e cancela notificações se necessário
+      await _checkAndUpdateNotifications();
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
     }
@@ -47,6 +51,9 @@ class DailyWaterIntakeNotifier
     try {
       await _repository.addWaterIntake(intake);
       await loadTodayIntakes();
+
+      // Verifica se a meta foi alcançada e cancela notificações se necessário
+      await _checkAndUpdateNotifications();
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
     }
@@ -58,6 +65,15 @@ class DailyWaterIntakeNotifier
       await loadTodayIntakes();
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
+    }
+  }
+
+  Future<void> _checkAndUpdateNotifications() async {
+    try {
+      final notificationService = NotificationService();
+      await notificationService.checkAndUpdateNotificationsForGoal();
+    } catch (e) {
+      // Falha silenciosa para não afetar a operação principal
     }
   }
 }

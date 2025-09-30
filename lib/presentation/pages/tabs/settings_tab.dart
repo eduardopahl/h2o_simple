@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/daily_goal_provider.dart';
 import '../../providers/theme_provider.dart';
+import '../../providers/notification_settings_provider.dart';
 import '../../theme/app_theme.dart';
+import '../../../core/services/notification_service.dart' as custom;
 
 class SettingsTab extends ConsumerWidget {
   const SettingsTab({super.key});
@@ -35,7 +37,7 @@ class SettingsTab extends ConsumerWidget {
                 children: [
                   _buildDailyGoalTile(context, ref, goalAmount),
                   _buildDarkModeTile(context, ref),
-                  _buildNotificationsTile(context),
+                  _buildNotificationsTile(context, ref),
                 ],
               ),
 
@@ -202,35 +204,64 @@ class SettingsTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildNotificationsTile(BuildContext context) {
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(
-          Icons.notifications_outlined,
-          color: Theme.of(context).colorScheme.primary,
-          size: 20,
-        ),
-      ),
-      title: Text(
-        'Notificações',
-        style: Theme.of(context).textTheme.titleMedium,
-      ),
-      subtitle: Text(
-        'Lembretes para beber água',
-        style: Theme.of(context).textTheme.bodyMedium,
-      ),
-      trailing: Switch(
-        value: false,
-        onChanged: (value) {
-          // TODO: Implementar lógica de notificações
-        },
-      ),
+  Widget _buildNotificationsTile(BuildContext context, WidgetRef ref) {
+    return Consumer(
+      builder: (context, ref, child) {
+        final notificationSettings = ref.watch(notificationSettingsProvider);
+        final notificationNotifier = ref.read(
+          notificationSettingsProvider.notifier,
+        );
+
+        return ListTile(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 8,
+          ),
+          leading: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              notificationSettings.enabled
+                  ? Icons.notifications_active
+                  : Icons.notifications_outlined,
+              color: Theme.of(context).colorScheme.primary,
+              size: 20,
+            ),
+          ),
+          title: Text(
+            'Notificações',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          subtitle: Text(
+            notificationSettings.enabled
+                ? '${notificationNotifier.intervalDescription} - ${notificationNotifier.scheduleDescription}'
+                : 'Lembretes para beber água',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          trailing: Switch(
+            value: notificationSettings.enabled,
+            onChanged: (value) async {
+              final success = await notificationNotifier.toggleNotifications(
+                value,
+              );
+              if (!success && value) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Permissão para notificações negada'),
+                      backgroundColor: AppTheme.errorColor,
+                    ),
+                  );
+                }
+              }
+            },
+          ),
+          onTap: () => _showNotificationSettings(context, ref),
+        );
+      },
     );
   }
 
@@ -431,5 +462,166 @@ class SettingsTab extends ConsumerWidget {
             ],
           ),
     );
+  }
+
+  void _showNotificationSettings(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (context) => _NotificationSettingsDialog(ref: ref),
+    );
+  }
+}
+
+class _NotificationSettingsDialog extends ConsumerWidget {
+  final WidgetRef ref;
+
+  const _NotificationSettingsDialog({required this.ref});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(notificationSettingsProvider);
+    final notifier = ref.read(notificationSettingsProvider.notifier);
+
+    return AlertDialog(
+      title: const Text('Configurações de Notificação'),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Intervalo entre notificações:',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<int>(
+              value: settings.intervalHours,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                isDense: true,
+              ),
+              items:
+                  [1, 2, 3, 4, 6, 8, 12].map((hours) {
+                    return DropdownMenuItem(
+                      value: hours,
+                      child: Text(
+                        hours == 1 ? 'A cada hora' : 'A cada $hours horas',
+                      ),
+                    );
+                  }).toList(),
+              onChanged: (value) {
+                if (value != null) notifier.setInterval(value);
+              },
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Horário de início:',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            const SizedBox(height: 8),
+            InkWell(
+              onTap:
+                  () =>
+                      _selectTime(context, true, settings.startTime, notifier),
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.schedule,
+                      size: 20,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(settings.startTime.toDisplayString()),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Horário de fim:',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            const SizedBox(height: 8),
+            InkWell(
+              onTap:
+                  () => _selectTime(context, false, settings.endTime, notifier),
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.schedule,
+                      size: 20,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(settings.endTime.toDisplayString()),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () => notifier.testNotification(),
+                icon: const Icon(Icons.notification_add),
+                label: const Text('Enviar Notificação de Teste'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.lightBlue,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Fechar'),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _selectTime(
+    BuildContext context,
+    bool isStartTime,
+    custom.TimeOfDay currentTime,
+    NotificationSettingsNotifier notifier,
+  ) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay(
+        hour: currentTime.hour,
+        minute: currentTime.minute,
+      ),
+    );
+
+    if (picked != null) {
+      final customTime = custom.TimeOfDay(
+        hour: picked.hour,
+        minute: picked.minute,
+      );
+      if (isStartTime) {
+        notifier.setStartTime(customTime);
+      } else {
+        notifier.setEndTime(customTime);
+      }
+    }
   }
 }

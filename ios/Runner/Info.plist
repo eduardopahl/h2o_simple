@@ -45,5 +45,20 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	
+	<!-- Notification permissions and background modes -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>background-fetch</string>
+		<string>background-processing</string>
+	</array>
+	
+	<!-- User notification permission description -->
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>Este app precisa enviar notificações para lembrá-lo de beber água regularmente e manter uma hidratação saudável.</string>
+	
+	<!-- Allow notifications while app is in background -->
+	<key>UIBackgroundTaskIdentifier</key>
+	<string>water-reminder-notifications</string>
 </dict>
 </plist>

@@ -87,6 +87,8 @@ flutter build apk --release
 flutter build ios --release
 ```
 
+For detailed iOS setup instructions, see [IOS_SETUP.md](IOS_SETUP.md)
+
 ## 🤝 Contributing
 
 1. Fork the project

@@ -1,5 +1,9 @@
 PODS:
   - Flutter (1.0.0)
+  - flutter_local_notifications (0.0.1):
+    - Flutter
+  - permission_handler_apple (9.3.0):
+    - Flutter
   - sensors_plus (0.0.1):
     - Flutter
   - shared_preferences_foundation (0.0.1):
@@ -8,12 +12,18 @@ PODS:
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
+  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - sensors_plus (from `.symlinks/plugins/sensors_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
   sensors_plus:
     :path: ".symlinks/plugins/sensors_plus/ios"
   shared_preferences_foundation:
@@ -21,9 +31,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_local_notifications: 4cde75091f6327eb8517fa068a0a5950212d2086
+  permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
   sensors_plus: 42b9de1b8237675fa8d8121e4bb93be0f79fa61d
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
 
-PODFILE CHECKSUM: 4305caec6b40dde0ae97be1573c53de1882a07e5
+PODFILE CHECKSUM: 490f611df17a63971f51a83705e3df5472ccb84e
 
 COCOAPODS: 1.16.2

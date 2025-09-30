@@ -1,0 +1,343 @@
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:timezone/timezone.dart' as tz;
+import '../../data/repositories/daily_goal_repository_impl.dart';
+import '../../data/repositories/water_intake_repository_impl.dart';
+
+class NotificationService {
+  static final NotificationService _instance = NotificationService._internal();
+  factory NotificationService() => _instance;
+  NotificationService._internal();
+
+  static final FlutterLocalNotificationsPlugin _notifications =
+      FlutterLocalNotificationsPlugin();
+
+  static const String channelId = 'water_reminder_channel';
+  static const String channelName = 'Water Reminders';
+  static const String channelDescription =
+      'Notifications to remind you to drink water';
+
+  Future<void> initialize() async {
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
+    const iosSettings = DarwinInitializationSettings(
+      requestSoundPermission: true,
+      requestBadgePermission: true,
+      requestAlertPermission: true,
+    );
+
+    const initSettings = InitializationSettings(
+      android: androidSettings,
+      iOS: iosSettings,
+    );
+
+    await _notifications.initialize(
+      initSettings,
+      onDidReceiveNotificationResponse: _onNotificationTapped,
+    );
+
+    if (Platform.isAndroid) {
+      await _createNotificationChannel();
+    }
+  }
+
+  Future<bool> requestPermissions() async {
+    if (Platform.isAndroid) {
+      if (await Permission.notification.isDenied) {
+        final status = await Permission.notification.request();
+        return status == PermissionStatus.granted;
+      }
+      return true;
+    } else if (Platform.isIOS) {
+      final granted = await _notifications
+          .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin
+          >()
+          ?.requestPermissions(alert: true, badge: true, sound: true);
+      return granted ?? false;
+    }
+    return false;
+  }
+
+  Future<bool> hasPermissions() async {
+    if (Platform.isAndroid) {
+      return await Permission.notification.isGranted;
+    } else if (Platform.isIOS) {
+      final granted = await _notifications
+          .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin
+          >()
+          ?.requestPermissions(alert: false, badge: false, sound: false);
+      return granted ?? false;
+    }
+    return false;
+  }
+
+  Future<void> _createNotificationChannel() async {
+    const androidChannel = AndroidNotificationChannel(
+      channelId,
+      channelName,
+      description: channelDescription,
+      importance: Importance.defaultImportance,
+      playSound: true,
+      enableVibration: true,
+    );
+
+    await _notifications
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
+        ?.createNotificationChannel(androidChannel);
+  }
+
+  Future<void> scheduleRepeatingNotifications({
+    required bool enabled,
+    required int intervalHours,
+    required TimeOfDay startTime,
+    required TimeOfDay endTime,
+  }) async {
+    await cancelAllNotifications();
+
+    if (!enabled) return;
+
+    final hasPermission = await requestPermissions();
+    if (!hasPermission) return;
+
+    final messages = [
+      '💧 Hora de se hidratar! Que tal um copo de água?',
+      '🌊 Lembrete: Seu corpo precisa de água para funcionar bem!',
+      '💦 Ei! Não se esqueça de beber água!',
+      '🥤 Que tal uma pausa para se hidratar?',
+      '💧 Sua meta diária de água está te esperando!',
+      '🌊 Hidrate-se! Seu corpo agradece!',
+      '💦 Hora da água! Mantenha-se saudável!',
+      '🥤 Lembrete amigável: Beba água regularmente!',
+    ];
+
+    int notificationId = 1000;
+    final now = DateTime.now();
+
+    for (int day = 0; day < 7; day++) {
+      final currentDay = now.add(Duration(days: day));
+
+      for (
+        int hour = startTime.hour;
+        hour <= endTime.hour;
+        hour += intervalHours
+      ) {
+        if (hour > endTime.hour) break;
+
+        final scheduledTime = DateTime(
+          currentDay.year,
+          currentDay.month,
+          currentDay.day,
+          hour,
+          startTime.minute,
+        );
+
+        if (scheduledTime.isAfter(now)) {
+          await _scheduleNotification(
+            id: notificationId++,
+            title: 'H2O Simple',
+            body: messages[notificationId % messages.length],
+            scheduledTime: scheduledTime,
+          );
+        }
+      }
+    }
+  }
+
+  Future<bool> _shouldSendNotification() async {
+    try {
+      final goalRepository = DailyGoalRepositoryImpl();
+      final intakeRepository = WaterIntakeRepositoryImpl();
+
+      final today = DateTime.now();
+      final goal = await goalRepository.getDailyGoalByDate(today);
+
+      if (goal == null) {
+        // Se não há meta definida, assume meta padrão de 2000ml
+        final currentTotal = await intakeRepository.getTotalWaterIntakeByDate(
+          today,
+        );
+        return currentTotal < 2000;
+      }
+
+      final currentTotal = await intakeRepository.getTotalWaterIntakeByDate(
+        today,
+      );
+      // Só envia notificação se a meta ainda não foi alcançada
+      return currentTotal < goal.targetAmount;
+    } catch (e) {
+      // Em caso de erro, envia a notificação (comportamento padrão)
+      return true;
+    }
+  }
+
+  Future<void> _scheduleNotification({
+    required int id,
+    required String title,
+    required String body,
+    required DateTime scheduledTime,
+  }) async {
+    const androidDetails = AndroidNotificationDetails(
+      channelId,
+      channelName,
+      channelDescription: channelDescription,
+      importance: Importance.defaultImportance,
+      priority: Priority.defaultPriority,
+      icon: '@mipmap/ic_launcher',
+      color: Color(0xFF42A5F5),
+      playSound: true,
+      enableVibration: true,
+    );
+
+    const iosDetails = DarwinNotificationDetails(
+      sound: 'default',
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    );
+
+    const notificationDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: iosDetails,
+    );
+
+    await _notifications.zonedSchedule(
+      id,
+      title,
+      body,
+      tz.TZDateTime.from(scheduledTime, tz.local),
+      notificationDetails,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+  }
+
+  Future<void> showInstantNotification({
+    required String title,
+    required String body,
+    bool checkGoal = false,
+  }) async {
+    // Se checkGoal for true, verifica se a meta foi alcançada
+    if (checkGoal) {
+      final shouldSend = await _shouldSendNotification();
+      if (!shouldSend) {
+        return; // Não envia notificação se a meta já foi alcançada
+      }
+    }
+
+    const androidDetails = AndroidNotificationDetails(
+      channelId,
+      channelName,
+      channelDescription: channelDescription,
+      importance: Importance.high,
+      priority: Priority.high,
+      icon: '@mipmap/ic_launcher',
+      color: Color(0xFF42A5F5),
+      playSound: true,
+      enableVibration: true,
+    );
+
+    const iosDetails = DarwinNotificationDetails(
+      sound: 'default',
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    );
+
+    const details = NotificationDetails(
+      android: androidDetails,
+      iOS: iosDetails,
+    );
+
+    await _notifications.show(
+      999, // ID fixo para notificações instantâneas
+      title,
+      body,
+      details,
+    );
+  }
+
+  Future<void> cancelAllNotifications() async {
+    await _notifications.cancelAll();
+  }
+
+  Future<void> cancelTodayNotificationsIfGoalReached() async {
+    final shouldCancel = !(await _shouldSendNotification());
+    if (shouldCancel) {
+      // Cancela todas as notificações agendadas para hoje
+      await _cancelTodayNotifications();
+    }
+  }
+
+  Future<void> _cancelTodayNotifications() async {
+    // Obtém todas as notificações pendentes
+    final pendingNotifications =
+        await _notifications.pendingNotificationRequests();
+
+    // Cancela notificações do dia atual
+    for (final notification in pendingNotifications) {
+      // Como não podemos verificar o horário agendado diretamente,
+      // vamos cancelar e reagendar todas as notificações
+      await _notifications.cancel(notification.id);
+    }
+  }
+
+  Future<void> checkAndUpdateNotificationsForGoal() async {
+    final shouldSend = await _shouldSendNotification();
+
+    if (!shouldSend) {
+      // Meta alcançada - cancela notificações do resto do dia
+      await _cancelTodayNotifications();
+
+      // Opcionalmente, mostra notificação de parabéns (apenas uma vez por dia)
+      await _showGoalCompletedNotificationIfNeeded();
+    }
+  }
+
+  Future<void> _showGoalCompletedNotificationIfNeeded() async {
+    // Implementação futura: verificar se já mostrou notificação de parabéns hoje
+    // Por enquanto, vamos apenas mostrar
+    await showInstantNotification(
+      title: 'H2O Simple - Meta Alcançada! 🎉',
+      body:
+          '💧 Parabéns! Você atingiu sua meta de hidratação hoje! Continue assim!',
+      checkGoal: false, // Não verifica meta para notificação de parabéns
+    );
+  }
+
+  Future<List<PendingNotificationRequest>> getPendingNotifications() async {
+    return await _notifications.pendingNotificationRequests();
+  }
+
+  static void _onNotificationTapped(NotificationResponse response) {
+    debugPrint('Notification tapped: ${response.payload}');
+  }
+}
+
+class TimeOfDay {
+  final int hour;
+  final int minute;
+
+  const TimeOfDay({required this.hour, required this.minute});
+
+  static const TimeOfDay morning = TimeOfDay(hour: 8, minute: 0);
+  static const TimeOfDay evening = TimeOfDay(hour: 20, minute: 0);
+
+  @override
+  String toString() {
+    return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+  }
+
+  String toDisplayString() {
+    final displayHour = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
+    final period = hour < 12 ? 'AM' : 'PM';
+    return '${displayHour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')} $period';
+  }
+}

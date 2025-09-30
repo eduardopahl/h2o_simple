@@ -52,6 +52,15 @@ dependencies:
   
   # Charts
   fl_chart: ^0.69.0
+  
+  # Local notifications
+  flutter_local_notifications: ^17.2.2
+  
+  # Permissions
+  permission_handler: ^11.3.1
+  
+  # Timezone
+  timezone: ^0.9.4
 
 dev_dependencies:
   flutter_test:
