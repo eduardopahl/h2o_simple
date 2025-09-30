@@ -93,80 +93,106 @@ class _PhysicsWaterContainerState extends State<PhysicsWaterContainer>
   }
 
   void _startAccelerometer() {
+    // Throttle do acelerômetro para economizar bateria
     _accelerometerSubscription = accelerometerEvents.listen((
       AccelerometerEvent event,
     ) {
-      setState(() {
-        // Inclinar a água baseado na orientação do dispositivo
-        final threshold = 0.3;
-        _waterTiltX = math.max(
-          -1.0,
-          math.min(
-            1.0,
-            event.x > threshold || event.x < -threshold ? event.x : 0,
-          ),
-        );
-        _waterTiltY = math.max(
-          -1.0,
-          math.min(
-            1.0,
-            event.y > threshold || event.y < -threshold ? event.y : 0,
-          ),
-        );
-      });
+      if (!mounted) return;
+
+      // Inclinar a água baseado na orientação do dispositivo
+      final threshold = 0.3;
+      final newTiltX = math.max(
+        -1.0,
+        math.min(
+          1.0,
+          event.x > threshold || event.x < -threshold ? event.x : 0,
+        ),
+      );
+      final newTiltY = math.max(
+        -1.0,
+        math.min(
+          1.0,
+          event.y > threshold || event.y < -threshold ? event.y : 0,
+        ),
+      );
+
+      // Só atualizar se houver mudança significativa
+      if ((newTiltX - _waterTiltX).abs() > 0.1 ||
+          (newTiltY - _waterTiltY).abs() > 0.1) {
+        setState(() {
+          _waterTiltX = newTiltX.toDouble();
+          _waterTiltY = newTiltY.toDouble();
+        });
+      }
     });
   }
 
   void _updateWaterPhysics() {
-    setState(() {
-      // Física de movimento da água com limites
-      const damping = 0.95;
-      const sensitivity = 0.08;
+    // Física de movimento da água com limites
+    const damping = 0.95;
+    const sensitivity = 0.08;
 
-      // Movimentos mínimos e máximos para naturalidade
-      const minWaveSpeed = 0.02; // Animação mínima quando parado
-      const maxWaveSpeed = 0.06; // Animação máxima
-      const minTiltEffect = 0.1; // Inclinação mínima
-      const maxTiltEffect = 0.25; // Inclinação máxima
+    // Movimentos mínimos e máximos para naturalidade
+    const minWaveSpeed = 0.02; // Animação mínima quando parado
+    const maxWaveSpeed = 0.06; // Animação máxima
+    const minTiltEffect = 0.1; // Inclinação mínima
+    const maxTiltEffect = 0.25; // Inclinação máxima
 
-      // Atualizar velocidades baseado na inclinação
-      _waterVelocityX += _waterTiltX * sensitivity;
-      _waterVelocityY += _waterTiltY * sensitivity;
+    // Salvar estado anterior para comparação
+    final oldWavePhase = _wavePhase;
+    final oldWaterLevel = _waterLevel;
 
-      // Aplicar amortecimento
-      _waterVelocityX *= damping;
-      _waterVelocityY *= damping;
+    // Atualizar velocidades baseado na inclinação
+    _waterVelocityX += _waterTiltX * sensitivity;
+    _waterVelocityY += _waterTiltY * sensitivity;
 
-      // Limitar velocidade máxima para manter naturalidade
-      _waterVelocityX = _waterVelocityX.clamp(-0.5, 0.5);
-      _waterVelocityY = _waterVelocityY.clamp(-0.5, 0.5);
+    // Aplicar amortecimento
+    _waterVelocityX *= damping;
+    _waterVelocityY *= damping;
 
-      // Calcular nível da água baseado na inclinação com limites
-      final tiltIntensity = _waterTiltX.abs().clamp(
-        minTiltEffect,
-        maxTiltEffect,
-      );
-      _waterLevel = (_waterTiltX.sign * tiltIntensity) * 0.15;
+    // Limitar velocidade máxima para manter naturalidade
+    _waterVelocityX = _waterVelocityX.clamp(-0.5, 0.5);
+    _waterVelocityY = _waterVelocityY.clamp(-0.5, 0.5);
 
-      // Calcular velocidade de onda com mínimo e máximo
-      final movementIntensity = math.sqrt(
-        _waterVelocityX * _waterVelocityX + _waterVelocityY * _waterVelocityY,
-      );
+    // Calcular nível da água baseado na inclinação com limites
+    final tiltIntensity = _waterTiltX.abs().clamp(minTiltEffect, maxTiltEffect);
+    _waterLevel = (_waterTiltX.sign * tiltIntensity) * 0.15;
 
-      // Garantir animação mínima sempre + movimento baseado na física (limitado)
-      final waveSpeed =
-          minWaveSpeed +
-          (movementIntensity * 0.3).clamp(0, maxWaveSpeed - minWaveSpeed);
+    // Calcular velocidade de onda com mínimo e máximo
+    final movementIntensity = math.sqrt(
+      _waterVelocityX * _waterVelocityX + _waterVelocityY * _waterVelocityY,
+    );
 
-      // Atualizar fase das ondas com velocidade controlada
-      _wavePhase += waveSpeed;
-    });
+    // Garantir animação mínima sempre + movimento baseado na física (limitado)
+    final waveSpeed =
+        minWaveSpeed +
+        (movementIntensity * 0.3).clamp(0, maxWaveSpeed - minWaveSpeed);
+
+    // Atualizar fase das ondas com velocidade controlada
+    _wavePhase += waveSpeed;
+
+    // Só fazer setState se houve mudança significativa
+    if ((oldWavePhase - _wavePhase).abs() > 0.01 ||
+        (oldWaterLevel - _waterLevel).abs() > 0.01) {
+      if (mounted) {
+        setState(() {});
+      }
+    }
+  }
+
+  // Função para mapear progresso linear para visualização não-linear
+  double _mapProgressToVisual(double progress) {
+    progress = progress.clamp(0.0, 1.0);
+
+    // Função que dá mais espaço visual para valores menores
+    final mapped = math.pow(progress, 0.75) * 0.85;
+
+    return mapped.toDouble();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Limitar progresso para não ultrapassar 85% da tela disponível
-    final actualProgress = _currentProgress.clamp(0.0, 0.85);
+    final mappedProgress = _mapProgressToVisual(_currentProgress);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -186,7 +212,7 @@ class _PhysicsWaterContainerState extends State<PhysicsWaterContainer>
           child: Stack(
             children: [
               // Água com física que representa o progresso
-              if (actualProgress > 0)
+              if (mappedProgress > 0)
                 AnimatedBuilder(
                   animation: _physicsController,
                   builder: (context, child) {
@@ -199,7 +225,7 @@ class _PhysicsWaterContainerState extends State<PhysicsWaterContainer>
                         velocityY: _waterVelocityY,
                         wavePhase: _wavePhase,
                         waterLevel: _waterLevel,
-                        progress: actualProgress,
+                        progress: mappedProgress,
                         totalHeight: screenHeight - safeAreaTop,
                         availableHeight: totalAvailableHeight,
                       ),
@@ -249,14 +275,8 @@ class RealisticWaterPainter extends CustomPainter {
     final waterBottom = size.height; // Fundo da tela
     final waterTop = waterBottom - waterHeight; // Topo da água
 
-    // Desenhar o corpo da água (gradiente)
+    // Desenhar o corpo da água com ondas integradas
     _drawWaterBody(canvas, size, waterTop, waterBottom);
-
-    // Desenhar superfície com física
-    _drawWaterSurface(canvas, size, waterTop);
-
-    // Ondas dinâmicas na superfície
-    _drawDynamicWaves(canvas, size, waterTop);
   }
 
   void _drawWaterBody(
@@ -291,34 +311,54 @@ class RealisticWaterPainter extends CustomPainter {
     path.moveTo(0, waterBottom);
     path.lineTo(0, leftSurfaceHeight);
 
-    // Criar superfície suave da esquerda para direita
-    const segments = 30;
+    // Calcular agitação uma vez fora do loop para performance
+    final movementIntensity = math.sqrt(
+      velocityX * velocityX + velocityY * velocityY,
+    );
+    final agitationMultiplier = (movementIntensity * 3).clamp(0.3, 1.0);
+
+    // Criar superfície suave com múltiplas camadas de ondas integradas
+    // Otimizar segmentos baseado no tamanho da tela
+    final segments = (size.width / 10).round().clamp(30, 60); // 30-60 segmentos
     for (int i = 0; i <= segments; i++) {
       final x = (i / segments) * size.width;
       final progress = i / segments;
 
-      // Interpolação linear da altura + ondas físicas controladas
+      // Interpolação linear da altura base
       final baseHeight =
           leftSurfaceHeight +
           (rightSurfaceHeight - leftSurfaceHeight) * progress;
 
-      // Ondas principais com amplitude controlada
-      final waveHeight = 8 * math.sin((progress * 3 * math.pi) + wavePhase);
+      // Cache dos cálculos trigonométricos para performance
+      final progressPi = progress * math.pi;
+      final wavePhaseCache = wavePhase;
 
-      // Agitação baseada no movimento, mas limitada
-      final movementIntensity = math.sqrt(
-        velocityX * velocityX + velocityY * velocityY,
-      );
-      final agitationMultiplier = (movementIntensity * 3).clamp(
-        0.3,
-        1.0,
-      ); // Min 30%, Max 100%
+      // Ondas principais (grandes e lentas)
+      final primaryWaveHeight =
+          15 * math.sin((progressPi * 3) + wavePhaseCache);
+
+      // Ondas secundárias (médias e rápidas) - integradas
+      final secondaryWaveHeight =
+          8 * math.sin((progressPi * 6) + wavePhaseCache * 1.5);
+
+      // Ondas terciárias (pequenas e muito rápidas) - para textura
+      final tertiaryWaveHeight =
+          4 * math.sin((progressPi * 12) + wavePhaseCache * 2.5);
+
+      // Agitação baseada no movimento (cache de intensity)
       final agitationHeight =
           6 *
           agitationMultiplier *
-          math.sin((progress * 6 * math.pi) + wavePhase * 1.5);
+          math.sin((progressPi * 8) + wavePhaseCache * 2.0);
 
-      final finalHeight = baseHeight + waveHeight + agitationHeight;
+      // Combinar todas as ondas
+      final finalHeight =
+          baseHeight +
+          primaryWaveHeight +
+          (secondaryWaveHeight * 0.6) +
+          (tertiaryWaveHeight * 0.4) +
+          agitationHeight;
+
       path.lineTo(x, finalHeight);
     }
 
@@ -328,79 +368,17 @@ class RealisticWaterPainter extends CustomPainter {
     canvas.drawPath(path, paint);
   }
 
-  void _drawWaterSurface(Canvas canvas, Size size, double waterTop) {
-    final paint =
-        Paint()
-          ..color = const Color(0xFFFFFFFF).withValues(alpha: 0.1)
-          ..style = PaintingStyle.fill;
-
-    final path = Path();
-
-    // Criar superfície brilhante na água
-    final leftHeight = waterTop + (waterLevel * size.width * 0.2);
-    final rightHeight = waterTop - (waterLevel * size.width * 0.2);
-
-    path.moveTo(0, leftHeight);
-
-    // Superfície com ondas sutis
-    const segments = 15;
-    for (int i = 0; i <= segments; i++) {
-      final x = (i / segments) * size.width;
-      final progress = i / segments;
-
-      final baseHeight = leftHeight + (rightHeight - leftHeight) * progress;
-      final waveHeight = 3 * math.sin((progress * 4 * math.pi) + wavePhase * 2);
-
-      final finalHeight = baseHeight + waveHeight;
-      path.lineTo(x, finalHeight);
-    }
-
-    path.lineTo(size.width, rightHeight + 15);
-    path.lineTo(0, leftHeight + 15);
-    path.close();
-
-    canvas.drawPath(path, paint);
-  }
-
-  void _drawDynamicWaves(Canvas canvas, Size size, double waterTop) {
-    // Ondas brancas na superfície para efeito controlado
-    final wavePaint =
-        Paint()
-          ..color = const Color(0xFFFFFFFF).withValues(alpha: 0.25)
-          ..strokeWidth = 1.5
-          ..style = PaintingStyle.stroke;
-
-    final path = Path();
-
-    for (double x = 0; x <= size.width; x += 4) {
-      final progress = x / size.width;
-      final baseY =
-          waterTop + (waterLevel * size.width * 0.2 * (1 - 2 * progress));
-
-      // Ondas com amplitude controlada
-      final waveAmplitude = 6.0; // Amplitude fixa mais suave
-      final waveY =
-          baseY +
-          waveAmplitude * math.sin((progress * 5 * math.pi) + wavePhase * 1.8);
-
-      if (x == 0) {
-        path.moveTo(x, waveY);
-      } else {
-        path.lineTo(x, waveY);
-      }
-    }
-
-    canvas.drawPath(path, wavePaint);
-  }
-
   @override
   bool shouldRepaint(covariant RealisticWaterPainter oldDelegate) {
-    return oldDelegate.tiltX != tiltX ||
-        oldDelegate.tiltY != tiltY ||
-        oldDelegate.velocityX != velocityX ||
-        oldDelegate.velocityY != velocityY ||
-        oldDelegate.wavePhase != wavePhase ||
-        oldDelegate.waterLevel != waterLevel ||
-        oldDelegate.progress != progress;
+    const tolerance = 0.01; // Tolerância para evitar redesenhos micro
+
+    return (oldDelegate.tiltX - tiltX).abs() > tolerance ||
+        (oldDelegate.tiltY - tiltY).abs() > tolerance ||
+        (oldDelegate.velocityX - velocityX).abs() > tolerance ||
+        (oldDelegate.velocityY - velocityY).abs() > tolerance ||
+        (oldDelegate.wavePhase - wavePhase).abs() > tolerance ||
+        (oldDelegate.waterLevel - waterLevel).abs() > tolerance ||
+        (oldDelegate.progress - progress).abs() >
+            0.001; // Progresso mais sensível
   }
 }
