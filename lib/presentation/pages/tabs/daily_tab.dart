@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../domain/entities/water_intake.dart';
-import '../../providers/water_intake_provider.dart';
+import '../../providers/daily_water_intake_provider.dart';
 import '../../providers/daily_goal_provider.dart';
 import '../../widgets/physics_water_container.dart';
 import '../../widgets/water_progress_display.dart';
@@ -25,7 +25,7 @@ class _DailyTabState extends ConsumerState<DailyTab> {
 
   void _addWaterIntake(WaterIntake waterIntake) {
     try {
-      ref.read(waterIntakeProvider.notifier).addWaterIntake(waterIntake);
+      ref.read(dailyWaterIntakeProvider.notifier).addWaterIntake(waterIntake);
     } catch (e) {
       // Handle error silently or show user-friendly message
     }
@@ -38,7 +38,7 @@ class _DailyTabState extends ConsumerState<DailyTab> {
         backgroundColor: Colors.transparent,
         body: Consumer(
           builder: (context, ref, child) {
-            final todayTotalAsync = ref.watch(waterIntakeProvider);
+            final todayTotalAsync = ref.watch(dailyWaterIntakeProvider);
             final currentGoalAsync = ref.watch(dailyGoalProvider);
 
             return todayTotalAsync.when(
@@ -77,7 +77,7 @@ class _DailyTabState extends ConsumerState<DailyTab> {
                           const SizedBox(height: 16),
                           ElevatedButton(
                             onPressed: () {
-                              ref.invalidate(waterIntakeProvider);
+                              ref.invalidate(dailyWaterIntakeProvider);
                               ref.invalidate(dailyGoalProvider);
                             },
                             child: const Text('Tentar novamente'),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../providers/water_intake_provider.dart';
+import '../../providers/history_water_intake_provider.dart';
 import '../../widgets/period_selector.dart';
 import '../../widgets/date_navigator.dart';
 import '../../widgets/water_chart.dart';
@@ -23,13 +23,30 @@ class _HistoryTabState extends ConsumerState<HistoryTab> {
     super.initState();
     // Carregar dados da data atual após o primeiro frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(waterIntakeProvider.notifier).loadIntakesByDate(selectedDate);
+      _loadDataForPeriod(selectedPeriod);
     });
+  }
+
+  void _loadDataForPeriod(TimePeriod period) {
+    // Forçar estado de loading antes de carregar novos dados
+    final notifier = ref.read(historyWaterIntakeProvider.notifier);
+
+    switch (period) {
+      case TimePeriod.day:
+        notifier.loadIntakesByDate(selectedDate);
+        break;
+      case TimePeriod.week:
+        notifier.loadWeekIntakes(selectedDate);
+        break;
+      case TimePeriod.month:
+        notifier.loadMonthIntakes(selectedDate);
+        break;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final waterIntakesAsync = ref.watch(waterIntakeProvider);
+    final waterIntakesAsync = ref.watch(historyWaterIntakeProvider);
 
     return SafeArea(
       child: Padding(
@@ -54,6 +71,7 @@ class _HistoryTabState extends ConsumerState<HistoryTab> {
                 setState(() {
                   selectedPeriod = period;
                 });
+                _loadDataForPeriod(period);
               },
             ),
             const SizedBox(height: 12),
@@ -67,7 +85,7 @@ class _HistoryTabState extends ConsumerState<HistoryTab> {
                     selectedDate = date;
                   });
                   ref
-                      .read(waterIntakeProvider.notifier)
+                      .read(historyWaterIntakeProvider.notifier)
                       .loadIntakesByDate(date);
                 },
               ),
@@ -92,21 +110,31 @@ class _HistoryTabState extends ConsumerState<HistoryTab> {
 
   Widget _buildContent(BuildContext context, List<dynamic> waterIntakes) {
     if (selectedPeriod == TimePeriod.day) {
-      // Para o período de dia, incluir gráfico e lista no scroll
+      // Para o período de dia, filtrar apenas os dados do dia selecionado
+      final dayIntakes =
+          waterIntakes
+              .where(
+                (intake) =>
+                    intake.timestamp.day == selectedDate.day &&
+                    intake.timestamp.month == selectedDate.month &&
+                    intake.timestamp.year == selectedDate.year,
+              )
+              .toList();
+
       return SingleChildScrollView(
         child: Column(
           children: [
-            // Gráfico do dia
+            // Gráfico do dia (com dados filtrados)
             WaterChart(
               chartType: selectedPeriod,
-              waterIntakes: waterIntakes,
+              waterIntakes: dayIntakes,
               selectedDate: selectedDate,
             ),
             const SizedBox(height: 20),
 
-            // Lista de registros do dia
+            // Lista de registros do dia (com dados filtrados)
             DailyListContent(
-              waterIntakes: waterIntakes,
+              waterIntakes: dayIntakes,
               selectedDate: selectedDate,
               onDeleteIntake:
                   (intakeId) => _showDeleteConfirmation(context, ref, intakeId),
@@ -115,7 +143,7 @@ class _HistoryTabState extends ConsumerState<HistoryTab> {
         ),
       );
     } else {
-      // Para semana e mês, mostrar apenas gráfico e resumo
+      // Para semana e mês, usar todos os dados carregados
       return SingleChildScrollView(
         child: Column(
           children: [
@@ -170,8 +198,12 @@ class _HistoryTabState extends ConsumerState<HistoryTab> {
               TextButton(
                 onPressed: () {
                   ref
-                      .read(waterIntakeProvider.notifier)
-                      .removeWaterIntake(intakeId, reloadDate: selectedDate);
+                      .read(historyWaterIntakeProvider.notifier)
+                      .removeWaterIntake(
+                        intakeId,
+                        reloadDate: selectedDate,
+                        period: selectedPeriod,
+                      );
                   Navigator.of(context).pop();
                 },
                 child: Text(

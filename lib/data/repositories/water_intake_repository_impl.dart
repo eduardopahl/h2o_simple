@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/entities/water_intake.dart';
 import '../../domain/repositories/water_intake_repository.dart';
@@ -86,58 +85,8 @@ class WaterIntakeRepositoryImpl implements WaterIntakeRepository {
       }
     }
 
-    //TODO Remover essa parte, só mockado
-    // Adicionando dados mockados para teste
-    intakes.addAll(_generateMockData());
-
     intakes.sort((a, b) => a.timestamp.compareTo(b.timestamp));
     return intakes;
-  }
-
-  //TODO Mockados
-  List<WaterIntake> _generateMockData() {
-    final mockIntakes = <WaterIntake>[];
-    final random = Random();
-
-    // Gerar dados para os últimos 7 dias
-    for (int dayOffset = 1; dayOffset <= 7; dayOffset++) {
-      final date = DateTime.now().subtract(Duration(days: dayOffset));
-
-      // Número aleatório de registros por dia (3-8)
-      final recordsCount = 3 + random.nextInt(6);
-
-      for (int i = 0; i < recordsCount; i++) {
-        // Horários distribuídos durante o dia (6h às 22h)
-        final hour = 6 + random.nextInt(17);
-        final minute = random.nextInt(60);
-
-        final timestamp = DateTime(
-          date.year,
-          date.month,
-          date.day,
-          hour,
-          minute,
-        );
-
-        // Volumes variados
-        final amounts = [150, 200, 250, 300, 500];
-        final amount = amounts[random.nextInt(amounts.length)];
-
-        // ID único para dados mockados
-        final id = 'mock_${timestamp.millisecondsSinceEpoch}_$i';
-
-        mockIntakes.add(
-          WaterIntake(
-            id: id,
-            amount: amount,
-            timestamp: timestamp,
-            note: 'Dados de teste',
-          ),
-        );
-      }
-    }
-
-    return mockIntakes;
   }
 
   @override

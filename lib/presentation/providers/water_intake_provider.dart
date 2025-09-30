@@ -30,6 +30,44 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<List<WaterIntake>>> {
     }
   }
 
+  Future<void> loadWeekIntakes() async {
+    state = const AsyncValue.loading();
+    try {
+      final now = DateTime.now();
+      final weekStart = now.subtract(Duration(days: now.weekday - 1));
+
+      List<WaterIntake> allIntakes = [];
+      for (int i = 0; i < 7; i++) {
+        final date = weekStart.add(Duration(days: i));
+        final dayIntakes = await _repository.getWaterIntakesByDate(date);
+        allIntakes.addAll(dayIntakes);
+      }
+
+      state = AsyncValue.data(allIntakes);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
+
+  Future<void> loadMonthIntakes() async {
+    state = const AsyncValue.loading();
+    try {
+      final now = DateTime.now();
+      final monthEnd = DateTime(now.year, now.month + 1, 0);
+
+      List<WaterIntake> allIntakes = [];
+      for (int day = 1; day <= monthEnd.day; day++) {
+        final date = DateTime(now.year, now.month, day);
+        final dayIntakes = await _repository.getWaterIntakesByDate(date);
+        allIntakes.addAll(dayIntakes);
+      }
+
+      state = AsyncValue.data(allIntakes);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
+
   Future<void> addWaterIntake(WaterIntake intake) async {
     try {
       await _repository.addWaterIntake(intake);

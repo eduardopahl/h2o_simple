@@ -272,7 +272,20 @@ class WaterChart extends StatelessWidget {
     }
 
     for (final intake in waterIntakes) {
-      final daysDiff = intake.timestamp.difference(weekStart).inDays;
+      // Normalizar as datas para comparação (só ano, mês, dia - sem hora)
+      final intakeDate = DateTime(
+        intake.timestamp.year,
+        intake.timestamp.month,
+        intake.timestamp.day,
+      );
+      final weekStartDate = DateTime(
+        weekStart.year,
+        weekStart.month,
+        weekStart.day,
+      );
+
+      final daysDiff = intakeDate.difference(weekStartDate).inDays;
+
       if (daysDiff >= 0 && daysDiff < 7) {
         weeklyData[daysDiff] =
             (weeklyData[daysDiff] ?? 0) + intake.amount as int;
@@ -341,8 +354,30 @@ class WaterChart extends StatelessWidget {
                 },
               ),
             ),
-            leftTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 50,
+                interval: maxValue > 0 ? maxValue / 4 : 500,
+                getTitlesWidget: (value, meta) {
+                  if (value == 0) return const SizedBox.shrink();
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: Text(
+                      '${value.toInt()}ml',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontSize: 8,
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withOpacity(0.6),
+                      ),
+                      textAlign: TextAlign.right,
+                      maxLines: 1,
+                      overflow: TextOverflow.clip,
+                    ),
+                  );
+                },
+              ),
             ),
             topTitles: const AxisTitles(
               sideTitles: SideTitles(showTitles: false),
@@ -380,9 +415,9 @@ class WaterChart extends StatelessWidget {
                         colors:
                             value > 0
                                 ? [
-                                  Theme.of(context).colorScheme.secondary
+                                  Theme.of(context).colorScheme.primary
                                       .withOpacity(0.3 + (intensity * 0.7)),
-                                  Theme.of(context).colorScheme.secondary
+                                  Theme.of(context).colorScheme.primary
                                       .withOpacity(0.8 + (intensity * 0.2)),
                                 ]
                                 : [
@@ -416,21 +451,60 @@ class WaterChart extends StatelessWidget {
   }
 
   Widget _buildMonthChart(BuildContext context) {
-    // Implementação simples - agrupa por semana do mês
+    // Calcular o número de semanas reais no mês selecionado
+    final firstDayOfMonth = DateTime(selectedDate.year, selectedDate.month, 1);
+    final lastDayOfMonth = DateTime(
+      selectedDate.year,
+      selectedDate.month + 1,
+      0,
+    );
+
+    // Encontrar o primeiro dia da primeira semana (segunda-feira)
+    final firstWeekStart = firstDayOfMonth.subtract(
+      Duration(days: firstDayOfMonth.weekday - 1),
+    );
+
+    // Calcular quantas semanas temos no mês
+    final totalDays = lastDayOfMonth.difference(firstWeekStart).inDays + 1;
+    final weeksInMonth = (totalDays / 7).ceil();
+
     final Map<int, int> monthlyData = {};
-    for (int i = 0; i < 4; i++) {
+    final Map<int, String> weekLabels = {};
+
+    // Inicializar dados das semanas
+    for (int i = 0; i < weeksInMonth; i++) {
       monthlyData[i] = 0;
+
+      final weekStart = firstWeekStart.add(Duration(days: i * 7));
+      final weekEnd = weekStart.add(const Duration(days: 6));
+
+      // Ajustar datas para ficar dentro do mês
+      final startDay =
+          weekStart.isBefore(firstDayOfMonth)
+              ? firstDayOfMonth.day
+              : weekStart.day;
+      final endDay =
+          weekEnd.isAfter(lastDayOfMonth) ? lastDayOfMonth.day : weekEnd.day;
+
+      if (startDay == endDay) {
+        weekLabels[i] = '$startDay';
+      } else {
+        weekLabels[i] = '$startDay-$endDay';
+      }
     }
 
-    final now = DateTime.now();
-
+    // Processar os dados dos intakes
     for (final intake in waterIntakes) {
-      if (intake.timestamp.year == now.year &&
-          intake.timestamp.month == now.month) {
-        final weekOfMonth = ((intake.timestamp.day - 1) / 7).floor();
-        if (weekOfMonth < 4) {
-          monthlyData[weekOfMonth] =
-              (monthlyData[weekOfMonth] ?? 0) + intake.amount as int;
+      if (intake.timestamp.year == selectedDate.year &&
+          intake.timestamp.month == selectedDate.month) {
+        // Calcular em qual semana esse intake se encaixa
+        final intakeDate = intake.timestamp;
+        final daysDiff = intakeDate.difference(firstWeekStart).inDays;
+        final weekIndex = (daysDiff / 7).floor();
+
+        if (weekIndex >= 0 && weekIndex < weeksInMonth) {
+          monthlyData[weekIndex] =
+              (monthlyData[weekIndex] ?? 0) + intake.amount as int;
         }
       }
     }
@@ -458,8 +532,11 @@ class WaterChart extends StatelessWidget {
                 vertical: 4,
               ),
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                final weekIndex = group.x;
+                final weekLabel =
+                    weekLabels[weekIndex] ?? 'Semana ${weekIndex + 1}';
                 return BarTooltipItem(
-                  'Semana ${group.x + 1}\n${rod.toY.toInt()}ml',
+                  'Dias $weekLabel\n${rod.toY.toInt()}ml',
                   TextStyle(
                     color: Theme.of(context).colorScheme.onInverseSurface,
                     fontSize: 12,
@@ -475,23 +552,50 @@ class WaterChart extends StatelessWidget {
                 showTitles: true,
                 reservedSize: 28,
                 getTitlesWidget: (value, meta) {
+                  final weekIndex = value.toInt();
+                  final weekLabel = weekLabels[weekIndex];
+                  if (weekLabel != null) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        weekLabel,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontSize: 10,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withOpacity(0.6),
+                        ),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+            ),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 50,
+                interval: maxValue > 0 ? maxValue / 4 : 1250,
+                getTitlesWidget: (value, meta) {
+                  if (value == 0) return const SizedBox.shrink();
                   return Padding(
-                    padding: const EdgeInsets.only(top: 8),
+                    padding: const EdgeInsets.only(right: 6),
                     child: Text(
-                      'S${(value.toInt() + 1)}',
+                      '${value.toInt()}ml',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontSize: 11,
+                        fontSize: 8,
                         color: Theme.of(
                           context,
                         ).colorScheme.onSurface.withOpacity(0.6),
                       ),
+                      textAlign: TextAlign.right,
+                      maxLines: 1,
+                      overflow: TextOverflow.clip,
                     ),
                   );
                 },
               ),
-            ),
-            leftTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
             ),
             topTitles: const AxisTitles(
               sideTitles: SideTitles(showTitles: false),
@@ -529,9 +633,9 @@ class WaterChart extends StatelessWidget {
                         colors:
                             value > 0
                                 ? [
-                                  Theme.of(context).colorScheme.tertiary
+                                  Theme.of(context).colorScheme.primary
                                       .withOpacity(0.3 + (intensity * 0.7)),
-                                  Theme.of(context).colorScheme.tertiary
+                                  Theme.of(context).colorScheme.primary
                                       .withOpacity(0.8 + (intensity * 0.2)),
                                 ]
                                 : [
