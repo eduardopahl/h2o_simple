@@ -117,7 +117,7 @@ class _FloatingAddButtonsState extends State<FloatingAddButtons>
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primaryBlue,
+                  backgroundColor: AppTheme.lightBlue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -214,7 +214,7 @@ class _FloatingAddButtonsState extends State<FloatingAddButtons>
                       duration: const Duration(milliseconds: 300),
                       child: Icon(
                         Icons.add,
-                        color: AppTheme.primaryBlue,
+                        color: AppTheme.lightBlue,
                         size: 30,
                       ),
                     ),
@@ -255,14 +255,14 @@ class _FloatingAddButtonsState extends State<FloatingAddButtons>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: AppTheme.primaryBlue, size: 18),
+              Icon(icon, color: AppTheme.lightBlue, size: 18),
               if (label.length <= 6)
                 Text(
                   label,
                   style: TextStyle(
                     fontSize: 8,
                     fontWeight: FontWeight.bold,
-                    color: AppTheme.primaryBlue,
+                    color: AppTheme.lightBlue,
                   ),
                 ),
             ],
