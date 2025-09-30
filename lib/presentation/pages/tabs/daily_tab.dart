@@ -88,7 +88,7 @@ class _DailyTabState extends ConsumerState<DailyTab> {
                 final goalAmount =
                     currentGoal?.targetAmount.toDouble() ?? 2000.0;
                 final progress = (todayTotal / goalAmount).clamp(0.0, 1.0);
-                final isOverGoal = todayTotal >= goalAmount;
+                final isOverGoal = todayTotal > goalAmount;
 
                 return PhysicsWaterContainer(
                   progress: progress,

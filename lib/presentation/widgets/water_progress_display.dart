@@ -49,7 +49,9 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
     _counterAnimation.addListener(() {
       setState(() {
         _displayedTotal =
-            _previousTotal + ((widget.todayTotal - _previousTotal) * _counterAnimation.value).round();
+            _previousTotal +
+            ((widget.todayTotal - _previousTotal) * _counterAnimation.value)
+                .round();
       });
     });
 
@@ -68,7 +70,7 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
   @override
   void didUpdateWidget(WaterProgressDisplay oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
+
     if (oldWidget.todayTotal != widget.todayTotal) {
       _previousTotal = _displayedTotal;
       _counterController.reset();
@@ -142,10 +144,7 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
                 ),
                 Text(
                   'de ${widget.goalAmount}ml',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(color: Colors.grey[600], fontSize: 14),
                 ),
                 if (widget.isOverGoal) ...[
                   const SizedBox(height: 8),
@@ -167,16 +166,7 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
                       ),
                     ),
                   ),
-                ] else if (_displayedTotal < widget.goalAmount) ...[
-                  const SizedBox(height: 8),
-                  Text(
-                    'Faltam ${widget.goalAmount - _displayedTotal}ml',
-                    style: const TextStyle(
-                      color: Color(0xFF95A5A6),
-                      fontSize: 14,
-                    ),
-                  ),
-                ] else ...[
+                ] else if (_displayedTotal >= widget.goalAmount) ...[
                   const SizedBox(height: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -196,6 +186,15 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
                       ),
                     ),
                   ),
+                ] else ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    'Faltam ${widget.goalAmount - _displayedTotal}ml',
+                    style: const TextStyle(
+                      color: Color(0xFF95A5A6),
+                      fontSize: 14,
+                    ),
+                  ),
                 ],
               ],
             ),
@@ -203,23 +202,52 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
           // Efeito de gotas animadas quando ultrapassa a meta
           if (widget.isOverGoal)
             ...List.generate(
-              6,
+              8,
               (index) => AnimatedBuilder(
                 animation: _dropletsController,
                 builder: (context, child) {
-                  final double rotation = (_dropletsController.value * 2 * math.pi) + (index * math.pi / 3);
-                  final double radius = 60;
-                  final double x = math.cos(rotation) * radius;
-                  final double y = math.sin(rotation) * radius;
-                  
+                  // Posições fixas espalhadas pelo card (usando seed baseado no index)
+                  final random = math.Random(index);
+                  final double baseX =
+                      (random.nextDouble() - 0.5) * 180; // -90 a 90
+                  final double baseY =
+                      (random.nextDouble() - 0.5) * 120; // -60 a 60
+
+                  // Animação de flutuação sutil
+                  final double floatX =
+                      baseX +
+                      math.sin(
+                            _dropletsController.value * 2 * math.pi + index,
+                          ) *
+                          8;
+                  final double floatY =
+                      baseY +
+                      math.cos(
+                            _dropletsController.value * 2 * math.pi +
+                                index * 1.5,
+                          ) *
+                          6;
+
+                  // Diferentes fases de fade para cada gota
+                  final double phase = (index / 8) * 2 * math.pi;
+                  final double opacity =
+                      ((math.sin(
+                                _dropletsController.value * 2 * math.pi + phase,
+                              ) +
+                              1) /
+                          2) *
+                      0.8;
+
                   return Transform.translate(
-                    offset: Offset(x, y),
+                    offset: Offset(floatX, floatY),
                     child: Opacity(
-                      opacity: (math.sin(_dropletsController.value * 2 * math.pi) + 1) / 2,
-                      child: const Icon(
+                      opacity: opacity,
+                      child: Icon(
                         Icons.water_drop,
-                        color: Color(0xFF3498DB),
-                        size: 16,
+                        color: Color(0xFF3498DB).withValues(alpha: 0.7),
+                        size:
+                            12 +
+                            (index % 3) * 2, // Tamanhos variados: 12, 14, 16
                       ),
                     ),
                   );
