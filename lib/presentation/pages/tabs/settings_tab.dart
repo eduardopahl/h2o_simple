@@ -15,37 +15,52 @@ class SettingsTab extends ConsumerWidget {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Configurações',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+              // Header
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  'Configurações',
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              const SizedBox(height: 24),
 
-              // Card de Meta Diária
-              _buildDailyGoalCard(context, ref, goalAmount),
-              const SizedBox(height: 16),
+              // Seção Principal
+              _buildSection(
+                context,
+                children: [
+                  _buildDailyGoalTile(context, ref, goalAmount),
+                  _buildDarkModeTile(context, ref),
+                  _buildNotificationsTile(context),
+                ],
+              ),
 
-              // Card de Aparência
-              _buildThemeCard(context, ref),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
 
-              // Card de Notificações
-              _buildNotificationsCard(context),
-              const SizedBox(height: 16),
+              // Seção Sobre
+              _buildSection(
+                context,
+                title: 'Sobre',
+                children: [
+                  _buildAboutTile(context),
+                  _buildVersionTile(context),
+                ],
+              ),
 
-              // Card Sobre o App
-              _buildAboutCard(context),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
-              // Botão de Reset
-              _buildResetButton(context, ref),
-              const SizedBox(height: 16), // Espaço extra no final
+              // Seção Dados
+              _buildSection(
+                context,
+                title: 'Dados',
+                children: [_buildResetDataTile(context, ref)],
+              ),
+
+              const SizedBox(height: 40),
             ],
           ),
         ),
@@ -53,224 +68,282 @@ class SettingsTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildDailyGoalCard(
+  Widget _buildSection(
+    BuildContext context, {
+    String? title,
+    required List<Widget> children,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (title != null) ...[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+            child: Text(
+              title.toUpperCase(),
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ),
+        ],
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+            ),
+          ),
+          child: Column(
+            children:
+                children.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final child = entry.value;
+                  return Column(
+                    children: [
+                      child,
+                      if (index < children.length - 1)
+                        Divider(
+                          height: 1,
+                          thickness: 1,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.outline.withOpacity(0.1),
+                          indent: 16,
+                          endIndent: 16,
+                        ),
+                    ],
+                  );
+                }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDailyGoalTile(
     BuildContext context,
     WidgetRef ref,
     double goalAmount,
   ) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.flag, color: Theme.of(context).colorScheme.primary),
-                const SizedBox(width: 8),
-                Text(
-                  'Meta Diária',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Meta atual: ${goalAmount.toStringAsFixed(0)}ml',
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => _showGoalDialog(context, ref, goalAmount),
-                child: const Text('Alterar Meta'),
-              ),
-            ),
-          ],
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
         ),
+        child: Icon(
+          Icons.flag_outlined,
+          color: Theme.of(context).colorScheme.primary,
+          size: 20,
+        ),
+      ),
+      title: Text(
+        'Meta Diária',
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
+      subtitle: Text(
+        '${goalAmount.toStringAsFixed(0)}ml por dia',
+        style: Theme.of(context).textTheme.bodyMedium,
+      ),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () => _showGoalDialog(context, ref, goalAmount),
+    );
+  }
+
+  Widget _buildDarkModeTile(BuildContext context, WidgetRef ref) {
+    return Consumer(
+      builder: (context, ref, child) {
+        final themeMode = ref.watch(themeProvider);
+        final themeNotifier = ref.read(themeProvider.notifier);
+        final isDarkMode = themeMode == ThemeMode.dark;
+
+        return ListTile(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 8,
+          ),
+          leading: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              isDarkMode ? Icons.dark_mode : Icons.light_mode,
+              color: Theme.of(context).colorScheme.primary,
+              size: 20,
+            ),
+          ),
+          title: Text(
+            'Modo Escuro',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          subtitle: Text(
+            isDarkMode ? 'Ativado' : 'Desativado',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          trailing: Switch(
+            value: isDarkMode,
+            onChanged: (value) {
+              themeNotifier.setThemeMode(
+                value ? ThemeMode.dark : ThemeMode.light,
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildNotificationsTile(BuildContext context) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          Icons.notifications_outlined,
+          color: Theme.of(context).colorScheme.primary,
+          size: 20,
+        ),
+      ),
+      title: Text(
+        'Notificações',
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
+      subtitle: Text(
+        'Lembretes para beber água',
+        style: Theme.of(context).textTheme.bodyMedium,
+      ),
+      trailing: Switch(
+        value: false,
+        onChanged: (value) {
+          // TODO: Implementar lógica de notificações
+        },
       ),
     );
   }
 
-  Widget _buildThemeCard(BuildContext context, WidgetRef ref) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.palette,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Aparência',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Consumer(
-              builder: (context, ref, child) {
-                final themeMode = ref.watch(themeProvider);
-                final themeNotifier = ref.read(themeProvider.notifier);
-
-                return Column(
-                  children: [
-                    RadioListTile<ThemeMode>(
-                      contentPadding: EdgeInsets.zero,
-                      title: const Text('Tema Claro'),
-                      subtitle: const Text('Interface com cores claras'),
-                      value: ThemeMode.light,
-                      groupValue: themeMode,
-                      onChanged: (ThemeMode? value) {
-                        if (value != null) {
-                          themeNotifier.setThemeMode(value);
-                        }
-                      },
-                    ),
-                    RadioListTile<ThemeMode>(
-                      contentPadding: EdgeInsets.zero,
-                      title: const Text('Tema Escuro'),
-                      subtitle: const Text('Interface com cores escuras'),
-                      value: ThemeMode.dark,
-                      groupValue: themeMode,
-                      onChanged: (ThemeMode? value) {
-                        if (value != null) {
-                          themeNotifier.setThemeMode(value);
-                        }
-                      },
-                    ),
-                    RadioListTile<ThemeMode>(
-                      contentPadding: EdgeInsets.zero,
-                      title: const Text('Sistema'),
-                      subtitle: const Text('Seguir configuração do sistema'),
-                      value: ThemeMode.system,
-                      groupValue: themeMode,
-                      onChanged: (ThemeMode? value) {
-                        if (value != null) {
-                          themeNotifier.setThemeMode(value);
-                        }
-                      },
-                    ),
-                  ],
-                );
-              },
-            ),
-          ],
+  Widget _buildAboutTile(BuildContext context) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          Icons.info_outline,
+          color: Theme.of(context).colorScheme.primary,
+          size: 20,
         ),
       ),
+      title: Text(
+        'Sobre o App',
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
+      subtitle: Text(
+        'Informações e créditos',
+        style: Theme.of(context).textTheme.bodyMedium,
+      ),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () {
+        _showAboutDialog(context);
+      },
     );
   }
 
-  Widget _buildNotificationsCard(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.notifications,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Notificações',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(
-                'Lembrete para beber água',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
-              ),
-              subtitle: Text(
-                'Receba notificações regulares',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              trailing: Switch(
-                value: false,
-                onChanged: (value) {
-                  // TODO: Implementar lógica de notificações
-                },
-              ),
-            ),
-          ],
+  Widget _buildVersionTile(BuildContext context) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          Icons.apps,
+          color: Theme.of(context).colorScheme.primary,
+          size: 20,
         ),
       ),
+      title: Text('Versão', style: Theme.of(context).textTheme.titleMedium),
+      subtitle: Text('1.0.0', style: Theme.of(context).textTheme.bodyMedium),
     );
   }
 
-  Widget _buildAboutCard(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.info, color: Theme.of(context).colorScheme.primary),
-                const SizedBox(width: 8),
-                Text(
-                  'Sobre o App',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'H2O Simple v1.0.0',
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'App para acompanhar seu consumo diário de água e manter uma hidratação saudável.',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ],
+  Widget _buildResetDataTile(BuildContext context, WidgetRef ref) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.error.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          Icons.refresh,
+          color: Theme.of(context).colorScheme.error,
+          size: 20,
         ),
       ),
+      title: Text(
+        'Resetar Dados',
+        style: TextStyle(color: Theme.of(context).colorScheme.error),
+      ),
+      subtitle: Text(
+        'Apagar todos os dados salvos',
+        style: Theme.of(context).textTheme.bodyMedium,
+      ),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () => _showResetDialog(context, ref),
     );
   }
 
-  Widget _buildResetButton(BuildContext context, WidgetRef ref) {
-    return SizedBox(
-      width: double.infinity,
-      child: OutlinedButton.icon(
-        onPressed: () => _showResetDialog(context, ref),
-        icon: const Icon(Icons.refresh),
-        label: const Text('Resetar Dados'),
-        style: OutlinedButton.styleFrom(
-          foregroundColor: Theme.of(context).colorScheme.error,
-          side: BorderSide(color: Theme.of(context).colorScheme.error),
-          padding: const EdgeInsets.symmetric(vertical: 16),
-        ),
-      ),
+  void _showAboutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Sobre o H2O Simple'),
+            content: const Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'H2O Simple v1.0.0',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  'App para acompanhar seu consumo diário de água e manter uma hidratação saudável.',
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Desenvolvido com Flutter 💙',
+                  style: TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Fechar'),
+              ),
+            ],
+          ),
     );
   }
 
@@ -351,7 +424,7 @@ class SettingsTab extends ConsumerWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.warningColor,
-                  foregroundColor: AppTheme.surfaceColor,
+                  foregroundColor: Colors.white,
                 ),
                 child: const Text('Resetar'),
               ),

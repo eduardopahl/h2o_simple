@@ -180,7 +180,9 @@ class _PhysicsWaterContainerState extends State<PhysicsWaterContainer>
         return Container(
           width: double.infinity,
           height: screenHeight - safeAreaTop,
-          decoration: const BoxDecoration(color: Color(0xFFF8FAFE)),
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+          ),
           child: Stack(
             children: [
               // Água com física que representa o progresso
@@ -269,9 +271,11 @@ class RealisticWaterPainter extends CustomPainter {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              const Color(0xFF1565C0).withValues(alpha: 0.3),
-              const Color(0xFF1565C0).withValues(alpha: 0.8),
-              const Color(0xFF0D47A1),
+              const Color(
+                0xFF42A5F5,
+              ).withValues(alpha: 0.3), // Material Light Blue
+              const Color(0xFF42A5F5).withValues(alpha: 0.8),
+              const Color(0xFF1976D2), // Material Blue
             ],
           ).createShader(
             Rect.fromLTWH(0, waterTop, size.width, waterBottom - waterTop),
@@ -327,7 +331,7 @@ class RealisticWaterPainter extends CustomPainter {
   void _drawWaterSurface(Canvas canvas, Size size, double waterTop) {
     final paint =
         Paint()
-          ..color = Colors.white.withValues(alpha: 0.1)
+          ..color = const Color(0xFFFFFFFF).withValues(alpha: 0.1)
           ..style = PaintingStyle.fill;
 
     final path = Path();
@@ -362,7 +366,7 @@ class RealisticWaterPainter extends CustomPainter {
     // Ondas brancas na superfície para efeito controlado
     final wavePaint =
         Paint()
-          ..color = Colors.white.withValues(alpha: 0.25)
+          ..color = const Color(0xFFFFFFFF).withValues(alpha: 0.25)
           ..strokeWidth = 1.5
           ..style = PaintingStyle.stroke;
 

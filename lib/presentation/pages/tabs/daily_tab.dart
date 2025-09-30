@@ -6,7 +6,6 @@ import '../../providers/daily_goal_provider.dart';
 import '../../widgets/physics_water_container.dart';
 import '../../widgets/water_progress_display.dart';
 import '../../widgets/floating_add_buttons.dart';
-import '../../theme/app_theme.dart';
 
 class DailyTab extends ConsumerStatefulWidget {
   const DailyTab({super.key});
@@ -54,25 +53,25 @@ class _DailyTabState extends ConsumerState<DailyTab> {
                           const Icon(
                             Icons.error_outline,
                             size: 64,
-                            color: AppTheme.errorColor,
+                            color: Colors.red,
                           ),
                           const SizedBox(height: 16),
                           Text(
                             'Erro ao carregar dados',
-                            style: const TextStyle(
+                            style: Theme.of(
+                              context,
+                            ).textTheme.titleMedium?.copyWith(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
-                              color: AppTheme.textPrimary,
                             ),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 8),
                           Text(
                             error.toString(),
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: AppTheme.textSecondary,
-                            ),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.copyWith(fontSize: 14),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 16),

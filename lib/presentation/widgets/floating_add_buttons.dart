@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../domain/entities/water_intake.dart';
+import '../theme/app_theme.dart';
 
 class FloatingAddButtons extends StatefulWidget {
   final bool isExpanded;
@@ -118,7 +119,7 @@ class _FloatingAddButtonsState extends State<FloatingAddButtons>
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1565C0),
+                  backgroundColor: AppTheme.primaryBlue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -215,9 +216,9 @@ class _FloatingAddButtonsState extends State<FloatingAddButtons>
                     child: AnimatedRotation(
                       turns: widget.isExpanded ? 0.125 : 0.0,
                       duration: const Duration(milliseconds: 300),
-                      child: const Icon(
+                      child: Icon(
                         Icons.add,
-                        color: Color(0xFF1565C0),
+                        color: AppTheme.primaryBlue,
                         size: 30,
                       ),
                     ),
@@ -258,14 +259,14 @@ class _FloatingAddButtonsState extends State<FloatingAddButtons>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: const Color(0xFF1565C0), size: 18),
+              Icon(icon, color: AppTheme.primaryBlue, size: 18),
               if (label.length <= 6)
                 Text(
                   label,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 8,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF1565C0),
+                    color: AppTheme.primaryBlue,
                   ),
                 ),
             ],

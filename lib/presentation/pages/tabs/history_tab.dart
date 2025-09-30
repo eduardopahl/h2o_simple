@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/water_intake_provider.dart';
-import '../../theme/app_theme.dart';
 
 class HistoryTab extends ConsumerWidget {
   const HistoryTab({super.key});
@@ -18,10 +17,9 @@ class HistoryTab extends ConsumerWidget {
           children: [
             Text(
               'Histórico de Consumo',
-              style: const TextStyle(
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: AppTheme.textPrimary,
               ),
             ),
             const SizedBox(height: 16),
@@ -48,29 +46,34 @@ class HistoryTab extends ConsumerWidget {
     List<dynamic> waterIntakes,
   ) {
     if (waterIntakes.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.water_drop_outlined,
               size: 64,
-              color: AppTheme.textLight,
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.5),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'Nenhum registro encontrado',
-              style: TextStyle(
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontSize: 18,
-                color: AppTheme.textSecondary,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               'Adicione água na aba "Hoje" para ver o histórico',
               textAlign: TextAlign.center,
-              style: TextStyle(color: AppTheme.textLight),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
             ),
           ],
         ),
@@ -88,20 +91,24 @@ class HistoryTab extends ConsumerWidget {
                 margin: const EdgeInsets.only(bottom: 8),
                 child: ListTile(
                   leading: CircleAvatar(
-                    backgroundColor: AppTheme.infoColor.withValues(alpha: 0.1),
-                    child: Icon(Icons.water_drop, color: AppTheme.infoColor),
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.1),
+                    child: Icon(
+                      Icons.water_drop,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                   title: Text(
                     '${intake.amount}ml',
-                    style: const TextStyle(
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: AppTheme.textPrimary,
                       fontSize: 16,
                     ),
                   ),
                   subtitle: Text(_formatDateTime(intake.timestamp)),
                   trailing: IconButton(
-                    icon: const Icon(Icons.delete, color: AppTheme.errorColor),
+                    icon: const Icon(Icons.delete, color: Colors.red),
                     onPressed:
                         () => _showDeleteConfirmation(context, ref, intake.id),
                   ),
@@ -119,25 +126,23 @@ class HistoryTab extends ConsumerWidget {
               children: [
                 Text(
                   'Estatísticas',
-                  style: const TextStyle(
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: AppTheme.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Total de registros:',
-                      style: TextStyle(color: AppTheme.textSecondary),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Text(
                       '${waterIntakes.length}',
-                      style: const TextStyle(
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.textPrimary,
                       ),
                     ),
                   ],
@@ -145,15 +150,14 @@ class HistoryTab extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Consumo total:',
-                      style: TextStyle(color: AppTheme.textSecondary),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Text(
                       '${waterIntakes.fold<int>(0, (sum, intake) => sum + intake.amount as int)}ml',
-                      style: const TextStyle(
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.textPrimary,
                         fontSize: 16,
                       ),
                     ),
@@ -201,8 +205,8 @@ class HistoryTab extends ConsumerWidget {
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.errorColor,
-                  foregroundColor: AppTheme.surfaceColor,
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
                 ),
                 child: const Text('Excluir'),
               ),

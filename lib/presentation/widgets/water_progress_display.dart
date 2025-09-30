@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import '../theme/app_theme.dart';
 
 class WaterProgressDisplay extends StatefulWidget {
   final int todayTotal;
@@ -94,11 +93,13 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             decoration: BoxDecoration(
-              color: AppTheme.surfaceColor.withValues(alpha: 0.95),
+              color: Theme.of(
+                context,
+              ).colorScheme.surface.withValues(alpha: 0.95),
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.shadowColor,
+                  color: Theme.of(context).colorScheme.shadow,
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -110,11 +111,7 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
                 // Título
                 Text(
                   'Hidratação de hoje',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.textPrimary,
-                  ),
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: 12),
                 // Total de água consumida
@@ -124,20 +121,20 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
                   children: [
                     Text(
                       '$_displayedTotal',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.infoColor,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 4),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
                       child: Text(
                         'ml',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
-                          color: AppTheme.infoColor,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ),
@@ -145,8 +142,7 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
                 ),
                 Text(
                   'de ${widget.goalAmount}ml',
-                  style: const TextStyle(
-                    color: AppTheme.textSecondary,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -159,13 +155,15 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: AppTheme.successColor.withValues(alpha: 0.1),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.secondary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       '+${_displayedTotal - widget.goalAmount}ml extra',
-                      style: const TextStyle(
-                        color: AppTheme.successColor,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -179,13 +177,15 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: AppTheme.successColor.withValues(alpha: 0.1),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.secondary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Text(
+                    child: Text(
                       '🎉 Meta atingida!',
                       style: TextStyle(
-                        color: AppTheme.successColor,
+                        color: Theme.of(context).colorScheme.secondary,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -195,8 +195,7 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
                   const SizedBox(height: 8),
                   Text(
                     'Faltam ${widget.goalAmount - _displayedTotal}ml',
-                    style: const TextStyle(
-                      color: AppTheme.textLight,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -250,7 +249,9 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
                       opacity: opacity,
                       child: Icon(
                         Icons.water_drop,
-                        color: AppTheme.infoColor.withValues(alpha: 0.7),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.primary.withValues(alpha: 0.7),
                         size:
                             12 +
                             (index % 3) * 2, // Tamanhos variados: 12, 14, 16
