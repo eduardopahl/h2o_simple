@@ -30,8 +30,8 @@ class _MainTabViewState extends ConsumerState<MainTabView> {
           });
         },
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Theme.of(context).primaryColor,
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: AppTheme.primaryBlue,
+        unselectedItemColor: AppTheme.textLight,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.water_drop), label: 'Hoje'),
           BottomNavigationBarItem(

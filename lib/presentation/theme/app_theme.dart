@@ -12,9 +12,23 @@ class AppTheme {
   static const Color progressFilled = Color(0xFF2196F3);
   static const Color progressCompleted = Color(0xFF4CAF50);
 
-  static const Color textPrimary = Color(0xFF212121);
-  static const Color textSecondary = Color(0xFF757575);
-  static const Color textLight = Color(0xFFBDBDBD);
+  static const Color textPrimary = Color(0xFF1A1A1A);
+  static const Color textSecondary = Color(0xFF424242);
+  static const Color textLight = Color(0xFF666666);
+
+  // Cores de ação
+  static const Color successColor = Color(0xFF4CAF50);
+  static const Color errorColor = Color(0xFFE53E3E);
+  static const Color warningColor = Color(0xFFFF9800);
+  static const Color infoColor = Color(0xFF3498DB);
+
+  // Cores de fundo
+  static const Color surfaceColor = Color(0xFFFFFFFF);
+  static const Color shadowColor = Color(0x1A000000);
+
+  // Cores de input
+  static const Color inputFillColor = Color(0xFFFAFAFA);
+  static const Color inputBorderColor = Color(0xFFE0E0E0);
 
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
@@ -29,11 +43,11 @@ class AppTheme {
 
     appBarTheme: const AppBarTheme(
       backgroundColor: primaryBlue,
-      foregroundColor: Colors.white,
+      foregroundColor: surfaceColor,
       elevation: 0,
       centerTitle: true,
       titleTextStyle: TextStyle(
-        color: Colors.white,
+        color: surfaceColor,
         fontSize: 20,
         fontWeight: FontWeight.w600,
       ),
@@ -47,14 +61,14 @@ class AppTheme {
 
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: primaryBlue,
-      foregroundColor: Colors.white,
+      foregroundColor: surfaceColor,
       elevation: 4,
     ),
 
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: primaryBlue,
-        foregroundColor: Colors.white,
+        foregroundColor: surfaceColor,
         elevation: 2,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -79,21 +93,21 @@ class AppTheme {
 
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: Colors.grey[50],
+      fillColor: inputFillColor,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: Colors.grey[300]!),
+        borderSide: const BorderSide(color: inputBorderColor),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: Colors.grey[300]!),
+        borderSide: const BorderSide(color: inputBorderColor),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
         borderSide: const BorderSide(color: primaryBlue, width: 2),
       ),
-      labelStyle: TextStyle(color: Colors.grey[600]),
-      hintStyle: TextStyle(color: Colors.grey[500]),
+      labelStyle: const TextStyle(color: textSecondary),
+      hintStyle: const TextStyle(color: textLight),
     ),
 
     textTheme: const TextTheme(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/water_intake_provider.dart';
+import '../../theme/app_theme.dart';
 
 class HistoryTab extends ConsumerWidget {
   const HistoryTab({super.key});
@@ -17,9 +18,11 @@ class HistoryTab extends ConsumerWidget {
           children: [
             Text(
               'Histórico de Consumo',
-              style: Theme.of(
-                context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.textPrimary,
+              ),
             ),
             const SizedBox(height: 16),
 
@@ -49,17 +52,25 @@ class HistoryTab extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.water_drop_outlined, size: 64, color: Colors.grey),
+            Icon(
+              Icons.water_drop_outlined,
+              size: 64,
+              color: AppTheme.textLight,
+            ),
             SizedBox(height: 16),
             Text(
               'Nenhum registro encontrado',
-              style: TextStyle(fontSize: 18, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 18,
+                color: AppTheme.textSecondary,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             SizedBox(height: 8),
             Text(
               'Adicione água na aba "Hoje" para ver o histórico',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(color: AppTheme.textLight),
             ),
           ],
         ),
@@ -77,16 +88,20 @@ class HistoryTab extends ConsumerWidget {
                 margin: const EdgeInsets.only(bottom: 8),
                 child: ListTile(
                   leading: CircleAvatar(
-                    backgroundColor: Colors.blue.shade100,
-                    child: Icon(Icons.water_drop, color: Colors.blue.shade600),
+                    backgroundColor: AppTheme.infoColor.withValues(alpha: 0.1),
+                    child: Icon(Icons.water_drop, color: AppTheme.infoColor),
                   ),
                   title: Text(
                     '${intake.amount}ml',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.textPrimary,
+                      fontSize: 16,
+                    ),
                   ),
                   subtitle: Text(_formatDateTime(intake.timestamp)),
                   trailing: IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
+                    icon: const Icon(Icons.delete, color: AppTheme.errorColor),
                     onPressed:
                         () => _showDeleteConfirmation(context, ref, intake.id),
                   ),
@@ -104,28 +119,43 @@ class HistoryTab extends ConsumerWidget {
               children: [
                 Text(
                   'Estatísticas',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: const TextStyle(
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
+                    color: AppTheme.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Total de registros:'),
+                    const Text(
+                      'Total de registros:',
+                      style: TextStyle(color: AppTheme.textSecondary),
+                    ),
                     Text(
                       '${waterIntakes.length}',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.textPrimary,
+                      ),
                     ),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Consumo total:'),
+                    const Text(
+                      'Consumo total:',
+                      style: TextStyle(color: AppTheme.textSecondary),
+                    ),
                     Text(
                       '${waterIntakes.fold<int>(0, (sum, intake) => sum + intake.amount as int)}ml',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.textPrimary,
+                        fontSize: 16,
+                      ),
                     ),
                   ],
                 ),
@@ -171,8 +201,8 @@ class HistoryTab extends ConsumerWidget {
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
+                  backgroundColor: AppTheme.errorColor,
+                  foregroundColor: AppTheme.surfaceColor,
                 ),
                 child: const Text('Excluir'),
               ),
