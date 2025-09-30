@@ -1,12 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/water_intake_provider.dart';
+import '../../widgets/period_selector.dart';
+import '../../widgets/date_navigator.dart';
+import '../../widgets/water_chart.dart';
+import '../../widgets/daily_list_content.dart';
+import '../../widgets/period_summary.dart';
 
-class HistoryTab extends ConsumerWidget {
+class HistoryTab extends ConsumerStatefulWidget {
   const HistoryTab({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HistoryTab> createState() => _HistoryTabState();
+}
+
+class _HistoryTabState extends ConsumerState<HistoryTab> {
+  TimePeriod selectedPeriod = TimePeriod.day;
+  DateTime selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    // Carregar dados da data atual após o primeiro frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(waterIntakeProvider.notifier).loadIntakesByDate(selectedDate);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final waterIntakesAsync = ref.watch(waterIntakeProvider);
 
     return SafeArea(
@@ -15,19 +37,47 @@ class HistoryTab extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Título
             Text(
-              'Histórico de Consumo',
+              'Histórico',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontSize: 20,
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 16),
 
+            // Seletor de período
+            PeriodSelector(
+              selectedPeriod: selectedPeriod,
+              onPeriodChanged: (period) {
+                setState(() {
+                  selectedPeriod = period;
+                });
+              },
+            ),
+            const SizedBox(height: 12),
+
+            // Navegador de data (apenas para período de dia)
+            if (selectedPeriod == TimePeriod.day) ...[
+              DateNavigator(
+                selectedDate: selectedDate,
+                onDateChanged: (date) {
+                  setState(() {
+                    selectedDate = date;
+                  });
+                  ref
+                      .read(waterIntakeProvider.notifier)
+                      .loadIntakesByDate(date);
+                },
+              ),
+              const SizedBox(height: 12),
+            ],
+
+            // Conteúdo baseado no período selecionado
             Expanded(
               child: waterIntakesAsync.when(
-                data:
-                    (waterIntakes) => _buildContent(context, ref, waterIntakes),
+                data: (waterIntakes) => _buildContent(context, waterIntakes),
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error:
                     (error, stack) =>
@@ -40,143 +90,52 @@ class HistoryTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildContent(
-    BuildContext context,
-    WidgetRef ref,
-    List<dynamic> waterIntakes,
-  ) {
-    if (waterIntakes.isEmpty) {
-      return Center(
+  Widget _buildContent(BuildContext context, List<dynamic> waterIntakes) {
+    if (selectedPeriod == TimePeriod.day) {
+      // Para o período de dia, incluir gráfico e lista no scroll
+      return SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.water_drop_outlined,
-              size: 64,
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.5),
+            // Gráfico do dia
+            WaterChart(
+              chartType: selectedPeriod,
+              waterIntakes: waterIntakes,
+              selectedDate: selectedDate,
             ),
-            const SizedBox(height: 16),
-            Text(
-              'Nenhum registro encontrado',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-              ),
+            const SizedBox(height: 20),
+
+            // Lista de registros do dia
+            DailyListContent(
+              waterIntakes: waterIntakes,
+              selectedDate: selectedDate,
+              onDeleteIntake:
+                  (intakeId) => _showDeleteConfirmation(context, ref, intakeId),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Adicione água na aba "Hoje" para ver o histórico',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(
-                  context,
-                ).colorScheme.onSurface.withValues(alpha: 0.6),
-              ),
+          ],
+        ),
+      );
+    } else {
+      // Para semana e mês, mostrar apenas gráfico e resumo
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            // Gráfico do período
+            WaterChart(
+              chartType: selectedPeriod,
+              waterIntakes: waterIntakes,
+              selectedDate: selectedDate,
+            ),
+            const SizedBox(height: 20),
+
+            // Resumo do período
+            PeriodSummary(
+              selectedPeriod: selectedPeriod,
+              waterIntakes: waterIntakes,
             ),
           ],
         ),
       );
     }
-
-    return Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            itemCount: waterIntakes.length,
-            itemBuilder: (context, index) {
-              final intake = waterIntakes[index];
-              return Card(
-                margin: const EdgeInsets.only(bottom: 8),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Theme.of(
-                      context,
-                    ).colorScheme.primary.withValues(alpha: 0.1),
-                    child: Icon(
-                      Icons.water_drop,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  title: Text(
-                    '${intake.amount}ml',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  subtitle: Text(_formatDateTime(intake.timestamp)),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed:
-                        () => _showDeleteConfirmation(context, ref, intake.id),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Estatísticas',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Total de registros:',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    Text(
-                      '${waterIntakes.length}',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Consumo total:',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    Text(
-                      '${waterIntakes.fold<int>(0, (sum, intake) => sum + intake.amount as int)}ml',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day.toString().padLeft(2, '0')}/'
-        '${dateTime.month.toString().padLeft(2, '0')}/'
-        '${dateTime.year} - '
-        '${dateTime.hour.toString().padLeft(2, '0')}:'
-        '${dateTime.minute.toString().padLeft(2, '0')}';
   }
 
   void _showDeleteConfirmation(
@@ -188,27 +147,40 @@ class HistoryTab extends ConsumerWidget {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('Excluir Registro'),
-            content: const Text(
-              'Tem certeza que deseja excluir este registro?',
+            title: Text(
+              'Confirmar exclusão',
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            content: Text(
+              'Deseja realmente excluir este registro de consumo de água?',
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cancelar'),
+                child: Text(
+                  'Cancelar',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
               ),
-              ElevatedButton(
+              TextButton(
                 onPressed: () {
                   ref
                       .read(waterIntakeProvider.notifier)
-                      .removeWaterIntake(intakeId);
+                      .removeWaterIntake(intakeId, reloadDate: selectedDate);
                   Navigator.of(context).pop();
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
+                child: Text(
+                  'Excluir',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                child: const Text('Excluir'),
               ),
             ],
           ),

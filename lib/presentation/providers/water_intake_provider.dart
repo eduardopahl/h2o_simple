@@ -39,10 +39,14 @@ class WaterIntakeNotifier extends StateNotifier<AsyncValue<List<WaterIntake>>> {
     }
   }
 
-  Future<void> removeWaterIntake(String id) async {
+  Future<void> removeWaterIntake(String id, {DateTime? reloadDate}) async {
     try {
       await _repository.removeWaterIntake(id);
-      await loadTodayIntakes();
+      if (reloadDate != null) {
+        await loadIntakesByDate(reloadDate);
+      } else {
+        await loadTodayIntakes();
+      }
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
     }

@@ -60,7 +60,7 @@ class AppTheme {
       primary: primaryBlue,
       secondary: accentCyan,
       surface: cardBackground,
-      onSurface: backgroundLight,
+      onSurface: textPrimary,
     ),
 
     appBarTheme: const AppBarTheme(
@@ -209,7 +209,7 @@ class AppTheme {
       primary: darkPrimaryBlue,
       secondary: darkAccentCyan,
       surface: darkCardBackground,
-      onSurface: darkBackgroundDark,
+      onSurface: darkTextPrimary,
     ),
 
     scaffoldBackgroundColor: darkBackgroundDark,
