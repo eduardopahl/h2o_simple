@@ -13,6 +13,12 @@ class HistoryWaterIntakeNotifier
   final WaterIntakeRepository _repository;
   final Ref _ref;
 
+  /// Carrega ingestões de água para uma data específica
+  ///
+  /// [date] - Data para buscar as ingestões
+  ///
+  /// Usado na visualização diária do histórico
+  /// Pattern: Single Responsibility - carrega apenas um dia
   Future<void> loadIntakesByDate(DateTime date) async {
     state = const AsyncValue.loading();
     try {
@@ -23,6 +29,16 @@ class HistoryWaterIntakeNotifier
     }
   }
 
+  /// Carrega ingestões de uma semana completa
+  ///
+  /// [date] - Qualquer data dentro da semana desejada
+  ///
+  /// Algoritmo:
+  /// 1. Calcula início da semana (segunda-feira)
+  /// 2. Itera pelos 7 dias
+  /// 3. Agrega todos os dados em uma lista única
+  ///
+  /// Performance: Otimizada para visualização de gráficos semanais
   Future<void> loadWeekIntakes(DateTime date) async {
     state = const AsyncValue.loading();
     try {
@@ -42,6 +58,16 @@ class HistoryWaterIntakeNotifier
     }
   }
 
+  /// Carrega ingestões de um mês completo
+  ///
+  /// [date] - Qualquer data dentro do mês desejado
+  ///
+  /// Implementação:
+  /// - Calcula automaticamente dias no mês (28-31)
+  /// - Carrega todos os dias do mês sequencialmente
+  /// - Agrega em lista única para análise mensal
+  ///
+  /// Use Case: Relatórios mensais e gráficos de tendência
   Future<void> loadMonthIntakes(DateTime date) async {
     state = const AsyncValue.loading();
     try {
@@ -60,6 +86,20 @@ class HistoryWaterIntakeNotifier
     }
   }
 
+  /// Remove uma ingestão com sincronização cross-provider inteligente
+  ///
+  /// [id] - Identificador único da ingestão
+  /// [reloadDate] - Data para recarregar após remoção
+  /// [period] - Período atual (dia/semana/mês) para recarregamento apropriado
+  ///
+  /// Funcionalidades avançadas:
+  /// 1. **Detecção de Cross-Provider**: Verifica se item deletado afeta Daily tab
+  /// 2. **Invalidação Seletiva**: Invalida [dailyWaterIntakeProvider] apenas se necessário
+  /// 3. **Recarregamento Contextual**: Recarrega dados baseado no período ativo
+  ///
+  /// Design Pattern: Observer + Strategy
+  /// - Observer: Detecta mudanças que afetam outros providers
+  /// - Strategy: Escolhe método de recarregamento baseado no período
   Future<void> removeWaterIntake(
     String id, {
     DateTime? reloadDate,
@@ -118,12 +158,29 @@ class HistoryWaterIntakeNotifier
     }
   }
 
+  /// Busca total de água para uma data específica
+  ///
+  /// [date] - Data para calcular o total
+  ///
+  /// Método utilitário para cálculos rápidos sem alterar estado
+  /// Usado principalmente para exibições de resumo
   Future<int> getTotalForDate(DateTime date) async {
     return await _repository.getTotalWaterIntakeByDate(date);
   }
 }
 
-// Provider específico para a aba History
+/// Provider principal para a aba History
+///
+/// Características arquiteturais:
+/// - **Escopo Separado**: Independente do [dailyWaterIntakeProvider]
+/// - **Cross-Provider Sync**: Pode invalidar outros providers quando necessário
+/// - **Injeção de Dependência**: Recebe repositório e referência Riverpod
+/// - **Multi-Period Support**: Suporta visualização por dia/semana/mês
+///
+/// Benefícios:
+/// - Isolamento de responsabilidades (SOLID)
+/// - Sincronização bidirecional automática
+/// - Performance otimizada para dados históricos
 final historyWaterIntakeProvider = StateNotifierProvider<
   HistoryWaterIntakeNotifier,
   AsyncValue<List<WaterIntake>>
@@ -132,7 +189,14 @@ final historyWaterIntakeProvider = StateNotifierProvider<
   return HistoryWaterIntakeNotifier(repository, ref);
 });
 
-// Provider derivado para lista de intakes da aba History
+/// Provider derivado que expõe lista segura de ingestões históricas
+///
+/// Funcionalidades:
+/// - **Fallback Safety**: Retorna lista vazia se dados não disponíveis
+/// - **Reactive UI**: Atualiza automaticamente quando dados mudam
+/// - **Type Safety**: Garante tipo List<WaterIntake> não-nullable
+///
+/// Usado por: Widgets de lista, gráficos, componentes de visualização
 final historyWaterIntakeListProvider = Provider<List<WaterIntake>>((ref) {
   return ref.watch(historyWaterIntakeProvider).valueOrNull ?? [];
 });

@@ -32,12 +32,14 @@ class _MainTabViewState extends ConsumerState<MainTabView> {
         backgroundColor:
             Theme.of(context).brightness == Brightness.dark
                 ? Theme.of(context).colorScheme.surface
-                : Colors.white,
+                : Theme.of(context).colorScheme.surface,
         selectedItemColor: Theme.of(context).colorScheme.primary,
         unselectedItemColor:
             Theme.of(context).brightness == Brightness.dark
-                ? Colors.grey[400]
-                : Colors.grey[600],
+                ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)
+                : Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.7),
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
         unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
         items: const [

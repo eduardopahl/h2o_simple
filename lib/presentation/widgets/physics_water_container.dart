@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
+import '../theme/app_theme.dart';
 
 class PhysicsWaterContainer extends StatefulWidget {
   final double progress;
@@ -216,6 +217,9 @@ class _PhysicsWaterContainerState extends State<PhysicsWaterContainer>
                 AnimatedBuilder(
                   animation: _physicsController,
                   builder: (context, child) {
+                    final isDark =
+                        Theme.of(context).brightness == Brightness.dark;
+
                     return CustomPaint(
                       size: Size(constraints.maxWidth, constraints.maxHeight),
                       painter: RealisticWaterPainter(
@@ -228,6 +232,12 @@ class _PhysicsWaterContainerState extends State<PhysicsWaterContainer>
                         progress: mappedProgress,
                         totalHeight: screenHeight - safeAreaTop,
                         availableHeight: totalAvailableHeight,
+                        lightBlue:
+                            isDark
+                                ? AppTheme.darkLightBlue
+                                : AppTheme.lightBlue,
+                        darkBlue:
+                            isDark ? AppTheme.darkDarkBlue : AppTheme.darkBlue,
                       ),
                     );
                   },
@@ -253,6 +263,8 @@ class RealisticWaterPainter extends CustomPainter {
   final double progress;
   final double totalHeight;
   final double availableHeight;
+  final Color lightBlue;
+  final Color darkBlue;
 
   RealisticWaterPainter({
     required this.tiltX,
@@ -264,6 +276,8 @@ class RealisticWaterPainter extends CustomPainter {
     required this.progress,
     required this.totalHeight,
     required this.availableHeight,
+    required this.lightBlue,
+    required this.darkBlue,
   });
 
   @override
@@ -291,11 +305,9 @@ class RealisticWaterPainter extends CustomPainter {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              const Color(
-                0xFF42A5F5,
-              ).withValues(alpha: 0.3), // Material Light Blue
-              const Color(0xFF42A5F5).withValues(alpha: 0.8),
-              const Color(0xFF1976D2), // Material Blue
+              lightBlue.withValues(alpha: 0.3),
+              lightBlue.withValues(alpha: 0.8),
+              darkBlue,
             ],
           ).createShader(
             Rect.fromLTWH(0, waterTop, size.width, waterBottom - waterTop),
@@ -379,6 +391,8 @@ class RealisticWaterPainter extends CustomPainter {
         (oldDelegate.wavePhase - wavePhase).abs() > tolerance ||
         (oldDelegate.waterLevel - waterLevel).abs() > tolerance ||
         (oldDelegate.progress - progress).abs() >
-            0.001; // Progresso mais sensível
+            0.001 || // Progresso mais sensível
+        oldDelegate.lightBlue != lightBlue ||
+        oldDelegate.darkBlue != darkBlue;
   }
 }

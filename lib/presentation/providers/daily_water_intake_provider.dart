@@ -1,16 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/water_intake.dart';
 import '../../domain/repositories/water_intake_repository.dart';
+import '../../domain/use_cases/add_water_intake_use_case.dart';
+import '../../core/extensions/extensions.dart';
 import 'repository_providers.dart';
+import 'use_case_providers.dart';
 
 class DailyWaterIntakeNotifier
     extends StateNotifier<AsyncValue<List<WaterIntake>>> {
-  DailyWaterIntakeNotifier(this._repository)
+  DailyWaterIntakeNotifier(this._repository, this._addWaterIntakeUseCase)
     : super(const AsyncValue.loading()) {
     loadTodayIntakes();
   }
 
   final WaterIntakeRepository _repository;
+  final AddWaterIntakeUseCase _addWaterIntakeUseCase;
 
   Future<void> loadTodayIntakes() async {
     try {
@@ -22,10 +26,27 @@ class DailyWaterIntakeNotifier
     }
   }
 
-  Future<void> addWaterIntake(WaterIntake intake) async {
+  Future<void> addWaterIntake({
+    required int amount,
+    DateTime? timestamp,
+    String? note,
+  }) async {
+    try {
+      await _addWaterIntakeUseCase.execute(
+        amount: amount,
+        timestamp: timestamp,
+        note: note,
+      );
+      await loadTodayIntakes();
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
+
+  Future<void> addWaterIntakeEntity(WaterIntake intake) async {
     try {
       await _repository.addWaterIntake(intake);
-      await loadTodayIntakes(); // Sempre recarrega apenas o dia atual
+      await loadTodayIntakes();
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
     }
@@ -34,29 +55,27 @@ class DailyWaterIntakeNotifier
   Future<void> removeWaterIntake(String id) async {
     try {
       await _repository.removeWaterIntake(id);
-      await loadTodayIntakes(); // Sempre recarrega apenas o dia atual
+      await loadTodayIntakes();
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
     }
   }
 }
 
-// Provider específico para a aba Daily que sempre mostra dados do dia atual
 final dailyWaterIntakeProvider = StateNotifierProvider<
   DailyWaterIntakeNotifier,
   AsyncValue<List<WaterIntake>>
 >((ref) {
   final repository = ref.watch(waterIntakeRepositoryProvider);
-  return DailyWaterIntakeNotifier(repository);
+  final addWaterIntakeUseCase = ref.watch(addWaterIntakeUseCaseProvider);
+  return DailyWaterIntakeNotifier(repository, addWaterIntakeUseCase);
 });
 
-// Provider derivado para lista de intakes do dia atual
 final dailyWaterIntakeListProvider = Provider<List<WaterIntake>>((ref) {
   return ref.watch(dailyWaterIntakeProvider).valueOrNull ?? [];
 });
 
-// Provider derivado para total do dia atual
 final todayWaterTotalProvider = Provider<int>((ref) {
   final intakes = ref.watch(dailyWaterIntakeListProvider);
-  return intakes.fold<int>(0, (total, intake) => total + intake.amount);
+  return intakes.totalAmount;
 });

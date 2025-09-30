@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../domain/entities/water_intake.dart';
 import '../../providers/daily_water_intake_provider.dart';
 import '../../providers/daily_goal_provider.dart';
+import '../../theme/app_theme.dart';
 import '../../widgets/physics_water_container.dart';
 import '../../widgets/water_progress_display.dart';
 import '../../widgets/floating_add_buttons.dart';
@@ -25,7 +26,9 @@ class _DailyTabState extends ConsumerState<DailyTab> {
 
   void _addWaterIntake(WaterIntake waterIntake) {
     try {
-      ref.read(dailyWaterIntakeProvider.notifier).addWaterIntake(waterIntake);
+      ref
+          .read(dailyWaterIntakeProvider.notifier)
+          .addWaterIntakeEntity(waterIntake);
     } catch (e) {
       // Handle error silently or show user-friendly message
     }
@@ -50,10 +53,10 @@ class _DailyTabState extends ConsumerState<DailyTab> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.error_outline,
                             size: 64,
-                            color: Colors.red,
+                            color: AppTheme.errorColor,
                           ),
                           const SizedBox(height: 16),
                           Text(

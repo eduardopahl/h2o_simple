@@ -58,11 +58,7 @@ class _FloatingAddButtonsState extends State<FloatingAddButtons>
       timestamp: DateTime.now(),
     );
 
-    try {
-      widget.onAddWater(waterIntake);
-    } catch (e) {
-      // Handle error silently or show user-friendly message
-    }
+    widget.onAddWater(waterIntake);
   }
 
   void _showCustomAmountDialog(BuildContext context) {
@@ -97,9 +93,9 @@ class _FloatingAddButtonsState extends State<FloatingAddButtons>
                   final text = controller.text.trim();
                   if (text.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Digite uma quantidade válida'),
-                        backgroundColor: Colors.red,
+                      SnackBar(
+                        content: const Text('Digite uma quantidade válida'),
+                        backgroundColor: AppTheme.errorColor,
                       ),
                     );
                     return;
@@ -111,9 +107,11 @@ class _FloatingAddButtonsState extends State<FloatingAddButtons>
                     Navigator.of(context).pop();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Digite um valor entre 1 e 9999 ml'),
-                        backgroundColor: Colors.red,
+                      SnackBar(
+                        content: const Text(
+                          'Digite um valor entre 1 e 9999 ml',
+                        ),
+                        backgroundColor: AppTheme.errorColor,
                       ),
                     );
                   }
@@ -136,16 +134,16 @@ class _FloatingAddButtonsState extends State<FloatingAddButtons>
     const containerSize = 300.0;
     const centerX = containerSize / 2;
     const centerY = containerSize / 2;
-    const radius = 120.0; // Aumentado de 80 para 120
+    const radius = 90.0; // distancia entre os botoes
     const buttonSize = 60.0;
     const buttonOffset = buttonSize / 2;
 
     final buttonConfigs = [
-      {'amount': 250.0, 'angle': math.pi}, // Esquerda
-      {'amount': 0.0, 'angle': 0.0}, // Direita (personalizado)
-      {'amount': 750.0, 'angle': -math.pi / 2}, // Cima
-      {'amount': 500.0, 'angle': -math.pi * 3 / 4}, // Cima-esquerda diagonal
-      {'amount': 1000.0, 'angle': -math.pi / 4}, // Cima-direita diagonal
+      {'amount': 250.0, 'angle': math.pi},
+      {'amount': 0.0, 'angle': 0.0},
+      {'amount': 750.0, 'angle': -math.pi / 2},
+      {'amount': 500.0, 'angle': -math.pi * 3 / 4},
+      {'amount': 1000.0, 'angle': -math.pi / 4},
     ];
 
     return Positioned(
@@ -158,7 +156,6 @@ class _FloatingAddButtonsState extends State<FloatingAddButtons>
           height: containerSize,
           child: Stack(
             children: [
-              // Botões radiais
               ...buttonConfigs.asMap().entries.map((entry) {
                 final index = entry.key;
                 final config = entry.value;
@@ -192,7 +189,6 @@ class _FloatingAddButtonsState extends State<FloatingAddButtons>
                 );
               }),
 
-              // Botão central "+"
               Positioned(
                 left: centerX - buttonOffset,
                 top: centerY - buttonOffset,
@@ -203,11 +199,11 @@ class _FloatingAddButtonsState extends State<FloatingAddButtons>
                     width: buttonSize,
                     height: buttonSize,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.surface,
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.2),
+                          color: AppTheme.shadowColor,
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         ),
@@ -241,11 +237,11 @@ class _FloatingAddButtonsState extends State<FloatingAddButtons>
       width: 60,
       height: 60,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.15),
+            color: AppTheme.shadowColor,
             blurRadius: 6,
             offset: const Offset(0, 4),
           ),

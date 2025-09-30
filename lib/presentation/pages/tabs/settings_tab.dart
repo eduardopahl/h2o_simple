@@ -424,7 +424,7 @@ class SettingsTab extends ConsumerWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.warningColor,
-                  foregroundColor: Colors.white,
+                  foregroundColor: AppTheme.surfaceColor,
                 ),
                 child: const Text('Resetar'),
               ),
