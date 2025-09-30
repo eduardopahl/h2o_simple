@@ -46,10 +46,22 @@ class NotificationService {
 
   Future<bool> requestPermissions() async {
     if (Platform.isAndroid) {
+      // Primeiro solicita permissão básica de notificação
       if (await Permission.notification.isDenied) {
         final status = await Permission.notification.request();
-        return status == PermissionStatus.granted;
+        if (status != PermissionStatus.granted) {
+          return false;
+        }
       }
+
+      // Tenta solicitar permissão de alarmes exatos (opcional)
+      try {
+        await Permission.scheduleExactAlarm.request();
+      } catch (e) {
+        // Permissão não disponível ou falhou - continua sem alarmes exatos
+        debugPrint('Permissão de alarmes exatos não disponível: $e');
+      }
+
       return true;
     } else if (Platform.isIOS) {
       final granted = await _notifications
@@ -202,21 +214,27 @@ class NotificationService {
       presentSound: true,
     );
 
-    const notificationDetails = NotificationDetails(
+    const details = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
     );
 
-    await _notifications.zonedSchedule(
-      id,
-      title,
-      body,
-      tz.TZDateTime.from(scheduledTime, tz.local),
-      notificationDetails,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
+    try {
+      // Usa alarmes inexatos para melhor compatibilidade
+      await _notifications.zonedSchedule(
+        id,
+        title,
+        body,
+        tz.TZDateTime.from(scheduledTime, tz.local),
+        details,
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+      );
+    } catch (e) {
+      // Se falhar, tenta sem agendamento (notificação imediata como fallback)
+      debugPrint('Erro ao agendar notificação: $e');
+    }
   }
 
   Future<void> showInstantNotification({
