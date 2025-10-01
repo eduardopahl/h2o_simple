@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>h2osync</string>
+	<string>H2OSync</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -55,7 +55,11 @@
 	
 	<!-- User notification permission description -->
 	<key>NSUserNotificationsUsageDescription</key>
-	<string>Este app precisa enviar notificações para lembrá-lo de beber água regularmente e manter uma hidratação saudável.</string>
+	<string>H2OSync needs to send notifications to remind you to drink water regularly and maintain healthy hydration habits.</string>
+	
+	<!-- Portuguese description for Brazil App Store -->
+	<key>NSUserNotificationsUsageDescription_pt</key>
+	<string>O H2OSync precisa enviar notificações para lembrá-lo de beber água regularmente e manter hábitos saudáveis de hidratação.</string>
 	
 	<!-- Allow notifications while app is in background -->
 	<key>UIBackgroundTaskIdentifier</key>
