@@ -5,7 +5,7 @@ import '../../data/models/personal_data_model.dart';
 
 class FirstLaunchSetupDialog extends StatefulWidget {
   final Function(PersonalDataModel personalData, bool allowNotifications)
-      onComplete;
+  onComplete;
 
   const FirstLaunchSetupDialog({super.key, required this.onComplete});
 
@@ -109,13 +109,15 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Theme.of(context).colorScheme.primaryContainer
-              : Theme.of(context).colorScheme.surface,
+          color:
+              isSelected
+                  ? Theme.of(context).colorScheme.primaryContainer
+                  : Theme.of(context).colorScheme.surface,
           border: Border.all(
-            color: isSelected
-                ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.outline,
+            color:
+                isSelected
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.outline,
             width: isSelected ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(12),
@@ -125,18 +127,20 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
             Icon(
               icon,
               size: 28,
-              color: isSelected
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.onSurfaceVariant,
+              color:
+                  isSelected
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             const SizedBox(height: 6),
             Text(
               label,
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: isSelected
+                color:
+                    isSelected
                         ? Theme.of(context).colorScheme.primary
                         : Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+              ),
             ),
           ],
         ),
@@ -160,9 +164,8 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
         width: double.infinity,
-        height: keyboardHeight > 0
-            ? availableHeight * 0.85
-            : availableHeight * 0.7,
+        height:
+            keyboardHeight > 0 ? availableHeight * 0.85 : availableHeight * 0.7,
         constraints: BoxConstraints(
           maxHeight: keyboardHeight > 0 ? availableHeight * 0.85 : 600,
           minHeight: 400,
@@ -233,9 +236,12 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
             margin: EdgeInsets.only(right: index < 2 ? 8 : 0),
             height: 4,
             decoration: BoxDecoration(
-              color: index <= _currentPage
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+              color:
+                  index <= _currentPage
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(
+                        context,
+                      ).colorScheme.outline.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -339,13 +345,20 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}')),
             ],
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: 'Peso (kg)',
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
               suffixText: 'kg',
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              helperText: _getWeightHelperText(),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 16,
+              ),
             ),
-            onChanged: (_) => _calculateGoal(),
+            onChanged: (_) {
+              _calculateGoal();
+              setState(() {}); // Atualiza o helper text
+            },
           ),
           const SizedBox(height: 12),
 
@@ -358,7 +371,10 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
               labelText: 'Idade',
               border: OutlineInputBorder(),
               suffixText: 'anos',
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 16,
+              ),
             ),
             onChanged: (_) => _calculateGoal(),
           ),
@@ -398,7 +414,10 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
             value: _activityLevel,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 16,
+              ),
             ),
             items: const [
               DropdownMenuItem(
@@ -493,7 +512,10 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
                   border: OutlineInputBorder(),
                   suffixText: 'ml',
                   helperText: 'Recomendado: 1500ml - 3000ml',
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 16,
+                  ),
                 ),
               ),
             ),
@@ -523,8 +545,9 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
                       ),
                       Switch(
                         value: _allowNotifications,
-                        onChanged: (value) =>
-                            setState(() => _allowNotifications = value),
+                        onChanged:
+                            (value) =>
+                                setState(() => _allowNotifications = value),
                       ),
                     ],
                   ),
@@ -540,6 +563,19 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
         ],
       ),
     );
+  }
+
+  /// Retorna o texto helper para conversão de peso kg/lbs
+  String? _getWeightHelperText() {
+    final weightText = _weightController.text.trim();
+    if (weightText.isEmpty) return null;
+
+    final weightKg = double.tryParse(weightText);
+    if (weightKg == null) return null;
+
+    // Conversão: 1 kg = 2.20462 lbs
+    final weightLbs = (weightKg * 2.20462).toStringAsFixed(1);
+    return '≈ $weightLbs lbs';
   }
 
   Widget _buildNavigationButtons() {
