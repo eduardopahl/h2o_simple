@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../presentation/widgets/custom_snackbar.dart';
 import 'notification_service.dart';
 
 class FirstLaunchService {
@@ -119,13 +120,10 @@ class FirstLaunchDialog extends StatelessWidget {
 
             if (granted) {
               if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
+                CustomSnackBar.showSuccess(
+                  context,
+                  message:
                       '✅ Notificações ativadas! Configure os horários em Configurações.',
-                    ),
-                    backgroundColor: Colors.green,
-                  ),
                 );
               }
             }

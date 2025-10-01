@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../domain/entities/water_intake.dart';
 import '../theme/app_theme.dart';
+import 'custom_snackbar.dart';
 
 class FloatingAddButtons extends StatefulWidget {
   final bool isExpanded;
@@ -92,11 +93,9 @@ class _FloatingAddButtonsState extends State<FloatingAddButtons>
                 onPressed: () {
                   final text = controller.text.trim();
                   if (text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('Digite uma quantidade válida'),
-                        backgroundColor: AppTheme.errorColor,
-                      ),
+                    CustomSnackBar.showError(
+                      context,
+                      message: 'Digite uma quantidade válida',
                     );
                     return;
                   }
@@ -106,13 +105,9 @@ class _FloatingAddButtonsState extends State<FloatingAddButtons>
                     _addWater(amount.toDouble());
                     Navigator.of(context).pop();
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text(
-                          'Digite um valor entre 1 e 9999 ml',
-                        ),
-                        backgroundColor: AppTheme.errorColor,
-                      ),
+                    CustomSnackBar.showError(
+                      context,
+                      message: 'Digite um valor entre 1 e 9999 ml',
                     );
                   }
                 },

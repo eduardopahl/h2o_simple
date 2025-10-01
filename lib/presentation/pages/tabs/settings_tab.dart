@@ -4,6 +4,7 @@ import '../../providers/daily_goal_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/notification_settings_provider.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/custom_snackbar.dart';
 import '../../../core/services/notification_service.dart' as custom;
 
 class SettingsTab extends ConsumerWidget {
@@ -249,11 +250,9 @@ class SettingsTab extends ConsumerWidget {
               );
               if (!success && value) {
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Permissão para notificações negada'),
-                      backgroundColor: AppTheme.errorColor,
-                    ),
+                  CustomSnackBar.showError(
+                    context,
+                    message: 'Permissão para notificações negada',
                   );
                 }
               }
@@ -414,11 +413,9 @@ class SettingsTab extends ConsumerWidget {
                         .read(dailyGoalProvider.notifier)
                         .updateDailyTarget(newGoal);
                     Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Meta alterada para ${newGoal}ml'),
-                        backgroundColor: AppTheme.successColor,
-                      ),
+                    CustomSnackBar.showSuccess(
+                      context,
+                      message: 'Meta alterada para ${newGoal}ml',
                     );
                   }
                 },
@@ -446,11 +443,9 @@ class SettingsTab extends ConsumerWidget {
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Dados resetados com sucesso'),
-                      backgroundColor: AppTheme.warningColor,
-                    ),
+                  CustomSnackBar.showWarning(
+                    context,
+                    message: 'Dados resetados com sucesso',
                   );
                 },
                 style: ElevatedButton.styleFrom(
