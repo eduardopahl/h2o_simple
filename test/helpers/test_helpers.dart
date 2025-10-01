@@ -25,10 +25,7 @@ class TestHelper {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        supportedLocales: const [
-          Locale('en'),
-          Locale('pt'),
-        ],
+        supportedLocales: const [Locale('en'), Locale('pt')],
       ),
     );
   }
@@ -49,15 +46,8 @@ class TestHelper {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        supportedLocales: const [
-          Locale('en'),
-          Locale('pt'),
-        ],
-        home: const Scaffold(
-          body: Center(
-            child: Text('Test Home'),
-          ),
-        ),
+        supportedLocales: const [Locale('en'), Locale('pt')],
+        home: const Scaffold(body: Center(child: Text('Test Home'))),
       ),
     );
   }

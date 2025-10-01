@@ -30,12 +30,13 @@ void main() {
       const gender = Gender.male;
 
       // Act
-      final sedentaryGoal = HydrationCalculatorService.calculateDailyWaterIntake(
-        weightKg: weightKg,
-        ageYears: ageYears,
-        gender: gender,
-        activityLevel: ActivityLevel.sedentary,
-      );
+      final sedentaryGoal =
+          HydrationCalculatorService.calculateDailyWaterIntake(
+            weightKg: weightKg,
+            ageYears: ageYears,
+            gender: gender,
+            activityLevel: ActivityLevel.sedentary,
+          );
 
       final activeGoal = HydrationCalculatorService.calculateDailyWaterIntake(
         weightKg: weightKg,
@@ -54,19 +55,21 @@ void main() {
       const activityLevel = ActivityLevel.moderate;
 
       // Act
-      final lightPersonGoal = HydrationCalculatorService.calculateDailyWaterIntake(
-        weightKg: 50.0,
-        ageYears: ageYears,
-        gender: Gender.female,
-        activityLevel: activityLevel,
-      );
+      final lightPersonGoal =
+          HydrationCalculatorService.calculateDailyWaterIntake(
+            weightKg: 50.0,
+            ageYears: ageYears,
+            gender: Gender.female,
+            activityLevel: activityLevel,
+          );
 
-      final heavyPersonGoal = HydrationCalculatorService.calculateDailyWaterIntake(
-        weightKg: 90.0,
-        ageYears: ageYears,
-        gender: Gender.male,
-        activityLevel: activityLevel,
-      );
+      final heavyPersonGoal =
+          HydrationCalculatorService.calculateDailyWaterIntake(
+            weightKg: 90.0,
+            ageYears: ageYears,
+            gender: Gender.male,
+            activityLevel: activityLevel,
+          );
 
       // Assert
       expect(heavyPersonGoal, greaterThan(lightPersonGoal));
@@ -220,13 +223,19 @@ void main() {
 
       // Assert
       // Sedentary should be lowest, extreme should be highest
-      expect(results[ActivityLevel.sedentary]!, 
-             lessThan(results[ActivityLevel.moderate]!));
-      expect(results[ActivityLevel.moderate]!, 
-             lessThan(results[ActivityLevel.intense]!));
-      expect(results[ActivityLevel.intense]!, 
-             lessThan(results[ActivityLevel.extreme]!));
-      
+      expect(
+        results[ActivityLevel.sedentary]!,
+        lessThan(results[ActivityLevel.moderate]!),
+      );
+      expect(
+        results[ActivityLevel.moderate]!,
+        lessThan(results[ActivityLevel.intense]!),
+      );
+      expect(
+        results[ActivityLevel.intense]!,
+        lessThan(results[ActivityLevel.extreme]!),
+      );
+
       // All results should be reasonable
       for (final result in results.values) {
         expect(result, greaterThan(1000));

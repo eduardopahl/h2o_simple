@@ -39,7 +39,9 @@ void main() {
       expect(find.textContaining('2000'), findsWidgets);
     });
 
-    testWidgets('should display animated droplets when over goal', (tester) async {
+    testWidgets('should display animated droplets when over goal', (
+      tester,
+    ) async {
       // Arrange
       await tester.pumpWidget(
         TestHelper.createTestApp(
@@ -73,17 +75,13 @@ void main() {
         isOverGoal: false,
       );
 
-      await tester.pumpWidget(
-        TestHelper.createTestApp(child: initialWidget),
-      );
+      await tester.pumpWidget(TestHelper.createTestApp(child: initialWidget));
 
       // Initial state
       expect(find.text('1000'), findsOneWidget);
 
       // Act - Update the widget
-      await tester.pumpWidget(
-        TestHelper.createTestApp(child: updatedWidget),
-      );
+      await tester.pumpWidget(TestHelper.createTestApp(child: updatedWidget));
 
       // Allow some animation time
       await tester.pump(const Duration(milliseconds: 100));

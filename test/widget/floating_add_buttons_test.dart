@@ -16,10 +16,9 @@ void main() {
 
       // Act
       await tester.pumpWidget(
-        TestHelper.createTestApp(child: Scaffold(
-          floatingActionButton: widget,
-          body: Container(),
-        )),
+        TestHelper.createTestApp(
+          child: Scaffold(floatingActionButton: widget, body: Container()),
+        ),
       );
       await tester.pump();
 
@@ -28,7 +27,9 @@ void main() {
       expect(find.byIcon(Icons.add), findsOneWidget);
     });
 
-    testWidgets('should display expanded state when isExpanded is true', (tester) async {
+    testWidgets('should display expanded state when isExpanded is true', (
+      tester,
+    ) async {
       // Arrange
       final widget = FloatingAddButtons(
         isExpanded: true,
@@ -38,10 +39,9 @@ void main() {
 
       // Act
       await tester.pumpWidget(
-        TestHelper.createTestApp(child: Scaffold(
-          floatingActionButton: widget,
-          body: Container(),
-        )),
+        TestHelper.createTestApp(
+          child: Scaffold(floatingActionButton: widget, body: Container()),
+        ),
       );
       await tester.pumpAndSettle();
 
@@ -50,7 +50,9 @@ void main() {
       expect(find.byIcon(Icons.close), findsOneWidget);
     });
 
-    testWidgets('should call onToggle when main button is tapped', (tester) async {
+    testWidgets('should call onToggle when main button is tapped', (
+      tester,
+    ) async {
       // Arrange
       bool toggleCalled = false;
 
@@ -64,10 +66,9 @@ void main() {
 
       // Act
       await tester.pumpWidget(
-        TestHelper.createTestApp(child: Scaffold(
-          floatingActionButton: widget,
-          body: Container(),
-        )),
+        TestHelper.createTestApp(
+          child: Scaffold(floatingActionButton: widget, body: Container()),
+        ),
       );
       await tester.pump();
 
@@ -79,63 +80,66 @@ void main() {
       expect(toggleCalled, isTrue);
     });
 
-    testWidgets('should call onAddWater with correct amount when quick button is tapped', (tester) async {
-      // Arrange
-      WaterIntake? receivedWaterIntake;
+    testWidgets(
+      'should call onAddWater with correct amount when quick button is tapped',
+      (tester) async {
+        // Arrange
+        WaterIntake? receivedWaterIntake;
 
-      final widget = FloatingAddButtons(
-        isExpanded: true,
-        onToggle: () {},
-        onAddWater: (waterIntake) {
-          receivedWaterIntake = waterIntake;
-        },
-      );
+        final widget = FloatingAddButtons(
+          isExpanded: true,
+          onToggle: () {},
+          onAddWater: (waterIntake) {
+            receivedWaterIntake = waterIntake;
+          },
+        );
 
-      // Act
-      await tester.pumpWidget(
-        TestHelper.createTestApp(child: Scaffold(
-          floatingActionButton: widget,
-          body: Container(),
-        )),
-      );
-      await tester.pumpAndSettle();
-
-      // Find quick add buttons (should have text with ml amounts)
-      final quickButtons = find.byType(FloatingActionButton);
-      expect(quickButtons.evaluate().length, greaterThan(1));
-
-      // Tap a quick add button (not the main toggle button)
-      final buttons = quickButtons.evaluate().toList();
-      if (buttons.length > 1) {
-        await tester.tap(quickButtons.at(1));
+        // Act
+        await tester.pumpWidget(
+          TestHelper.createTestApp(
+            child: Scaffold(floatingActionButton: widget, body: Container()),
+          ),
+        );
         await tester.pumpAndSettle();
-      }
 
-      // Assert
-      expect(receivedWaterIntake, isNotNull);
-      if (receivedWaterIntake != null) {
-        expect(receivedWaterIntake!.amount, greaterThan(0));
-      }
-    });
+        // Find quick add buttons (should have text with ml amounts)
+        final quickButtons = find.byType(FloatingActionButton);
+        expect(quickButtons.evaluate().length, greaterThan(1));
+
+        // Tap a quick add button (not the main toggle button)
+        final buttons = quickButtons.evaluate().toList();
+        if (buttons.length > 1) {
+          await tester.tap(quickButtons.at(1));
+          await tester.pumpAndSettle();
+        }
+
+        // Assert
+        expect(receivedWaterIntake, isNotNull);
+        if (receivedWaterIntake != null) {
+          expect(receivedWaterIntake!.amount, greaterThan(0));
+        }
+      },
+    );
 
     testWidgets('should handle state changes correctly', (tester) async {
       // Arrange
       bool isExpanded = false;
-      
+
       Widget buildWidget() => TestHelper.createTestApp(
         child: StatefulBuilder(
-          builder: (context, setState) => Scaffold(
-            floatingActionButton: FloatingAddButtons(
-              isExpanded: isExpanded,
-              onToggle: () {
-                setState(() {
-                  isExpanded = !isExpanded;
-                });
-              },
-              onAddWater: (waterIntake) {},
-            ),
-            body: Container(),
-          ),
+          builder:
+              (context, setState) => Scaffold(
+                floatingActionButton: FloatingAddButtons(
+                  isExpanded: isExpanded,
+                  onToggle: () {
+                    setState(() {
+                      isExpanded = !isExpanded;
+                    });
+                  },
+                  onAddWater: (waterIntake) {},
+                ),
+                body: Container(),
+              ),
         ),
       );
 
@@ -156,7 +160,9 @@ void main() {
       expect(find.byType(FloatingActionButton), findsAtLeastNWidgets(3));
     });
 
-    testWidgets('should show custom amount button when expanded', (tester) async {
+    testWidgets('should show custom amount button when expanded', (
+      tester,
+    ) async {
       // Arrange
       final widget = FloatingAddButtons(
         isExpanded: true,
@@ -166,10 +172,9 @@ void main() {
 
       // Act
       await tester.pumpWidget(
-        TestHelper.createTestApp(child: Scaffold(
-          floatingActionButton: widget,
-          body: Container(),
-        )),
+        TestHelper.createTestApp(
+          child: Scaffold(floatingActionButton: widget, body: Container()),
+        ),
       );
       await tester.pumpAndSettle();
 
@@ -182,21 +187,22 @@ void main() {
     testWidgets('should handle animation properly', (tester) async {
       // Arrange
       bool isExpanded = false;
-      
+
       Widget buildWidget() => TestHelper.createTestApp(
         child: StatefulBuilder(
-          builder: (context, setState) => Scaffold(
-            floatingActionButton: FloatingAddButtons(
-              isExpanded: isExpanded,
-              onToggle: () {
-                setState(() {
-                  isExpanded = !isExpanded;
-                });
-              },
-              onAddWater: (waterIntake) {},
-            ),
-            body: Container(),
-          ),
+          builder:
+              (context, setState) => Scaffold(
+                floatingActionButton: FloatingAddButtons(
+                  isExpanded: isExpanded,
+                  onToggle: () {
+                    setState(() {
+                      isExpanded = !isExpanded;
+                    });
+                  },
+                  onAddWater: (waterIntake) {},
+                ),
+                body: Container(),
+              ),
         ),
       );
 
@@ -206,7 +212,7 @@ void main() {
 
       // Start animation
       await tester.tap(find.byIcon(Icons.add));
-      
+
       // Check intermediate states
       await tester.pump(const Duration(milliseconds: 50));
       await tester.pump(const Duration(milliseconds: 100));
@@ -227,10 +233,9 @@ void main() {
 
       // Act & Assert
       await tester.pumpWidget(
-        TestHelper.createTestApp(child: Scaffold(
-          floatingActionButton: widget,
-          body: Container(),
-        )),
+        TestHelper.createTestApp(
+          child: Scaffold(floatingActionButton: widget, body: Container()),
+        ),
       );
       await tester.pump();
 

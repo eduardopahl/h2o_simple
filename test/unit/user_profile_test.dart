@@ -98,8 +98,14 @@ void main() {
       expect(updatedProfile.id, equals(originalProfile.id));
       expect(updatedProfile.name, equals('Updated Name'));
       expect(updatedProfile.weight, equals(85));
-      expect(updatedProfile.defaultDailyGoal, equals(originalProfile.defaultDailyGoal));
-      expect(updatedProfile.notificationsEnabled, equals(originalProfile.notificationsEnabled));
+      expect(
+        updatedProfile.defaultDailyGoal,
+        equals(originalProfile.defaultDailyGoal),
+      );
+      expect(
+        updatedProfile.notificationsEnabled,
+        equals(originalProfile.notificationsEnabled),
+      );
     });
 
     test('should maintain equality when comparing identical profiles', () {
@@ -155,7 +161,10 @@ void main() {
       expect(userProfile.minutesToTimeString(360), equals('06:00')); // 6:00 AM
       expect(userProfile.minutesToTimeString(540), equals('09:00')); // 9:00 AM
       expect(userProfile.minutesToTimeString(750), equals('12:30')); // 12:30 PM
-      expect(userProfile.minutesToTimeString(1440), equals('24:00')); // Next day
+      expect(
+        userProfile.minutesToTimeString(1440),
+        equals('24:00'),
+      ); // Next day
     });
   });
 }
