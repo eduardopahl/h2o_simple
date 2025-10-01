@@ -313,21 +313,7 @@ class NotificationService {
     if (!shouldSend) {
       // Meta alcançada - cancela notificações do resto do dia
       await _cancelTodayNotifications();
-
-      // Opcionalmente, mostra notificação de parabéns (apenas uma vez por dia)
-      await _showGoalCompletedNotificationIfNeeded();
     }
-  }
-
-  Future<void> _showGoalCompletedNotificationIfNeeded() async {
-    // Implementação futura: verificar se já mostrou notificação de parabéns hoje
-    // Por enquanto, vamos apenas mostrar
-    await showInstantNotification(
-      title: 'H2O Simple - Meta Alcançada! 🎉',
-      body:
-          '💧 Parabéns! Você atingiu sua meta de hidratação hoje! Continue assim!',
-      checkGoal: false, // Não verifica meta para notificação de parabéns
-    );
   }
 
   Future<List<PendingNotificationRequest>> getPendingNotifications() async {

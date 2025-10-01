@@ -36,6 +36,11 @@ class _DailyTabState extends ConsumerState<DailyTab> {
 
   @override
   Widget build(BuildContext context) {
+    // Define o contexto no provider para permitir mostrar dialogs
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(dailyWaterIntakeProvider.notifier).setContext(context);
+    });
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.transparent,
