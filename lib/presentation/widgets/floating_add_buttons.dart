@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../domain/entities/water_intake.dart';
 import '../theme/app_theme.dart';
-import 'custom_snackbar.dart';
+import '../dialogs/custom_amount_dialog.dart';
 
 class FloatingAddButtons extends StatefulWidget {
   final bool isExpanded;
@@ -63,64 +63,9 @@ class _FloatingAddButtonsState extends State<FloatingAddButtons>
   }
 
   void _showCustomAmountDialog(BuildContext context) {
-    final TextEditingController controller = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            title: const Text('Quantidade Personalizada'),
-            content: TextField(
-              controller: controller,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: const InputDecoration(
-                labelText: 'Quantidade (ml)',
-                border: OutlineInputBorder(),
-                suffixText: 'ml',
-              ),
-              autofocus: true,
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cancelar'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  final text = controller.text.trim();
-                  if (text.isEmpty) {
-                    CustomSnackBar.showError(
-                      context,
-                      message: 'Digite uma quantidade válida',
-                    );
-                    return;
-                  }
-
-                  final amount = int.tryParse(text);
-                  if (amount != null && amount > 0 && amount <= 9999) {
-                    _addWater(amount.toDouble());
-                    Navigator.of(context).pop();
-                  } else {
-                    CustomSnackBar.showError(
-                      context,
-                      message: 'Digite um valor entre 1 e 9999 ml',
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.lightBlue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text('Adicionar'),
-              ),
-            ],
-          ),
+    showCustomAmountDialog(
+      context,
+      onAmountSelected: (amount) => _addWater(amount.toDouble()),
     );
   }
 

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../domain/entities/water_intake.dart';
 import '../../providers/daily_water_intake_provider.dart';
 import '../../providers/daily_goal_provider.dart';
+import '../../controllers/water_intake_controller.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/physics_water_container.dart';
 import '../../widgets/water_progress_display.dart';
@@ -36,9 +37,23 @@ class _DailyTabState extends ConsumerState<DailyTab> {
 
   @override
   Widget build(BuildContext context) {
-    // Define o contexto no provider para permitir mostrar dialogs
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(dailyWaterIntakeProvider.notifier).setContext(context);
+    // Escuta mudanças no provider e processa eventos
+    ref.listen<AsyncValue<List<WaterIntake>>>(dailyWaterIntakeProvider, (
+      previous,
+      next,
+    ) {
+      if (!context.mounted) return;
+
+      final notifier = ref.read(dailyWaterIntakeProvider.notifier);
+      final events = notifier.events;
+
+      // Processa novos eventos
+      for (final event in events) {
+        WaterIntakeController.handleEvent(context, event);
+      }
+
+      // Limpa eventos processados
+      notifier.clearEvents();
     });
 
     return SafeArea(

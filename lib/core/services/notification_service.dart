@@ -3,13 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/timezone.dart' as tz;
-import '../../data/repositories/daily_goal_repository_impl.dart';
-import '../../data/repositories/water_intake_repository_impl.dart';
+import '../../domain/repositories/daily_goal_repository.dart';
+import '../../domain/repositories/water_intake_repository.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
   factory NotificationService() => _instance;
   NotificationService._internal();
+
+  // Dependency injection - repositories como interfaces
+  DailyGoalRepository? _goalRepository;
+  WaterIntakeRepository? _intakeRepository;
+
+  /// Configura as dependências do service
+  void configureDependencies({
+    required DailyGoalRepository goalRepository,
+    required WaterIntakeRepository intakeRepository,
+  }) {
+    _goalRepository = goalRepository;
+    _intakeRepository = intakeRepository;
+  }
 
   static final FlutterLocalNotificationsPlugin _notifications =
       FlutterLocalNotificationsPlugin();
@@ -163,27 +176,33 @@ class NotificationService {
   }
 
   Future<bool> _shouldSendNotification() async {
-    try {
-      final goalRepository = DailyGoalRepositoryImpl();
-      final intakeRepository = WaterIntakeRepositoryImpl();
+    // Verifica se as dependências foram configuradas
+    if (_goalRepository == null || _intakeRepository == null) {
+      debugPrint(
+        'NotificationService: Dependências não configuradas, enviando notificação por padrão',
+      );
+      return true;
+    }
 
+    try {
       final today = DateTime.now();
-      final goal = await goalRepository.getDailyGoalByDate(today);
+      final goal = await _goalRepository!.getDailyGoalByDate(today);
 
       if (goal == null) {
         // Se não há meta definida, assume meta padrão de 2000ml
-        final currentTotal = await intakeRepository.getTotalWaterIntakeByDate(
+        final currentTotal = await _intakeRepository!.getTotalWaterIntakeByDate(
           today,
         );
         return currentTotal < 2000;
       }
 
-      final currentTotal = await intakeRepository.getTotalWaterIntakeByDate(
+      final currentTotal = await _intakeRepository!.getTotalWaterIntakeByDate(
         today,
       );
       // Só envia notificação se a meta ainda não foi alcançada
       return currentTotal < goal.targetAmount;
     } catch (e) {
+      debugPrint('NotificationService: Erro ao verificar meta - $e');
       // Em caso de erro, envia a notificação (comportamento padrão)
       return true;
     }

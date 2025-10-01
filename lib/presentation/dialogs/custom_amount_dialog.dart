@@ -1,0 +1,94 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import '../theme/app_theme.dart';
+import '../widgets/custom_snackbar.dart';
+
+class CustomAmountDialog extends StatefulWidget {
+  final Function(int amount) onAmountSelected;
+
+  const CustomAmountDialog({super.key, required this.onAmountSelected});
+
+  @override
+  State<CustomAmountDialog> createState() => _CustomAmountDialogState();
+}
+
+class _CustomAmountDialogState extends State<CustomAmountDialog> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _handleSubmit() {
+    final text = _controller.text.trim();
+
+    if (text.isEmpty) {
+      CustomSnackBar.showError(
+        context,
+        message: 'Digite uma quantidade válida',
+      );
+      return;
+    }
+
+    final amount = int.tryParse(text);
+    if (amount != null && amount > 0 && amount <= 9999) {
+      widget.onAmountSelected(amount);
+      Navigator.of(context).pop();
+    } else {
+      CustomSnackBar.showError(
+        context,
+        message: 'Digite um valor entre 1 e 9999 ml',
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: const Text('Quantidade Personalizada'),
+      content: TextField(
+        controller: _controller,
+        keyboardType: TextInputType.number,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        decoration: const InputDecoration(
+          labelText: 'Quantidade (ml)',
+          border: OutlineInputBorder(),
+          suffixText: 'ml',
+        ),
+        autofocus: true,
+        onSubmitted: (_) => _handleSubmit(),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancelar'),
+        ),
+        ElevatedButton(
+          onPressed: _handleSubmit,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppTheme.lightBlue,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          child: const Text('Adicionar'),
+        ),
+      ],
+    );
+  }
+}
+
+/// Função helper para mostrar o dialog
+Future<void> showCustomAmountDialog(
+  BuildContext context, {
+  required Function(int amount) onAmountSelected,
+}) async {
+  await showDialog(
+    context: context,
+    builder:
+        (context) => CustomAmountDialog(onAmountSelected: onAmountSelected),
+  );
+}

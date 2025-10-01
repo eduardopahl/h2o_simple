@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../presentation/widgets/custom_snackbar.dart';
 import 'notification_service.dart';
 
 class FirstLaunchService {
@@ -8,26 +6,36 @@ class FirstLaunchService {
   static const String _notificationPermissionKey =
       'notification_permission_requested';
 
+  /// Verifica se é o primeiro acesso ao app
   static Future<bool> isFirstLaunch() async {
     final prefs = await SharedPreferences.getInstance();
     return !(prefs.getBool(_firstLaunchKey) ?? false);
   }
 
+  /// Verifica se deve mostrar o dialog de primeiro acesso
+  static Future<bool> shouldShowFirstLaunchDialog() async {
+    return await isFirstLaunch();
+  }
+
+  /// Marca o primeiro acesso como completo
   static Future<void> markFirstLaunchCompleted() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_firstLaunchKey, true);
   }
 
+  /// Verifica se a permissão de notificação já foi solicitada
   static Future<bool> wasNotificationPermissionRequested() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(_notificationPermissionKey) ?? false;
   }
 
+  /// Marca que a permissão de notificação foi solicitada
   static Future<void> markNotificationPermissionRequested() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_notificationPermissionKey, true);
   }
 
+  /// Solicita permissão de notificação na primeira vez
   static Future<bool> requestFirstTimeNotificationPermission() async {
     if (await wasNotificationPermissionRequested()) {
       return false; // Já foi solicitado antes
@@ -40,99 +48,5 @@ class FirstLaunchService {
     await markNotificationPermissionRequested();
 
     return granted;
-  }
-}
-
-class FirstLaunchDialog extends StatelessWidget {
-  final VoidCallback onComplete;
-
-  const FirstLaunchDialog({super.key, required this.onComplete});
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      title: Row(
-        children: [
-          Icon(
-            Icons.water_drop,
-            color: Theme.of(context).colorScheme.primary,
-            size: 28,
-          ),
-          const SizedBox(width: 8),
-          const Text('Bem-vindo ao H2O Simple!'),
-        ],
-      ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Para ajudá-lo a manter uma hidratação saudável, gostaríamos de enviar lembretes para beber água.',
-            style: TextStyle(fontSize: 16),
-          ),
-          const SizedBox(height: 16),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.notifications_outlined,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'Você poderá personalizar os horários e intervalos nas configurações.',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () async {
-            Navigator.of(context).pop();
-            await FirstLaunchService.markNotificationPermissionRequested();
-            await FirstLaunchService.markFirstLaunchCompleted();
-            onComplete();
-          },
-          child: const Text('Agora não'),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            Navigator.of(context).pop();
-
-            // Solicita permissão
-            final granted =
-                await FirstLaunchService.requestFirstTimeNotificationPermission();
-            await FirstLaunchService.markFirstLaunchCompleted();
-
-            if (granted) {
-              if (context.mounted) {
-                CustomSnackBar.showSuccess(
-                  context,
-                  message:
-                      '✅ Notificações ativadas! Configure os horários em Configurações.',
-                );
-              }
-            }
-
-            onComplete();
-          },
-          child: const Text('Permitir Notificações'),
-        ),
-      ],
-    );
   }
 }

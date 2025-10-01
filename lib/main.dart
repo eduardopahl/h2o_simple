@@ -5,7 +5,8 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'presentation/theme/app_theme.dart';
 import 'presentation/pages/main_tab_view.dart';
 import 'presentation/providers/theme_provider.dart';
-import 'core/services/notification_service.dart';
+import 'presentation/providers/notification_service_provider.dart';
+import 'presentation/controllers/first_launch_controller.dart';
 import 'core/services/first_launch_service.dart';
 
 void main() async {
@@ -16,9 +17,6 @@ void main() async {
   // Initialize timezone data for notifications
   tz.initializeTimeZones();
 
-  // Initialize notification service
-  await NotificationService().initialize();
-
   runApp(const ProviderScope(child: H2OSimpleApp()));
 }
 
@@ -28,6 +26,9 @@ class H2OSimpleApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeProvider);
+
+    // Inicializa o notification service em background
+    ref.watch(notificationServiceInitializerProvider);
 
     return MaterialApp(
       title: 'H2O Simple',
@@ -67,22 +68,9 @@ class _FirstLaunchWrapperState extends State<FirstLaunchWrapper> {
     if (isFirstLaunch) {
       // Aguarda um frame para garantir que o widget está construído
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _showFirstLaunchNotificationDialog();
+        FirstLaunchController.handleFirstLaunch(context);
       });
     }
-  }
-
-  void _showFirstLaunchNotificationDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder:
-          (context) => FirstLaunchDialog(
-            onComplete: () {
-              // Dialog será fechado automaticamente pelo Navigator.pop()
-            },
-          ),
-    );
   }
 
   @override
