@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:h2o_simple/presentation/theme/app_theme.dart';
+import 'package:h2osync/presentation/theme/app_theme.dart';
 
 /// Helper class to create test widgets with all necessary providers and localizations
 class TestHelper {

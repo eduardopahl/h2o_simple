@@ -76,8 +76,8 @@ lib/
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/eduardopahl/h2osync.git
-cd h2osync
+git clone https://github.com/eduardopahl/h2o_simple.git
+cd h2o_simple
 ```
 
 2. Install dependencies:

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:h2o_simple/domain/entities/user_profile.dart';
+import 'package:h2osync/domain/entities/user_profile.dart';
 
 void main() {
   group('UserProfile Entity Tests', () {

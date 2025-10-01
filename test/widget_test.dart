@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:h2o_simple/main.dart';
+import 'package:h2osync/main.dart';
 
 void main() {
   group('H2O Simple App Tests', () {
     testWidgets('H2O Simple app smoke test', (WidgetTester tester) async {
       // Build our app and trigger a frame.
-      await tester.pumpWidget(const ProviderScope(child: H2OSimpleApp()));
+      await tester.pumpWidget(const ProviderScope(child: H2OSyncApp()));
 
       // Wait for first frame
       await tester.pump();
@@ -24,7 +24,7 @@ void main() {
       WidgetTester tester,
     ) async {
       // Build the app
-      await tester.pumpWidget(const ProviderScope(child: H2OSimpleApp()));
+      await tester.pumpWidget(const ProviderScope(child: H2OSyncApp()));
       await tester.pump();
 
       // Verify the app doesn't crash on basic interactions
@@ -45,11 +45,11 @@ void main() {
       WidgetTester tester,
     ) async {
       // Build the app
-      await tester.pumpWidget(const ProviderScope(child: H2OSimpleApp()));
+      await tester.pumpWidget(const ProviderScope(child: H2OSyncApp()));
       await tester.pump();
 
       // Rebuild the app (simulating hot reload)
-      await tester.pumpWidget(const ProviderScope(child: H2OSimpleApp()));
+      await tester.pumpWidget(const ProviderScope(child: H2OSyncApp()));
       await tester.pumpAndSettle();
 
       // Should still have the basic structure
@@ -66,7 +66,7 @@ void main() {
           overrides: [
             // Empty overrides to test the mechanism
           ],
-          child: const H2OSimpleApp(),
+          child: const H2OSyncApp(),
         ),
       );
       await tester.pump();

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:h2o_simple/main.dart';
+import 'package:h2osync/main.dart';
 
 void main() {
   group('H2O Simple Integration Tests', () {
     testWidgets('should render app without errors', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(ProviderScope(child: H2OSimpleApp()));
+      await tester.pumpWidget(ProviderScope(child: H2OSyncApp()));
 
       // Wait for initial render
       await tester.pump();
@@ -18,7 +18,7 @@ void main() {
 
     testWidgets('should contain basic app structure', (tester) async {
       // Arrange
-      await tester.pumpWidget(ProviderScope(child: H2OSimpleApp()));
+      await tester.pumpWidget(ProviderScope(child: H2OSyncApp()));
 
       // Act
       await tester.pump();
@@ -30,7 +30,7 @@ void main() {
 
     testWidgets('should handle widget rendering', (tester) async {
       // Arrange
-      await tester.pumpWidget(ProviderScope(child: H2OSimpleApp()));
+      await tester.pumpWidget(ProviderScope(child: H2OSyncApp()));
 
       // Act
       await tester.pump();
@@ -49,25 +49,25 @@ void main() {
 
     testWidgets('should handle app initialization', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(ProviderScope(child: H2OSimpleApp()));
+      await tester.pumpWidget(ProviderScope(child: H2OSyncApp()));
 
       await tester.pump();
 
       // Assert
       expect(find.byType(MaterialApp), findsOneWidget);
-      expect(find.byType(H2OSimpleApp), findsOneWidget);
+      expect(find.byType(H2OSyncApp), findsOneWidget);
     });
 
     testWidgets('should have proper widget hierarchy', (tester) async {
       // Arrange
-      await tester.pumpWidget(ProviderScope(child: H2OSimpleApp()));
+      await tester.pumpWidget(ProviderScope(child: H2OSyncApp()));
 
       // Act
       await tester.pump();
 
       // Assert - Check widget hierarchy
       expect(find.byType(ProviderScope), findsOneWidget);
-      expect(find.byType(H2OSimpleApp), findsOneWidget);
+      expect(find.byType(H2OSyncApp), findsOneWidget);
       expect(find.byType(MaterialApp), findsOneWidget);
     });
   });

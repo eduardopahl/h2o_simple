@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:h2o_simple/presentation/widgets/water_progress_display.dart';
+import 'package:h2osync/presentation/widgets/water_progress_display.dart';
 import '../helpers/test_helpers.dart';
 
 void main() {

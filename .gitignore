@@ -43,3 +43,44 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Security - Sensitive configuration files
+# Never commit these files with real credentials!
+/android/key.properties
+/android/app/upload-keystore.jks
+/android/app/key.jks
+*.keystore
+*.jks
+
+# iOS signing
+/ios/Runner/GoogleService-Info.plist
+/ios/GoogleService-Info.plist
+/ios/firebase_app_id_file.json
+/ios/Runner.xcodeproj/project.pbxproj.backup
+
+# Firebase and API keys
+/lib/firebase_options.dart
+google-services.json
+GoogleService-Info.plist
+.env
+.env.local
+.env.production
+.env.development
+
+# Store credentials and configs
+/fastlane/report.xml
+/fastlane/Preview.html
+/fastlane/screenshots
+/fastlane/test_output
+/android/fastlane/report.xml
+/ios/fastlane/report.xml
+
+# Personal developer configs
+local.properties
+**/local.properties
+key.properties
+**/key.properties
+
+# App Store Connect API
+/private_keys/
+AuthKey_*.p8

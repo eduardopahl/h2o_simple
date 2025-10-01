@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:h2o_simple/presentation/widgets/floating_add_buttons.dart';
-import 'package:h2o_simple/domain/entities/water_intake.dart';
+import 'package:h2osync/presentation/widgets/floating_add_buttons.dart';
+import 'package:h2osync/domain/entities/water_intake.dart';
 import '../helpers/test_helpers.dart';
 
 void main() {

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:h2o_simple/core/services/hydration_calculator_service.dart';
+import 'package:h2osync/core/services/hydration_calculator_service.dart';
 
 void main() {
   group('HydrationCalculatorService Tests', () {
