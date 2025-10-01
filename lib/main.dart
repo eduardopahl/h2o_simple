@@ -42,14 +42,14 @@ class H2OSimpleApp extends ConsumerWidget {
   }
 }
 
-class FirstLaunchWrapper extends StatefulWidget {
+class FirstLaunchWrapper extends ConsumerStatefulWidget {
   const FirstLaunchWrapper({super.key});
 
   @override
-  State<FirstLaunchWrapper> createState() => _FirstLaunchWrapperState();
+  ConsumerState<FirstLaunchWrapper> createState() => _FirstLaunchWrapperState();
 }
 
-class _FirstLaunchWrapperState extends State<FirstLaunchWrapper> {
+class _FirstLaunchWrapperState extends ConsumerState<FirstLaunchWrapper> {
   bool _isLoading = true;
 
   @override
@@ -68,7 +68,7 @@ class _FirstLaunchWrapperState extends State<FirstLaunchWrapper> {
     if (isFirstLaunch) {
       // Aguarda um frame para garantir que o widget está construído
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        FirstLaunchController.handleFirstLaunch(context);
+        FirstLaunchController.handleFirstLaunch(context, ref);
       });
     }
   }
