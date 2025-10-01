@@ -1,11 +1,11 @@
 {
   "@@locale": "en",
-  "appTitle": "H2O Simple",
+    "appTitle": "H2OSync",
   "@appTitle": {
     "description": "The application title"
   },
 
-  "welcomeTitle": "Welcome to H2O Simple!",
+  "welcomeTitle": "Welcome to H2OSync!",
   "@welcomeTitle": {
     "description": "Welcome dialog title"
   },
@@ -248,7 +248,7 @@
     "description": "About section title"
   },
 
-  "aboutH2OSimple": "About H2O Simple",
+  "aboutH2OSimple": "About H2OSync",
   "@aboutH2OSimple": {
     "description": "About dialog title"
   },
@@ -539,7 +539,7 @@
     "description": "Reset data confirmation message"
   },
 
-  "loading": "Loading H2O Simple...",
+  "loading": "Loading H2OSync...",
   "@loading": {
     "description": "Loading screen text"
   },
@@ -609,12 +609,12 @@
     "description": "Reset data description"
   },
 
-  "aboutH2OSimple": "About H2O Simple",
+  "aboutH2OSimple": "About H2OSync",
   "@aboutH2OSimple": {
     "description": "About dialog title"
   },
 
-  "appVersion": "H2O Simple v1.0.0",
+  "appVersion": "H2OSync v1.0.0",
   "@appVersion": {
     "description": "App version in about dialog"
   },
@@ -709,7 +709,7 @@
     }
   },
 
-  "welcomeToH2O": "Welcome to H2O Simple!",
+  "welcomeToH2O": "Welcome to H2OSync!",
   "@welcomeToH2O": {
     "description": "Welcome dialog title"
   },
@@ -939,7 +939,7 @@
     "description": "Notification customization info text"
   },
 
-  "welcomeToH2OSimple": "Welcome to H2O Simple!",
+  "welcomeToH2OSimple": "Welcome to H2OSync!",
   "@welcomeToH2OSimple": {
     "description": "Welcome title in setup dialog"
   },
@@ -1074,7 +1074,7 @@
     "description": "Water intake deletion confirmation message"
   },
 
-  "testNotificationTitle": "H2O Simple - Test",
+  "testNotificationTitle": "H2OSync - Test",
   "@testNotificationTitle": {
     "description": "Test notification title"
   },

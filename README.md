@@ -1,10 +1,10 @@
-# H2O Simple 💧
+# H2OSync 💧
 
 A simple Flutter app to track your daily water intake with full internationalization support.
 
 ## 📱 About the App
 
-H2O Simple is a hydration tracking app that helps you keep your water levels on track. With a clean and intuitive interface, you can easily log your water intake and monitor your progress over time. The app supports multiple languages and automatically adapts to your device's language settings.
+H2OSync is a hydration tracking app that helps you keep your water levels on track. With a clean and intuitive interface, you can easily log your water intake and monitor your progress over time. The app supports multiple languages and automatically adapts to your device's language settings.
 
 ### ✨ Features
 
@@ -76,8 +76,8 @@ lib/
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/eduardopahl/h2o_simple.git
-cd h2o_simple
+git clone https://github.com/eduardopahl/h2osync.git
+cd h2osync
 ```
 
 2. Install dependencies:

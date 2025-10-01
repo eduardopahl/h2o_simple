@@ -20,11 +20,11 @@ void main() async {
   // Initialize timezone data for notifications
   tz.initializeTimeZones();
 
-  runApp(const ProviderScope(child: H2OSimpleApp()));
+  runApp(const ProviderScope(child: H2OSyncApp()));
 }
 
-class H2OSimpleApp extends ConsumerWidget {
-  const H2OSimpleApp({super.key});
+class H2OSyncApp extends ConsumerWidget {
+  const H2OSyncApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
