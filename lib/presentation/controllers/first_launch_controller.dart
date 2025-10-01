@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../core/services/first_launch_service.dart';
 import '../../data/models/personal_data_model.dart';
 import '../../data/repositories/daily_goal_repository_impl.dart';
@@ -82,12 +83,16 @@ class FirstLaunchController {
         if (notificationsGranted) {
           CustomSnackBar.showSuccess(
             context,
-            message: '✅ Configuração concluída! Meta: ${dailyGoal}ml/dia',
+            message: AppLocalizations.of(
+              context,
+            ).setupCompleteWithGoal(dailyGoal),
           );
         } else {
           CustomSnackBar.showInfo(
             context,
-            message: '⚙️ Configuração concluída! Meta: ${dailyGoal}ml/dia',
+            message: AppLocalizations.of(
+              context,
+            ).setupCompleteManual(dailyGoal),
           );
         }
       }
@@ -95,7 +100,9 @@ class FirstLaunchController {
       if (context.mounted) {
         CustomSnackBar.showError(
           context,
-          message: 'Erro ao salvar configurações: $e',
+          message: AppLocalizations.of(
+            context,
+          ).errorSavingSettings(e.toString()),
         );
       }
     }

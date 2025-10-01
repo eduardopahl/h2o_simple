@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum TimePeriod { day, week, month }
 
@@ -24,9 +25,21 @@ class PeriodSelector extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _buildPeriodOption(context, 'Dia', TimePeriod.day),
-          _buildPeriodOption(context, 'Semana', TimePeriod.week),
-          _buildPeriodOption(context, 'Mês', TimePeriod.month),
+          _buildPeriodOption(
+            context,
+            AppLocalizations.of(context).day,
+            TimePeriod.day,
+          ),
+          _buildPeriodOption(
+            context,
+            AppLocalizations.of(context).week,
+            TimePeriod.week,
+          ),
+          _buildPeriodOption(
+            context,
+            AppLocalizations.of(context).month,
+            TimePeriod.month,
+          ),
         ],
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'period_selector.dart';
 
 class WaterChart extends StatelessWidget {
@@ -32,7 +33,7 @@ class WaterChart extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                _getChartTitle(),
+                _getChartTitle(context),
                 style: Theme.of(
                   context,
                 ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
@@ -64,14 +65,15 @@ class WaterChart extends StatelessWidget {
     );
   }
 
-  String _getChartTitle() {
+  String _getChartTitle(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     switch (chartType) {
       case TimePeriod.day:
-        return 'Consumo do Dia';
+        return l10n.dailyConsumption;
       case TimePeriod.week:
-        return 'Consumo Semanal';
+        return l10n.weeklyConsumption;
       case TimePeriod.month:
-        return 'Consumo Mensal';
+        return l10n.monthlyConsumption;
     }
   }
 
@@ -297,7 +299,15 @@ class WaterChart extends StatelessWidget {
             ? weeklyData.values.reduce((a, b) => a > b ? a : b).toDouble()
             : 2000.0;
 
-    const dayLabels = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+    final dayLabels = [
+      AppLocalizations.of(context).monShort,
+      AppLocalizations.of(context).tueShort,
+      AppLocalizations.of(context).wedShort,
+      AppLocalizations.of(context).thuShort,
+      AppLocalizations.of(context).friShort,
+      AppLocalizations.of(context).satShort,
+      AppLocalizations.of(context).sunShort,
+    ];
 
     return Padding(
       padding: const EdgeInsets.only(top: 16, bottom: 8, left: 8, right: 8),
@@ -532,11 +542,13 @@ class WaterChart extends StatelessWidget {
                 vertical: 4,
               ),
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                final l10n = AppLocalizations.of(context);
                 final weekIndex = group.x;
                 final weekLabel =
-                    weekLabels[weekIndex] ?? 'Semana ${weekIndex + 1}';
+                    weekLabels[weekIndex] ??
+                    '${l10n.weekLabel} ${weekIndex + 1}';
                 return BarTooltipItem(
-                  'Dias $weekLabel\n${rod.toY.toInt()}ml',
+                  '${l10n.daysLabel} $weekLabel\n${rod.toY.toInt()}ml',
                   TextStyle(
                     color: Theme.of(context).colorScheme.onInverseSurface,
                     fontSize: 12,

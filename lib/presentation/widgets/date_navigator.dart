@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DateNavigator extends StatelessWidget {
   final DateTime selectedDate;
@@ -44,7 +45,7 @@ class DateNavigator extends StatelessWidget {
           // Data atual
           Expanded(
             child: Text(
-              _formatSelectedDate(),
+              _formatSelectedDate(context),
               textAlign: TextAlign.center,
               style: Theme.of(
                 context,
@@ -80,15 +81,15 @@ class DateNavigator extends StatelessWidget {
         date1.day == date2.day;
   }
 
-  String _formatSelectedDate() {
+  String _formatSelectedDate(BuildContext context) {
     final now = DateTime.now();
     if (_isSameDay(selectedDate, now)) {
-      return 'Hoje';
+      return AppLocalizations.of(context).today;
     } else if (_isSameDay(
       selectedDate,
       now.subtract(const Duration(days: 1)),
     )) {
-      return 'Ontem';
+      return AppLocalizations.of(context).yesterday;
     } else {
       return '${selectedDate.day.toString().padLeft(2, '0')}/'
           '${selectedDate.month.toString().padLeft(2, '0')}/'

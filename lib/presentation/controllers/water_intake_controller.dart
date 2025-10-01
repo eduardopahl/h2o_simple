@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../core/events/water_intake_events.dart';
 import '../widgets/goal_achieved_dialog.dart';
 
@@ -48,12 +49,33 @@ class WaterIntakeController {
 
   /// Lida com erros
   static void _handleError(BuildContext context, WaterIntakeEvent event) {
-    final message = event.data['message'] as String;
+    final messageKey = event.data['message'] as String;
+
+    // Traduzir a key da mensagem de erro
+    final localizedMessage = _getLocalizedErrorMessage(context, messageKey);
 
     // Mostra erro para o usuário (pode usar SnackBar customizado aqui se necessário)
-    debugPrint('Erro no water intake: $message');
+    debugPrint('Erro no water intake: $localizedMessage');
 
     // Aqui poderia mostrar um SnackBar de erro se necessário
-    // CustomSnackBar.showError(context, message: message);
+    // CustomSnackBar.showError(context, message: localizedMessage);
+  }
+
+  /// Traduz uma key de erro para a mensagem localizada
+  static String _getLocalizedErrorMessage(BuildContext context, String key) {
+    final l10n = AppLocalizations.of(context);
+
+    switch (key) {
+      case 'errorLoadingHydrationData':
+        return l10n.errorLoadingHydrationData;
+      case 'errorAddingWaterIntake':
+        return l10n.errorAddingWaterIntake;
+      case 'errorRemovingWaterIntake':
+        return l10n.errorRemovingWaterIntake;
+      case 'errorCheckingNotifications':
+        return l10n.errorCheckingNotifications;
+      default:
+        return key; // Fallback para a key original se não encontrar tradução
+    }
   }
 }

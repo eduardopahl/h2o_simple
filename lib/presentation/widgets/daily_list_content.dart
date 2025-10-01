@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DailyListContent extends StatelessWidget {
   final List<dynamic> waterIntakes;
@@ -36,7 +37,7 @@ class DailyListContent extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Nenhum registro neste dia',
+              AppLocalizations.of(context).noRecordsThisDay,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontSize: 18,
                 fontWeight: FontWeight.w500,

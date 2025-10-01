@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FirstLaunchDialog extends StatelessWidget {
   final VoidCallback onComplete;
@@ -17,15 +18,15 @@ class FirstLaunchDialog extends StatelessWidget {
             size: 28,
           ),
           const SizedBox(width: 8),
-          const Text('Bem-vindo ao H2O Simple!'),
+          Text(AppLocalizations.of(context).welcomeToH2O),
         ],
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Para ajudá-lo a manter uma hidratação saudável, gostaríamos de enviar lembretes para beber água.',
+          Text(
+            AppLocalizations.of(context).helpYouStayHydrated,
             style: TextStyle(fontSize: 16),
           ),
           const SizedBox(height: 16),
@@ -44,11 +45,8 @@ class FirstLaunchDialog extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Você poderá personalizar os horários e intervalos nas configurações.',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      fontSize: 14,
-                    ),
+                    AppLocalizations.of(context).customizeNotificationSettings,
+                    style: const TextStyle(color: Colors.grey),
                   ),
                 ),
               ],
@@ -62,14 +60,14 @@ class FirstLaunchDialog extends StatelessWidget {
             Navigator.of(context).pop();
             onComplete();
           },
-          child: const Text('Agora não'),
+          child: Text(AppLocalizations.of(context).notNow),
         ),
         ElevatedButton(
           onPressed: () {
             Navigator.of(context).pop();
             onComplete();
           },
-          child: const Text('Permitir Notificações'),
+          child: Text(AppLocalizations.of(context).allowNotifications),
         ),
       ],
     );

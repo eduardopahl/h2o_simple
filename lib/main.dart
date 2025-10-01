@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'presentation/theme/app_theme.dart';
 import 'presentation/pages/main_tab_view.dart';
 import 'presentation/providers/theme_provider.dart';
+import 'presentation/providers/language_provider.dart';
 import 'presentation/providers/notification_service_provider.dart';
 import 'presentation/controllers/first_launch_controller.dart';
 import 'core/services/first_launch_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,17 +29,28 @@ class H2OSimpleApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeProvider);
+    final locale = ref.watch(languageProvider);
 
     // Inicializa o notification service em background
     ref.watch(notificationServiceInitializerProvider);
 
     return MaterialApp(
-      title: 'H2O Simple',
+      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
-      locale: const Locale('pt', 'BR'),
+      locale: locale,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'), // English
+        Locale('pt'), // Portuguese
+      ],
       home: const FirstLaunchWrapper(),
     );
   }
@@ -89,7 +103,7 @@ class _FirstLaunchWrapperState extends ConsumerState<FirstLaunchWrapper> {
               const SizedBox(height: 16),
               const CircularProgressIndicator(),
               const SizedBox(height: 16),
-              const Text('Carregando H2O Simple...'),
+              Text(AppLocalizations.of(context).loading),
             ],
           ),
         ),

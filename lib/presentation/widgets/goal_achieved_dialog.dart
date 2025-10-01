@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GoalAchievedDialog extends StatelessWidget {
   const GoalAchievedDialog({super.key});
@@ -48,7 +49,7 @@ class GoalAchievedDialog extends StatelessWidget {
 
             // Título
             Text(
-              '🎉 Parabéns!',
+              AppLocalizations.of(context).congratulations,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.primary,
@@ -58,7 +59,7 @@ class GoalAchievedDialog extends StatelessWidget {
 
             // Mensagem
             Text(
-              'Você alcançou sua meta de hidratação diária!\n\nSeu corpo agradece! 💧',
+              AppLocalizations.of(context).goalAchieved,
               textAlign: TextAlign.center,
               style: Theme.of(
                 context,
@@ -79,8 +80,8 @@ class GoalAchievedDialog extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text(
-                  'Continuar',
+                child: Text(
+                  AppLocalizations.of(context).continueText,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),

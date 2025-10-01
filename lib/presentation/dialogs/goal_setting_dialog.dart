@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GoalSettingDialog extends StatefulWidget {
   final double currentGoal;
@@ -52,7 +53,7 @@ class _GoalSettingDialogState extends State<GoalSettingDialog> {
             size: 24,
           ),
           const SizedBox(width: 12),
-          const Text('Alterar Meta Diária'),
+          Text(AppLocalizations.of(context).changeDailyGoal),
         ],
       ),
       content: Column(
@@ -66,10 +67,10 @@ class _GoalSettingDialogState extends State<GoalSettingDialog> {
               FilteringTextInputFormatter.digitsOnly,
               LengthLimitingTextInputFormatter(5), // Max 99999ml
             ],
-            decoration: const InputDecoration(
-              labelText: 'Meta (ml)',
-              border: OutlineInputBorder(),
-              helperText: 'Recomendado: 2000ml - 2500ml por dia',
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context).goalMlLabel,
+              border: const OutlineInputBorder(),
+              helperText: AppLocalizations.of(context).recommendedDailyGoal,
               suffixText: 'ml',
             ),
             autofocus: true,
@@ -92,7 +93,7 @@ class _GoalSettingDialogState extends State<GoalSettingDialog> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'A meta recomendada para adultos é de 2-3 litros por dia.',
+                    AppLocalizations.of(context).adultRecommendation,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onPrimaryContainer,
                       fontSize: 12,
@@ -107,9 +108,12 @@ class _GoalSettingDialogState extends State<GoalSettingDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancelar'),
+          child: Text(AppLocalizations.of(context).cancel),
         ),
-        ElevatedButton(onPressed: _handleSubmit, child: const Text('Salvar')),
+        ElevatedButton(
+          onPressed: _handleSubmit,
+          child: Text(AppLocalizations.of(context).save),
+        ),
       ],
     );
   }

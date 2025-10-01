@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../providers/daily_goal_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/notification_settings_provider.dart';
+import '../../providers/language_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/custom_snackbar.dart';
 import '../../../core/services/notification_service.dart' as custom;
@@ -25,7 +27,7 @@ class SettingsTab extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Text(
-                  'Configurações',
+                  AppLocalizations.of(context).settings,
                   style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -37,6 +39,7 @@ class SettingsTab extends ConsumerWidget {
                 context,
                 children: [
                   _buildDailyGoalTile(context, ref, goalAmount),
+                  _buildLanguageTile(context, ref),
                   _buildDarkModeTile(context, ref),
                   _buildNotificationsTile(context, ref),
                 ],
@@ -47,7 +50,7 @@ class SettingsTab extends ConsumerWidget {
               // Seção Sobre
               _buildSection(
                 context,
-                title: 'Sobre',
+                title: AppLocalizations.of(context).about,
                 children: [
                   _buildAboutTile(context),
                   _buildVersionTile(context),
@@ -59,7 +62,7 @@ class SettingsTab extends ConsumerWidget {
               // Seção Dados
               _buildSection(
                 context,
-                title: 'Dados',
+                title: AppLocalizations.of(context).data,
                 children: [_buildResetDataTile(context, ref)],
               ),
 
@@ -148,15 +151,52 @@ class SettingsTab extends ConsumerWidget {
         ),
       ),
       title: Text(
-        'Meta Diária',
+        AppLocalizations.of(context).dailyGoal,
         style: Theme.of(context).textTheme.titleMedium,
       ),
       subtitle: Text(
-        '${goalAmount.toStringAsFixed(0)}ml por dia',
+        AppLocalizations.of(context).perDay(goalAmount.toStringAsFixed(0)),
         style: Theme.of(context).textTheme.bodyMedium,
       ),
       trailing: const Icon(Icons.chevron_right),
       onTap: () => _showGoalDialog(context, ref, goalAmount),
+    );
+  }
+
+  Widget _buildLanguageTile(BuildContext context, WidgetRef ref) {
+    return Consumer(
+      builder: (context, ref, child) {
+        final currentLanguage = ref.watch(currentLanguageProvider);
+
+        return ListTile(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 8,
+          ),
+          leading: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              Icons.language,
+              color: Theme.of(context).colorScheme.primary,
+              size: 20,
+            ),
+          ),
+          title: Text(
+            'Language / Idioma',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          subtitle: Text(
+            '${currentLanguage.flag} ${currentLanguage.name}',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => _showLanguageDialog(context, ref),
+        );
+      },
     );
   }
 
@@ -185,11 +225,13 @@ class SettingsTab extends ConsumerWidget {
             ),
           ),
           title: Text(
-            'Modo Escuro',
+            AppLocalizations.of(context).darkMode,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           subtitle: Text(
-            isDarkMode ? 'Ativado' : 'Desativado',
+            isDarkMode
+                ? AppLocalizations.of(context).enabled
+                : AppLocalizations.of(context).disabled,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           trailing: Switch(
@@ -233,13 +275,13 @@ class SettingsTab extends ConsumerWidget {
             ),
           ),
           title: Text(
-            'Notificações',
+            AppLocalizations.of(context).notifications,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           subtitle: Text(
             notificationSettings.enabled
-                ? '${notificationNotifier.intervalDescription} - ${notificationNotifier.scheduleDescription}'
-                : 'Lembretes para beber água',
+                ? '${notificationNotifier.getIntervalDescription(AppLocalizations.of(context).everyHourInterval, (hours) => AppLocalizations.of(context).everyXHoursInterval(hours))} - ${notificationNotifier.getScheduleDescription((start, end) => AppLocalizations.of(context).fromToSchedule(start, end))}'
+                : AppLocalizations.of(context).waterReminders,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           trailing: Switch(
@@ -252,7 +294,10 @@ class SettingsTab extends ConsumerWidget {
                 if (context.mounted) {
                   CustomSnackBar.showError(
                     context,
-                    message: 'Permissão para notificações negada',
+                    message:
+                        AppLocalizations.of(
+                          context,
+                        ).notificationPermissionDenied,
                   );
                 }
               }
@@ -280,11 +325,11 @@ class SettingsTab extends ConsumerWidget {
         ),
       ),
       title: Text(
-        'Sobre o App',
+        AppLocalizations.of(context).aboutApp,
         style: Theme.of(context).textTheme.titleMedium,
       ),
       subtitle: Text(
-        'Informações e créditos',
+        AppLocalizations.of(context).appInfo,
         style: Theme.of(context).textTheme.bodyMedium,
       ),
       trailing: const Icon(Icons.chevron_right),
@@ -309,7 +354,10 @@ class SettingsTab extends ConsumerWidget {
           size: 20,
         ),
       ),
-      title: Text('Versão', style: Theme.of(context).textTheme.titleMedium),
+      title: Text(
+        AppLocalizations.of(context).version,
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
       subtitle: Text('1.0.0', style: Theme.of(context).textTheme.bodyMedium),
     );
   }
@@ -330,11 +378,11 @@ class SettingsTab extends ConsumerWidget {
         ),
       ),
       title: Text(
-        'Resetar Dados',
+        AppLocalizations.of(context).resetAllData,
         style: TextStyle(color: Theme.of(context).colorScheme.error),
       ),
       subtitle: Text(
-        'Apagar todos os dados salvos',
+        AppLocalizations.of(context).deleteAllSavedData,
         style: Theme.of(context).textTheme.bodyMedium,
       ),
       trailing: const Icon(Icons.chevron_right),
@@ -347,22 +395,20 @@ class SettingsTab extends ConsumerWidget {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('Sobre o H2O Simple'),
-            content: const Column(
+            title: Text(AppLocalizations.of(context).aboutH2OSimple),
+            content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'H2O Simple v1.0.0',
+                  AppLocalizations.of(context).appVersion,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 12),
-                Text(
-                  'App para acompanhar seu consumo diário de água e manter uma hidratação saudável.',
-                ),
+                Text(AppLocalizations.of(context).h2oSimpleDescription),
                 SizedBox(height: 16),
                 Text(
-                  'Desenvolvido com Flutter 💙',
+                  AppLocalizations.of(context).developedWithFlutter,
                   style: TextStyle(fontSize: 12),
                 ),
               ],
@@ -370,7 +416,56 @@ class SettingsTab extends ConsumerWidget {
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Fechar'),
+                child: Text(AppLocalizations.of(context).close),
+              ),
+            ],
+          ),
+    );
+  }
+
+  void _showLanguageDialog(BuildContext context, WidgetRef ref) {
+    final currentLanguage = ref.read(currentLanguageProvider);
+
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text(AppLocalizations.of(context).selectLanguage),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children:
+                  SupportedLanguage.values.map((language) {
+                    return RadioListTile<SupportedLanguage>(
+                      value: language,
+                      groupValue: currentLanguage,
+                      onChanged: (value) {
+                        if (value != null) {
+                          ref
+                              .read(languageProvider.notifier)
+                              .setLanguage(value);
+                          Navigator.of(context).pop();
+
+                          CustomSnackBar.showSuccess(
+                            context,
+                            message:
+                                AppLocalizations.of(context).languageChanged,
+                          );
+                        }
+                      },
+                      title: Row(
+                        children: [
+                          Text(language.flag),
+                          const SizedBox(width: 12),
+                          Text(language.name),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(AppLocalizations.of(context).cancel),
               ),
             ],
           ),
@@ -390,20 +485,20 @@ class SettingsTab extends ConsumerWidget {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('Alterar Meta Diária'),
+            title: Text(AppLocalizations.of(context).changeDailyGoal),
             content: TextField(
               controller: controller,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Meta (ml)',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context).goalMl,
                 border: OutlineInputBorder(),
-                helperText: 'Recomendado: 2000ml - 2500ml por dia',
+                helperText: AppLocalizations.of(context).recommendedDaily,
               ),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cancelar'),
+                child: Text(AppLocalizations.of(context).cancel),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -415,11 +510,13 @@ class SettingsTab extends ConsumerWidget {
                     Navigator.of(context).pop();
                     CustomSnackBar.showSuccess(
                       context,
-                      message: 'Meta alterada para ${newGoal}ml',
+                      message: AppLocalizations.of(
+                        context,
+                      ).goalChangedTo(newGoal),
                     );
                   }
                 },
-                child: const Text('Salvar'),
+                child: Text(AppLocalizations.of(context).save),
               ),
             ],
           ),
@@ -431,28 +528,26 @@ class SettingsTab extends ConsumerWidget {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('Resetar Dados'),
-            content: const Text(
-              'Tem certeza que deseja resetar todos os dados? Esta ação não pode ser desfeita.',
-            ),
+            title: Text(AppLocalizations.of(context).resetData),
+            content: Text(AppLocalizations.of(context).resetDataConfirmation),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cancelar'),
+                child: Text(AppLocalizations.of(context).cancel),
               ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                   CustomSnackBar.showWarning(
                     context,
-                    message: 'Dados resetados com sucesso',
+                    message: AppLocalizations.of(context).dataResetSuccess,
                   );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.warningColor,
                   foregroundColor: AppTheme.surfaceColor,
                 ),
-                child: const Text('Resetar'),
+                child: Text(AppLocalizations.of(context).reset),
               ),
             ],
           ),
@@ -478,14 +573,14 @@ class _NotificationSettingsDialog extends ConsumerWidget {
     final notifier = ref.read(notificationSettingsProvider.notifier);
 
     return AlertDialog(
-      title: const Text('Configurações de Notificação'),
+      title: Text(AppLocalizations.of(context).notificationSettings),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Intervalo entre notificações:',
+              AppLocalizations.of(context).intervalBetweenNotifications,
               style: Theme.of(context).textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
@@ -500,7 +595,9 @@ class _NotificationSettingsDialog extends ConsumerWidget {
                     return DropdownMenuItem(
                       value: hours,
                       child: Text(
-                        hours == 1 ? 'A cada hora' : 'A cada $hours horas',
+                        hours == 1
+                            ? AppLocalizations.of(context).everyHour
+                            : AppLocalizations.of(context).everyXHours(hours),
                       ),
                     );
                   }).toList(),
@@ -510,7 +607,7 @@ class _NotificationSettingsDialog extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Horário de início:',
+              AppLocalizations.of(context).startTime,
               style: Theme.of(context).textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
@@ -541,7 +638,7 @@ class _NotificationSettingsDialog extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Horário de fim:',
+              AppLocalizations.of(context).endTime,
               style: Theme.of(context).textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
@@ -573,9 +670,13 @@ class _NotificationSettingsDialog extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () => notifier.testNotification(),
+                onPressed:
+                    () => notifier.testNotification(
+                      title: AppLocalizations.of(context).testNotificationTitle,
+                      body: AppLocalizations.of(context).testNotificationBody,
+                    ),
                 icon: const Icon(Icons.notification_add),
-                label: const Text('Enviar Notificação de Teste'),
+                label: Text(AppLocalizations.of(context).sendTestNotification),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.lightBlue,
                 ),
@@ -587,7 +688,7 @@ class _NotificationSettingsDialog extends ConsumerWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Fechar'),
+          child: Text(AppLocalizations.of(context).close),
         ),
       ],
     );

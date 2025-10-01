@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../providers/history_water_intake_provider.dart';
 import '../../widgets/period_selector.dart';
 import '../../widgets/date_navigator.dart';
@@ -56,7 +57,7 @@ class _HistoryTabState extends ConsumerState<HistoryTab> {
           children: [
             // Título
             Text(
-              'Histórico',
+              AppLocalizations.of(context).history,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -98,8 +99,13 @@ class _HistoryTabState extends ConsumerState<HistoryTab> {
                 data: (waterIntakes) => _buildContent(context, waterIntakes),
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error:
-                    (error, stack) =>
-                        Center(child: Text('Erro ao carregar dados: $error')),
+                    (error, stack) => Center(
+                      child: Text(
+                        AppLocalizations.of(
+                          context,
+                        ).errorLoadingData(error.toString()),
+                      ),
+                    ),
               ),
             ),
           ],
@@ -176,20 +182,20 @@ class _HistoryTabState extends ConsumerState<HistoryTab> {
       builder:
           (context) => AlertDialog(
             title: Text(
-              'Confirmar exclusão',
+              AppLocalizations.of(context).confirmDeletion,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             content: Text(
-              'Deseja realmente excluir este registro de consumo de água?',
+              AppLocalizations.of(context).confirmDeleteWaterRecord,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text(
-                  'Cancelar',
+                  AppLocalizations.of(context).cancel,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -207,7 +213,7 @@ class _HistoryTabState extends ConsumerState<HistoryTab> {
                   Navigator.of(context).pop();
                 },
                 child: Text(
-                  'Excluir',
+                  AppLocalizations.of(context).delete,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.error,
                     fontWeight: FontWeight.bold,

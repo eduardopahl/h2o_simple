@@ -184,22 +184,32 @@ class NotificationSettingsNotifier extends StateNotifier<NotificationSettings> {
     );
   }
 
-  Future<void> testNotification() async {
+  Future<void> testNotification({
+    required String title,
+    required String body,
+  }) async {
     await _notificationService.showInstantNotification(
-      title: 'H2O Simple - Teste',
-      body:
-          '💧 Esta é uma notificação de teste! Suas notificações estão funcionando.',
+      title: title,
+      body: body,
     );
   }
 
-  String get intervalDescription {
+  String getIntervalDescription(
+    String everyHour,
+    String Function(int) everyXHours,
+  ) {
     return state.intervalHours == 1
-        ? 'A cada hora'
-        : 'A cada ${state.intervalHours} horas';
+        ? everyHour
+        : everyXHours(state.intervalHours);
   }
 
-  String get scheduleDescription {
-    return 'Das ${state.startTime.toDisplayString()} às ${state.endTime.toDisplayString()}';
+  String getScheduleDescription(
+    String Function(String, String) fromToSchedule,
+  ) {
+    return fromToSchedule(
+      state.startTime.toDisplayString(),
+      state.endTime.toDisplayString(),
+    );
   }
 }
 

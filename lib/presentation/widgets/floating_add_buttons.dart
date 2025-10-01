@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../domain/entities/water_intake.dart';
 import '../theme/app_theme.dart';
 import '../dialogs/custom_amount_dialog.dart';
@@ -118,7 +119,9 @@ class _FloatingAddButtonsState extends State<FloatingAddButtons>
                       opacity: widget.isExpanded ? 1.0 : 0.0,
                       duration: Duration(milliseconds: 150 + (index * 25)),
                       child: _buildRadialButton(
-                        amount == 0 ? 'Personalizado' : '${amount.toInt()}ml',
+                        amount == 0
+                            ? AppLocalizations.of(context).custom
+                            : '${amount.toInt()}ml',
                         amount == 0
                             ? () => _showCustomAmountDialog(context)
                             : () => _addWater(amount),

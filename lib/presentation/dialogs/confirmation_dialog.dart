@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ConfirmationDialog extends StatelessWidget {
   final String title;
@@ -15,8 +16,8 @@ class ConfirmationDialog extends StatelessWidget {
     super.key,
     required this.title,
     required this.message,
-    this.confirmButtonText = 'Confirmar',
-    this.cancelButtonText = 'Cancelar',
+    required this.confirmButtonText,
+    required this.cancelButtonText,
     this.onConfirm,
     this.onCancel,
     this.confirmButtonColor,
@@ -77,8 +78,8 @@ Future<bool?> showConfirmationDialog(
   BuildContext context, {
   required String title,
   required String message,
-  String confirmButtonText = 'Confirmar',
-  String cancelButtonText = 'Cancelar',
+  String? confirmButtonText,
+  String? cancelButtonText,
   Color? confirmButtonColor,
   Color? confirmTextColor,
   IconData? icon,
@@ -89,8 +90,10 @@ Future<bool?> showConfirmationDialog(
         (context) => ConfirmationDialog(
           title: title,
           message: message,
-          confirmButtonText: confirmButtonText,
-          cancelButtonText: cancelButtonText,
+          confirmButtonText:
+              confirmButtonText ?? AppLocalizations.of(context).confirm,
+          cancelButtonText:
+              cancelButtonText ?? AppLocalizations.of(context).cancel,
           confirmButtonColor: confirmButtonColor,
           confirmTextColor: confirmTextColor,
           icon: icon,
@@ -108,10 +111,11 @@ Future<bool?> showDeleteConfirmationDialog(
 }) async {
   return await showConfirmationDialog(
     context,
-    title: 'Confirmar exclusão',
-    message: customMessage ?? 'Deseja realmente excluir $itemName?',
-    confirmButtonText: 'Excluir',
-    cancelButtonText: 'Cancelar',
+    title: AppLocalizations.of(context).confirmDeletion,
+    message:
+        customMessage ?? AppLocalizations.of(context).confirmDelete(itemName),
+    confirmButtonText: AppLocalizations.of(context).delete,
+    cancelButtonText: AppLocalizations.of(context).cancel,
     confirmButtonColor: Theme.of(context).colorScheme.error,
     confirmTextColor: Colors.white,
     icon: Icons.delete_outline,
@@ -125,12 +129,11 @@ Future<bool?> showResetConfirmationDialog(
 }) async {
   return await showConfirmationDialog(
     context,
-    title: 'Resetar Dados',
+    title: AppLocalizations.of(context).resetData,
     message:
-        customMessage ??
-        'Tem certeza que deseja resetar todos os dados? Esta ação não pode ser desfeita.',
-    confirmButtonText: 'Resetar',
-    cancelButtonText: 'Cancelar',
+        customMessage ?? AppLocalizations.of(context).resetDataConfirmation,
+    confirmButtonText: AppLocalizations.of(context).reset,
+    cancelButtonText: AppLocalizations.of(context).cancel,
     confirmButtonColor: Theme.of(context).colorScheme.error,
     confirmTextColor: Colors.white,
     icon: Icons.warning_outlined,

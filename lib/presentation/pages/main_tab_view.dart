@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'tabs/daily_tab.dart';
 import 'tabs/history_tab.dart';
 import 'tabs/settings_tab.dart';
@@ -42,15 +43,18 @@ class _MainTabViewState extends ConsumerState<MainTabView> {
                 ).colorScheme.onSurface.withValues(alpha: 0.7),
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
         unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.water_drop), label: 'Hoje'),
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.water_drop),
+            label: AppLocalizations.of(context).today,
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.bar_chart),
-            label: 'Histórico',
+            label: AppLocalizations.of(context).history,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: 'Configurações',
+            label: AppLocalizations.of(context).settings,
           ),
         ],
       ),

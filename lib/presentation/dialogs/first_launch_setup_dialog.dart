@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../core/services/hydration_calculator_service.dart';
 import '../../data/models/personal_data_model.dart';
 
@@ -220,7 +221,7 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
         const SizedBox(width: 12),
         Expanded(
           child: Text(
-            'Bem-vindo ao H2O Simple!',
+            AppLocalizations.of(context).welcomeToH2OSimple,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
         ),
@@ -257,29 +258,29 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Vamos personalizar sua experiência!',
+            AppLocalizations.of(context).letsCustomizeExperience,
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 12),
           Text(
-            'Para ajudá-lo a manter uma hidratação saudável, vamos configurar:',
+            AppLocalizations.of(context).helpMaintainHealthyHydration,
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           const SizedBox(height: 16),
           _buildFeatureItem(
             Icons.person_outline,
-            'Meta personalizada',
-            'Baseada em seu peso, idade e nível de atividade',
+            AppLocalizations.of(context).personalizedGoal,
+            AppLocalizations.of(context).basedOnWeightAgeActivity,
           ),
           _buildFeatureItem(
             Icons.notifications_outlined,
-            'Lembretes inteligentes',
-            'Notificações para manter você hidratado',
+            AppLocalizations.of(context).intelligentReminders,
+            AppLocalizations.of(context).notificationsToKeepHydrated,
           ),
           _buildFeatureItem(
             Icons.analytics_outlined,
-            'Acompanhamento',
-            'Monitore seu progresso diário',
+            AppLocalizations.of(context).tracking,
+            AppLocalizations.of(context).monitorDailyProgress,
           ),
         ],
       ),
@@ -330,10 +331,13 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Dados pessoais', style: Theme.of(context).textTheme.titleLarge),
+          Text(
+            AppLocalizations.of(context).personalData,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
           const SizedBox(height: 6),
           Text(
-            'Para calcular sua meta de hidratação ideal',
+            AppLocalizations.of(context).toCalculateIdealGoal,
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: 16),
@@ -346,7 +350,7 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
               FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,1}')),
             ],
             decoration: InputDecoration(
-              labelText: 'Peso (kg)',
+              labelText: AppLocalizations.of(context).weightKg,
               border: const OutlineInputBorder(),
               suffixText: 'kg',
               helperText: _getWeightHelperText(),
@@ -367,10 +371,10 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
             controller: _ageController,
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            decoration: const InputDecoration(
-              labelText: 'Idade',
-              border: OutlineInputBorder(),
-              suffixText: 'anos',
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context).ageYears,
+              border: const OutlineInputBorder(),
+              suffixText: AppLocalizations.of(context).years,
               contentPadding: EdgeInsets.symmetric(
                 horizontal: 12,
                 vertical: 16,
@@ -381,7 +385,10 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
           const SizedBox(height: 12),
 
           // Gênero
-          Text('Gênero', style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            AppLocalizations.of(context).gender,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -389,7 +396,7 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
                 child: _buildGenderOption(
                   gender: Gender.male,
                   icon: Icons.male,
-                  label: 'Masculino',
+                  label: AppLocalizations.of(context).male,
                 ),
               ),
               const SizedBox(width: 12),
@@ -397,7 +404,7 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
                 child: _buildGenderOption(
                   gender: Gender.female,
                   icon: Icons.female,
-                  label: 'Feminino',
+                  label: AppLocalizations.of(context).female,
                 ),
               ),
             ],
@@ -406,7 +413,7 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
 
           // Nível de atividade
           Text(
-            'Nível de atividade',
+            AppLocalizations.of(context).activityLevel,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
@@ -419,26 +426,26 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
                 vertical: 16,
               ),
             ),
-            items: const [
+            items: [
               DropdownMenuItem(
                 value: ActivityLevel.sedentary,
-                child: Text('Sedentário'),
+                child: Text(AppLocalizations.of(context).sedentary),
               ),
               DropdownMenuItem(
                 value: ActivityLevel.light,
-                child: Text('Leve (1-3x/semana)'),
+                child: Text(AppLocalizations.of(context).lightActivity),
               ),
               DropdownMenuItem(
                 value: ActivityLevel.moderate,
-                child: Text('Moderado (3-5x/semana)'),
+                child: Text(AppLocalizations.of(context).moderateActivity),
               ),
               DropdownMenuItem(
                 value: ActivityLevel.intense,
-                child: Text('Intenso (6-7x/semana)'),
+                child: Text(AppLocalizations.of(context).intenseActivity),
               ),
               DropdownMenuItem(
                 value: ActivityLevel.extreme,
-                child: Text('Extremo (2x/dia)'),
+                child: Text(AppLocalizations.of(context).extremeActivity),
               ),
             ],
             onChanged: (value) {
@@ -458,15 +465,17 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Meta de hidratação',
+            AppLocalizations.of(context).hydrationGoal,
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 16),
 
           // Opção personalizada
           RadioListTile<bool>(
-            title: const Text('Meta personalizada (recomendado)'),
-            subtitle: Text('${_calculatedGoal}ml por dia'),
+            title: Text(AppLocalizations.of(context).customGoalRecommended),
+            subtitle: Text(
+              AppLocalizations.of(context).mlPerDay(_calculatedGoal),
+            ),
             value: true,
             groupValue: _usePersonalizedGoal,
             onChanged: (value) => setState(() => _usePersonalizedGoal = value!),
@@ -493,7 +502,7 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
 
           // Opção manual
           RadioListTile<bool>(
-            title: const Text('Definir meta manualmente'),
+            title: Text(AppLocalizations.of(context).setGoalManually),
             value: false,
             groupValue: _usePersonalizedGoal,
             onChanged: (value) => setState(() => _usePersonalizedGoal = value!),
@@ -507,11 +516,11 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
                 controller: _customGoalController,
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                decoration: const InputDecoration(
-                  labelText: 'Meta (ml)',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context).goalMl,
+                  border: const OutlineInputBorder(),
                   suffixText: 'ml',
-                  helperText: 'Recomendado: 1500ml - 3000ml',
+                  helperText: AppLocalizations.of(context).recommendedRange,
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 12,
                     vertical: 16,
@@ -539,7 +548,7 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'Lembretes de hidratação',
+                          AppLocalizations.of(context).hydrationReminders,
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ),
@@ -553,7 +562,7 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Receba lembretes inteligentes para beber água ao longo do dia',
+                    AppLocalizations.of(context).receiveIntelligentReminders,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -582,11 +591,18 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
     return Row(
       children: [
         if (_currentPage > 0)
-          TextButton(onPressed: _previousPage, child: const Text('Voltar')),
+          TextButton(
+            onPressed: _previousPage,
+            child: Text(AppLocalizations.of(context).back),
+          ),
         const Spacer(),
         ElevatedButton(
           onPressed: _nextPage,
-          child: Text(_currentPage == 2 ? 'Finalizar' : 'Próximo'),
+          child: Text(
+            _currentPage == 2
+                ? AppLocalizations.of(context).finish
+                : AppLocalizations.of(context).next,
+          ),
         ),
       ],
     );

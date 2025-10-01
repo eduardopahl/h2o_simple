@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'period_selector.dart';
 
 class PeriodSummary extends StatelessWidget {
@@ -61,7 +62,7 @@ class PeriodSummary extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Total consumido:',
+                AppLocalizations.of(context).totalConsumed,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               Text(
@@ -78,7 +79,7 @@ class PeriodSummary extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Média por registro:',
+                AppLocalizations.of(context).averagePerRecord,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               Text(

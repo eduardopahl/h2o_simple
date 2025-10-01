@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WaterProgressDisplay extends StatefulWidget {
   final int todayTotal;
@@ -110,7 +111,7 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
               children: [
                 // Título
                 Text(
-                  'Hidratação de hoje',
+                  AppLocalizations.of(context).todayHydration,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: 12),
@@ -130,7 +131,7 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
                     Padding(
                       padding: const EdgeInsets.only(bottom: 4),
                       child: Text(
-                        'ml',
+                        AppLocalizations.of(context).mlUnit,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -141,7 +142,9 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
                   ],
                 ),
                 Text(
-                  'de ${widget.goalAmount}ml',
+                  AppLocalizations.of(
+                    context,
+                  ).ofTarget(widget.goalAmount.toInt()),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -161,7 +164,9 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      '+${_displayedTotal - widget.goalAmount}ml extra',
+                      AppLocalizations.of(
+                        context,
+                      ).extraAmount(_displayedTotal - widget.goalAmount),
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                         fontSize: 12,
@@ -183,7 +188,7 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      '🎉 Meta atingida!',
+                      AppLocalizations.of(context).goalAchieved,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                         fontSize: 12,
@@ -194,7 +199,9 @@ class _WaterProgressDisplayState extends State<WaterProgressDisplay>
                 ] else ...[
                   const SizedBox(height: 8),
                   Text(
-                    'Faltam ${widget.goalAmount - _displayedTotal}ml',
+                    AppLocalizations.of(
+                      context,
+                    ).remaining(widget.goalAmount.toInt() - _displayedTotal),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,

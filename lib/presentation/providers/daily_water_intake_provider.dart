@@ -66,7 +66,7 @@ class DailyWaterIntakeNotifier
       state = AsyncValue.error(error, stackTrace);
       _addEvent(
         WaterIntakeEvent.error(
-          message: 'Erro ao carregar dados de hidratação',
+          message: 'errorLoadingHydrationData',
           error: error,
         ),
       );
@@ -89,10 +89,7 @@ class DailyWaterIntakeNotifier
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
       _addEvent(
-        WaterIntakeEvent.error(
-          message: 'Erro ao adicionar consumo de água',
-          error: error,
-        ),
+        WaterIntakeEvent.error(message: 'errorAddingWaterIntake', error: error),
       );
     }
   }
@@ -105,10 +102,7 @@ class DailyWaterIntakeNotifier
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
       _addEvent(
-        WaterIntakeEvent.error(
-          message: 'Erro ao adicionar consumo de água',
-          error: error,
-        ),
+        WaterIntakeEvent.error(message: 'errorAddingWaterIntake', error: error),
       );
     }
   }
@@ -121,7 +115,7 @@ class DailyWaterIntakeNotifier
       state = AsyncValue.error(error, stackTrace);
       _addEvent(
         WaterIntakeEvent.error(
-          message: 'Erro ao remover consumo de água',
+          message: 'errorRemovingWaterIntake',
           error: error,
         ),
       );
@@ -171,10 +165,7 @@ class DailyWaterIntakeNotifier
     } catch (e) {
       // Falha silenciosa para não afetar a operação principal
       _addEvent(
-        WaterIntakeEvent.error(
-          message: 'Erro ao verificar notificações',
-          error: e,
-        ),
+        WaterIntakeEvent.error(message: 'errorCheckingNotifications', error: e),
       );
     }
   }

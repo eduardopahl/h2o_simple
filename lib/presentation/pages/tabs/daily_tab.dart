@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/entities/water_intake.dart';
 import '../../providers/daily_water_intake_provider.dart';
 import '../../providers/daily_goal_provider.dart';
@@ -80,7 +81,9 @@ class _DailyTabState extends ConsumerState<DailyTab> {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'Erro ao carregar dados',
+                            AppLocalizations.of(
+                              context,
+                            ).errorLoadingHydrationData,
                             style: Theme.of(
                               context,
                             ).textTheme.titleMedium?.copyWith(
@@ -103,7 +106,7 @@ class _DailyTabState extends ConsumerState<DailyTab> {
                               ref.invalidate(dailyWaterIntakeProvider);
                               ref.invalidate(dailyGoalProvider);
                             },
-                            child: const Text('Tentar novamente'),
+                            child: Text(AppLocalizations.of(context).tryAgain),
                           ),
                         ],
                       ),

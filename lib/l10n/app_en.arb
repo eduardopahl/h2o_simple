@@ -1,0 +1,1199 @@
+{
+  "@@locale": "en",
+  "appTitle": "H2O Simple",
+  "@appTitle": {
+    "description": "The application title"
+  },
+
+  "welcomeTitle": "Welcome to H2O Simple!",
+  "@welcomeTitle": {
+    "description": "Welcome dialog title"
+  },
+
+  "letsPersonalize": "Let's customize your experience!",
+  "@letsPersonalize": {
+    "description": "Welcome dialog subtitle"
+  },
+
+  "helpYouStayHydrated": "To help you maintain healthy hydration, let's configure:",
+  "@helpYouStayHydrated": {
+    "description": "Welcome dialog description"
+  },
+
+  "personalizedGoal": "Personalized goal",
+  "@personalizedGoal": {
+    "description": "Feature item title"
+  },
+
+  "basedOnWeightAge": "Based on your weight, age and activity level",
+  "@basedOnWeightAge": {
+    "description": "Feature item description"
+  },
+
+  "smartReminders": "Smart reminders",
+  "@smartReminders": {
+    "description": "Feature item title"
+  },
+
+  "notificationsToKeepHydrated": "Notifications to keep you hydrated",
+  "@notificationsToKeepHydrated": {
+    "description": "Feature item description"
+  },
+
+  "tracking": "Tracking",
+  "@tracking": {
+    "description": "Feature item title"
+  },
+
+  "monitorDailyProgress": "Monitor your daily progress",
+  "@monitorDailyProgress": {
+    "description": "Feature item description"
+  },
+
+  "personalData": "Personal data",
+  "@personalData": {
+    "description": "Personal data page title"
+  },
+
+  "toCalculateIdealGoal": "To calculate your ideal hydration goal",
+  "@toCalculateIdealGoal": {
+    "description": "Personal data page subtitle"
+  },
+
+  "weightKg": "Weight (kg)",
+  "@weightKg": {
+    "description": "Weight input label"
+  },
+
+  "kg": "kg",
+  "@kg": {
+    "description": "Kilogram unit abbreviation"
+  },
+
+  "age": "Age",
+  "@age": {
+    "description": "Age input label"
+  },
+
+  "years": "years",
+  "@years": {
+    "description": "Years unit"
+  },
+
+  "gender": "Gender",
+  "@gender": {
+    "description": "Gender selection label"
+  },
+
+  "male": "Male",
+  "@male": {
+    "description": "Male gender option"
+  },
+
+  "female": "Female",
+  "@female": {
+    "description": "Female gender option"
+  },
+
+  "activityLevel": "Activity level",
+  "@activityLevel": {
+    "description": "Activity level selection label"
+  },
+
+  "sedentary": "Sedentary",
+  "@sedentary": {
+    "description": "Sedentary activity level"
+  },
+
+  "light": "Light (1-3x/week)",
+  "@light": {
+    "description": "Light activity level"
+  },
+
+  "moderate": "Moderate (3-5x/week)",
+  "@moderate": {
+    "description": "Moderate activity level"
+  },
+
+  "intense": "Intense (6-7x/week)",
+  "@intense": {
+    "description": "Intense activity level"
+  },
+
+  "extreme": "Extreme (2x/day)",
+  "@extreme": {
+    "description": "Extreme activity level"
+  },
+
+  "hydrationGoal": "Hydration goal",
+  "@hydrationGoal": {
+    "description": "Goal configuration page title"
+  },
+
+  "personalizedGoalRecommended": "Personalized goal (recommended)",
+  "@personalizedGoalRecommended": {
+    "description": "Personalized goal option"
+  },
+
+  "perDay": "per day",
+  "@perDay": {
+    "description": "Per day suffix for goal"
+  },
+
+  "setGoalManually": "Set goal manually",
+  "@setGoalManually": {
+    "description": "Manual goal option"
+  },
+
+  "goalMl": "Goal (ml)",
+  "@goalMl": {
+    "description": "Goal input label"
+  },
+
+  "ml": "ml",
+  "@ml": {
+    "description": "Milliliter unit abbreviation"
+  },
+
+  "recommendedRange": "Recommended: {min} - {max}",
+  "@recommendedRange": {
+    "description": "Recommended range text",
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+
+  "hydrationReminders": "Hydration reminders",
+  "@hydrationReminders": {
+    "description": "Notification settings title"
+  },
+
+  "receiveSmartReminders": "Receive smart reminders to drink water throughout the day",
+  "@receiveSmartReminders": {
+    "description": "Notification settings description"
+  },
+
+  "customizeSchedule": "You can customize schedules and intervals in settings.",
+  "@customizeSchedule": {
+    "description": "Notification settings note"
+  },
+
+  "notNow": "Not now",
+  "@notNow": {
+    "description": "Not now button"
+  },
+
+  "allowNotifications": "Allow Notifications",
+  "@allowNotifications": {
+    "description": "Allow notifications button"
+  },
+
+  "back": "Back",
+  "@back": {
+    "description": "Back button"
+  },
+
+  "next": "Next",
+  "@next": {
+    "description": "Next button"
+  },
+
+  "finish": "Finish",
+  "@finish": {
+    "description": "Finish button"
+  },
+
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings tab title"
+  },
+
+  "dailyGoal": "Daily Goal",
+  "@dailyGoal": {
+    "description": "Daily goal settings item"
+  },
+
+  "volumeUnit": "Volume Unit",
+  "@volumeUnit": {
+    "description": "Volume unit settings item"
+  },
+
+  "darkMode": "Dark Mode",
+  "@darkMode": {
+    "description": "Dark mode settings item"
+  },
+
+  "enabled": "Enabled",
+  "@enabled": {
+    "description": "Enabled status"
+  },
+
+  "disabled": "Disabled",
+  "@disabled": {
+    "description": "Disabled status"
+  },
+
+  "notifications": "Notifications",
+  "@notifications": {
+    "description": "Notifications settings item"
+  },
+
+  "about": "About",
+  "@about": {
+    "description": "About section title"
+  },
+
+  "aboutH2OSimple": "About H2O Simple",
+  "@aboutH2OSimple": {
+    "description": "About dialog title"
+  },
+
+  "version": "Version",
+  "@version": {
+    "description": "Version settings item"
+  },
+
+  "data": "Data",
+  "@data": {
+    "description": "Data section title"
+  },
+
+  "resetData": "Reset Data",
+  "@resetData": {
+    "description": "Reset data settings item"
+  },
+
+  "deleteAllSavedData": "Delete all saved data",
+  "@deleteAllSavedData": {
+    "description": "Reset data description"
+  },
+
+  "selectUnit": "Select Unit",
+  "@selectUnit": {
+    "description": "Unit selection dialog title"
+  },
+
+  "milliliters": "Milliliters",
+  "@milliliters": {
+    "description": "Milliliters unit name"
+  },
+
+  "fluidOunces": "Fluid Ounces",
+  "@fluidOunces": {
+    "description": "Fluid ounces unit name"
+  },
+
+  "symbol": "Symbol",
+  "@symbol": {
+    "description": "Unit symbol label"
+  },
+
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button"
+  },
+
+  "unitChangedTo": "Unit changed to {unit}",
+  "@unitChangedTo": {
+    "description": "Unit change success message",
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+
+  "changeDailyGoal": "Change Daily Goal",
+  "@changeDailyGoal": {
+    "description": "Change goal dialog title"
+  },
+
+  "recommendedDaily": "Recommended: 2000ml - 2500ml per day",
+  "@recommendedDaily": {
+    "description": "Recommended daily intake"
+  },
+
+  "save": "Save",
+  "@save": {
+    "description": "Save button"
+  },
+
+  "goalChangedTo": "Goal changed to {goal}ml",
+  "@goalChangedTo": {
+    "description": "Goal change success message",
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+
+  "confirmResetData": "Confirm Reset Data",
+  "@confirmResetData": {
+    "description": "Reset confirmation dialog title"
+  },
+
+  "resetWarningMessage": "Are you sure you want to reset all data? This action cannot be undone.",
+  "@resetWarningMessage": {
+    "description": "Reset warning message"
+  },
+
+  "reset": "Reset",
+  "@reset": {
+    "description": "Reset button"
+  },
+
+  "dataResetSuccessfully": "Data reset successfully",
+  "@dataResetSuccessfully": {
+    "description": "Reset success message"
+  },
+
+  "customAmount": "Custom Amount",
+  "@customAmount": {
+    "description": "Custom amount dialog title"
+  },
+
+  "enterValidAmount": "Enter a valid amount",
+  "@enterValidAmount": {
+    "description": "Invalid amount error"
+  },
+
+  "enterValueBetween": "Enter a value between 1 and 9999 ml",
+  "@enterValueBetween": {
+    "description": "Value range error"
+  },
+
+  "add": "Add",
+  "@add": {
+    "description": "Add button"
+  },
+
+  "congratulations": "🎉 Congratulations!",
+  "@congratulations": {
+    "description": "Goal achieved dialog title"
+  },
+
+  "goalAchievedMessage": "You reached your daily hydration goal!\\n\\nYour body thanks you! 💧",
+  "@goalAchievedMessage": {
+    "description": "Goal achieved message"
+  },
+
+  "continueText": "Continue",
+  "@continueText": {
+    "description": "Continue button"
+  },
+
+  "prepositionOf": "of",
+  "@prepositionOf": {
+    "description": "Of preposition for progress"
+  },
+
+  "remaining": "remaining",
+  "@remaining": {
+    "description": "Remaining text for progress"
+  },
+
+  "extra": "extra",
+  "@extra": {
+    "description": "Extra text for over-goal"
+  },
+
+  "custom": "Custom",
+  "@custom": {
+    "description": "Custom option for buttons"
+  },
+
+  "lbs": "lbs",
+  "@lbs": {
+    "description": "Pounds unit abbreviation"
+  },
+
+  "flOz": "fl oz",
+  "@flOz": {
+    "description": "Fluid ounces unit abbreviation"
+  },
+
+  "history": "History",
+  "@history": {
+    "description": "History tab title"
+  },
+
+  "daily": "Daily",
+  "@daily": {
+    "description": "Daily tab title"
+  },
+
+  "notificationSettings": "Notification Settings",
+  "@notificationSettings": {
+    "description": "Notification settings dialog title"
+  },
+
+  "intervalBetweenNotifications": "Interval between notifications:",
+  "@intervalBetweenNotifications": {
+    "description": "Notification interval label"
+  },
+
+  "everyHour": "Every hour",
+  "@everyHour": {
+    "description": "Every hour option"
+  },
+
+  "everyXHours": "Every {hours} hours",
+  "@everyXHours": {
+    "description": "Every X hours option",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+
+  "startTime": "Start time:",
+  "@startTime": {
+    "description": "Start time label"
+  },
+
+  "endTime": "End time:",
+  "@endTime": {
+    "description": "End time label"
+  },
+
+  "sendTestNotification": "Send Test Notification",
+  "@sendTestNotification": {
+    "description": "Test notification button"
+  },
+
+  "close": "Close",
+  "@close": {
+    "description": "Close button"
+  },
+
+  "averagePerRecord": "Average per record:",
+  "@averagePerRecord": {
+    "description": "Average per record label"
+  },
+
+  "h2oSimpleDescription": "App to track your daily water consumption and maintain healthy hydration.",
+  "@h2oSimpleDescription": {
+    "description": "App description in about dialog"
+  },
+
+  "developedWithFlutter": "Developed with Flutter 💙",
+  "@developedWithFlutter": {
+    "description": "Development info in about dialog"
+  },
+
+  "selectLanguage": "Select Language",
+  "@selectLanguage": {
+    "description": "Language selection dialog title"
+  },
+
+  "languageChanged": "Language changed successfully",
+  "@languageChanged": {
+    "description": "Language change success message"
+  },
+
+  "changeDailyGoal": "Change Daily Goal",
+  "@changeDailyGoal": {
+    "description": "Change daily goal dialog title"
+  },
+
+  "goalMl": "Goal (ml)",
+  "@goalMl": {
+    "description": "Goal input field label"
+  },
+
+  "recommendedDaily": "Recommended: 2000ml - 2500ml per day",
+  "@recommendedDaily": {
+    "description": "Daily goal recommendation helper text"
+  },
+
+  "save": "Save",
+  "@save": {
+    "description": "Save button text"
+  },
+
+  "goalChangedTo": "Goal changed to {amount}ml",
+  "@goalChangedTo": {
+    "description": "Goal change success message",
+    "placeholders": {
+      "amount": {
+        "type": "int",
+        "example": "2000"
+      }
+    }
+  },
+
+  "resetData": "Reset Data",
+  "@resetData": {
+    "description": "Reset data dialog title"
+  },
+
+  "resetDataConfirmation": "Are you sure you want to reset all data? This action cannot be undone.",
+  "@resetDataConfirmation": {
+    "description": "Reset data confirmation message"
+  },
+
+  "loading": "Loading H2O Simple...",
+  "@loading": {
+    "description": "Loading screen text"
+  },
+
+  "version": "Version",
+  "@version": {
+    "description": "Version label"
+  },
+
+  "close": "Close",
+  "@close": {
+    "description": "Close button text"
+  },
+
+  "about": "About",
+  "@about": {
+    "description": "About section title"
+  },
+
+  "data": "Data",
+  "@data": {
+    "description": "Data section title"
+  },
+
+  "perDay": "{amount}ml per day",
+  "@perDay": {
+    "description": "Daily amount format",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+
+  "notifications": "Notifications",
+  "@notifications": {
+    "description": "Notifications title"
+  },
+
+  "waterReminders": "Water reminders",
+  "@waterReminders": {
+    "description": "Water reminder description"
+  },
+
+  "notificationPermissionDenied": "Notification permission denied",
+  "@notificationPermissionDenied": {
+    "description": "Notification permission denied message"
+  },
+
+  "aboutApp": "About the App",
+  "@aboutApp": {
+    "description": "About app section title"
+  },
+
+  "appInfo": "Information and credits",
+  "@appInfo": {
+    "description": "App info description"
+  },
+
+  "resetAllData": "Reset All Data",
+  "@resetAllData": {
+    "description": "Reset data button title"
+  },
+
+  "deleteAllSavedData": "Delete all saved data",
+  "@deleteAllSavedData": {
+    "description": "Reset data description"
+  },
+
+  "aboutH2OSimple": "About H2O Simple",
+  "@aboutH2OSimple": {
+    "description": "About dialog title"
+  },
+
+  "appVersion": "H2O Simple v1.0.0",
+  "@appVersion": {
+    "description": "App version in about dialog"
+  },
+
+  "reset": "Reset",
+  "@reset": {
+    "description": "Reset button text"
+  },
+
+  "notificationSettings": "Notification Settings",
+  "@notificationSettings": {
+    "description": "Notification settings dialog title"
+  },
+
+  "sendTestNotification": "Send Test Notification",
+  "@sendTestNotification": {
+    "description": "Test notification button"
+  },
+
+  "personalData": "Personal Data",
+  "@personalData": {
+    "description": "Personal data section title"
+  },
+
+  "gender": "Gender",
+  "@gender": {
+    "description": "Gender label"
+  },
+
+  "sedentary": "Sedentary",
+  "@sedentary": {
+    "description": "Sedentary activity level"
+  },
+
+  "lightActivity": "Light (1-3x/week)",
+  "@lightActivity": {
+    "description": "Light activity level"
+  },
+
+  "moderateActivity": "Moderate (3-5x/week)",
+  "@moderateActivity": {
+    "description": "Moderate activity level"
+  },
+
+  "intenseActivity": "Intense (6-7x/week)",
+  "@intenseActivity": {
+    "description": "Intense activity level"
+  },
+
+  "extremeActivity": "Extreme (2x/day)",
+  "@extremeActivity": {
+    "description": "Extreme activity level"
+  },
+
+  "customGoalRecommended": "Custom goal (recommended)",
+  "@customGoalRecommended": {
+    "description": "Custom goal radio option"
+  },
+
+  "mlPerDay": "{amount}ml per day",
+  "@mlPerDay": {
+    "description": "ML per day format",
+    "placeholders": {
+      "amount": {
+        "type": "int"
+      }
+    }
+  },
+
+  "setGoalManually": "Set goal manually",
+  "@setGoalManually": {
+    "description": "Manual goal radio option"
+  },
+
+  "back": "Back",
+  "@back": {
+    "description": "Back button text"
+  },
+
+  "tryAgain": "Try again",
+  "@tryAgain": {
+    "description": "Try again button"
+  },
+
+  "errorLoadingData": "Error loading data: {error}",
+  "@errorLoadingData": {
+    "description": "Error loading data message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "welcomeToH2O": "Welcome to H2O Simple!",
+  "@welcomeToH2O": {
+    "description": "Welcome dialog title"
+  },
+
+  "notNow": "Not now",
+  "@notNow": {
+    "description": "Not now button"
+  },
+
+  "allowNotifications": "Allow Notifications",
+  "@allowNotifications": {
+    "description": "Allow notifications button"
+  },
+
+  "customAmount": "Custom Amount",
+  "@customAmount": {
+    "description": "Custom amount dialog title"
+  },
+
+  "add": "Add",
+  "@add": {
+    "description": "Add button text"
+  },
+
+  "noRecordsThisDay": "No records on this day",
+  "@noRecordsThisDay": {
+    "description": "No records message"
+  },
+
+  "dataResetSuccess": "Data reset successfully",
+  "@dataResetSuccess": {
+    "description": "Data reset success message"
+  },
+
+  "invalidAmount": "Please enter a valid amount",
+  "@invalidAmount": {
+    "description": "Invalid amount error message"
+  },
+
+  "amountTooSmall": "Amount must be greater than 0ml",
+  "@amountTooSmall": {
+    "description": "Amount too small error message"
+  },
+
+  "notificationsEnabled": "Notifications enabled successfully",
+  "@notificationsEnabled": {
+    "description": "Notifications enabled success message"
+  },
+
+  "notificationsNotAvailable": "Notifications are not available on this device",
+  "@notificationsNotAvailable": {
+    "description": "Notifications not available message"
+  },
+
+  "errorEnablingNotifications": "Error enabling notifications",
+  "@errorEnablingNotifications": {
+    "description": "Error enabling notifications message"
+  },
+
+  "setupCompleteWithGoal": "✅ Setup complete! Goal: {goal}ml/day",
+  "@setupCompleteWithGoal": {
+    "description": "Setup complete message with goal",
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+
+  "setupCompleteManual": "⚙️ Setup complete! Goal: {goal}ml/day",
+  "@setupCompleteManual": {
+    "description": "Setup complete message manual",
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+
+  "errorSavingSettings": "Error saving settings: {error}",
+  "@errorSavingSettings": {
+    "description": "Error saving settings message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "confirmDelete": "Do you really want to delete {itemName}?",
+  "@confirmDelete": {
+    "description": "Confirm delete message",
+    "placeholders": {
+      "itemName": {
+        "type": "String"
+      }
+    }
+  },
+
+  "errorLoadingHydrationData": "Error loading hydration data",
+  "@errorLoadingHydrationData": {
+    "description": "Error loading hydration data"
+  },
+
+  "errorAddingWaterIntake": "Error adding water intake",
+  "@errorAddingWaterIntake": {
+    "description": "Error adding water intake"
+  },
+
+  "errorRemovingWaterIntake": "Error removing water intake",
+  "@errorRemovingWaterIntake": {
+    "description": "Error removing water intake"
+  },
+
+  "errorCheckingNotifications": "Error checking notifications",
+  "@errorCheckingNotifications": {
+    "description": "Error checking notifications"
+  },
+
+  "confirmDeletion": "Confirm deletion",
+  "@confirmDeletion": {
+    "description": "Confirm deletion dialog title"
+  },
+
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button text"
+  },
+
+  "confirmReset": "Confirm reset",
+  "@confirmReset": {
+    "description": "Confirm reset dialog title"
+  },
+
+  "resetConfirmMessage": "This action will permanently delete all data. Do you want to continue?",
+  "@resetConfirmMessage": {
+    "description": "Reset confirmation message"
+  },
+
+  "today": "Today",
+  "@today": {
+    "description": "Today tab label"
+  },
+
+  "history": "History",
+  "@history": {
+    "description": "History tab label"
+  },
+
+  "day": "Day",
+  "@day": {
+    "description": "Day period option"
+  },
+
+  "week": "Week",
+  "@week": {
+    "description": "Week period option"
+  },
+
+  "month": "Month",
+  "@month": {
+    "description": "Month period option"
+  },
+
+  "goalAchieved": "You reached your daily hydration goal!\n\nYour body thanks you! 💧",
+  "@goalAchieved": {
+    "description": "Goal achieved message"
+  },
+
+  "continueText": "Continue",
+  "@continueText": {
+    "description": "Continue button text"
+  },
+
+  "totalConsumed": "Total consumed:",
+  "@totalConsumed": {
+    "description": "Total consumed label"
+  },
+
+  "averagePerRecord": "Average per record:",
+  "@averagePerRecord": {
+    "description": "Average per record label"
+  },
+
+  "todayHydration": "Today's hydration",
+  "@todayHydration": {
+    "description": "Today's hydration title"
+  },
+
+  "ofTarget": "of {target}ml",
+  "@ofTarget": {
+    "description": "Of target amount",
+    "placeholders": {
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+
+  "remaining": "Remaining {amount}ml",
+  "@remaining": {
+    "description": "Remaining amount",
+    "placeholders": {
+      "amount": {
+        "type": "int"
+      }
+    }
+  },
+
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Confirm button text"
+  },
+
+  "resetData": "Reset Data",
+  "@resetData": {
+    "description": "Reset data dialog title"
+  },
+
+  "amountMl": "Amount (ml)",
+  "@amountMl": {
+    "description": "Amount input field label"
+  },
+
+  "customizeNotificationSettings": "You can customize the times and intervals in the settings.",
+  "@customizeNotificationSettings": {
+    "description": "Notification customization info text"
+  },
+
+  "welcomeToH2OSimple": "Welcome to H2O Simple!",
+  "@welcomeToH2OSimple": {
+    "description": "Welcome title in setup dialog"
+  },
+
+  "letsCustomizeExperience": "Let's customize your experience!",
+  "@letsCustomizeExperience": {
+    "description": "Setup dialog customization title"
+  },
+
+  "helpMaintainHealthyHydration": "To help you maintain healthy hydration, we'll set up:",
+  "@helpMaintainHealthyHydration": {
+    "description": "Setup dialog description"
+  },
+
+  "personalizedGoal": "Personalized goal",
+  "@personalizedGoal": {
+    "description": "Personalized goal feature title"
+  },
+
+  "basedOnWeightAgeActivity": "Based on your weight, age and activity level",
+  "@basedOnWeightAgeActivity": {
+    "description": "Personalized goal description"
+  },
+
+  "intelligentReminders": "Intelligent reminders",
+  "@intelligentReminders": {
+    "description": "Reminders feature title"
+  },
+
+  "notificationsToKeepHydrated": "Notifications to keep you hydrated",
+  "@notificationsToKeepHydrated": {
+    "description": "Reminders feature description"
+  },
+
+  "tracking": "Tracking",
+  "@tracking": {
+    "description": "Tracking feature title"
+  },
+
+  "monitorDailyProgress": "Monitor your daily progress",
+  "@monitorDailyProgress": {
+    "description": "Tracking feature description"
+  },
+
+  "toCalculateIdealGoal": "To calculate your ideal hydration goal",
+  "@toCalculateIdealGoal": {
+    "description": "Personal data page subtitle"
+  },
+
+  "weightKg": "Weight (kg)",
+  "@weightKg": {
+    "description": "Weight input label"
+  },
+
+  "ageYears": "Age",
+  "@ageYears": {
+    "description": "Age input label"
+  },
+
+  "years": "years",
+  "@years": {
+    "description": "Years suffix"
+  },
+
+  "male": "Male",
+  "@male": {
+    "description": "Male gender option"
+  },
+
+  "female": "Female",
+  "@female": {
+    "description": "Female gender option"
+  },
+
+  "activityLevel": "Activity level",
+  "@activityLevel": {
+    "description": "Activity level section title"
+  },
+
+  "hydrationGoal": "Hydration goal",
+  "@hydrationGoal": {
+    "description": "Hydration goal page title"
+  },
+
+  "goalMl": "Goal (ml)",
+  "@goalMl": {
+    "description": "Manual goal input label"
+  },
+
+  "recommendedRange": "Recommended: 1500ml - 3000ml",
+  "@recommendedRange": {
+    "description": "Recommended goal range helper text"
+  },
+
+  "hydrationReminders": "Hydration reminders",
+  "@hydrationReminders": {
+    "description": "Notification toggle title"
+  },
+
+  "receiveIntelligentReminders": "Receive intelligent reminders to drink water throughout the day",
+  "@receiveIntelligentReminders": {
+    "description": "Notification toggle description"
+  },
+
+  "finish": "Finish",
+  "@finish": {
+    "description": "Finish button text"
+  },
+
+  "next": "Next",
+  "@next": {
+    "description": "Next button text"
+  },
+
+  "goalMlLabel": "Goal (ml)",
+  "@goalMlLabel": {
+    "description": "Goal input field label"
+  },
+
+  "recommendedDailyGoal": "Recommended: 2000ml - 2500ml per day",
+  "@recommendedDailyGoal": {
+    "description": "Recommended daily goal helper text"
+  },
+
+  "adultRecommendation": "The recommended goal for adults is 2-3 liters per day.",
+  "@adultRecommendation": {
+    "description": "Adult recommendation info text"
+  },
+
+  "confirmDeleteWaterRecord": "Do you really want to delete this water intake record?",
+  "@confirmDeleteWaterRecord": {
+    "description": "Water intake deletion confirmation message"
+  },
+
+  "testNotificationTitle": "H2O Simple - Test",
+  "@testNotificationTitle": {
+    "description": "Test notification title"
+  },
+
+  "testNotificationBody": "💧 This is a test notification! Your notifications are working.",
+  "@testNotificationBody": {
+    "description": "Test notification body message"
+  },
+
+  "everyHourInterval": "Every hour",
+  "@everyHourInterval": {
+    "description": "Every hour interval description"
+  },
+
+  "everyXHoursInterval": "Every {hours} hours",
+  "@everyXHoursInterval": {
+    "description": "Every X hours interval description",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+
+  "fromToSchedule": "From {startTime} to {endTime}",
+  "@fromToSchedule": {
+    "description": "Schedule time range description",
+    "placeholders": {
+      "startTime": {
+        "type": "String"
+      },
+      "endTime": {
+        "type": "String"
+      }
+    }
+  },
+
+  "yesterday": "Yesterday",
+  "@yesterday": {
+    "description": "Yesterday date label"
+  },
+
+  "monShort": "Mon",
+  "@monShort": {
+    "description": "Monday short label"
+  },
+
+  "tueShort": "Tue",
+  "@tueShort": {
+    "description": "Tuesday short label"
+  },
+
+  "wedShort": "Wed",
+  "@wedShort": {
+    "description": "Wednesday short label"
+  },
+
+  "thuShort": "Thu",
+  "@thuShort": {
+    "description": "Thursday short label"
+  },
+
+  "friShort": "Fri",
+  "@friShort": {
+    "description": "Friday short label"
+  },
+
+  "satShort": "Sat",
+  "@satShort": {
+    "description": "Saturday short label"
+  },
+
+  "sunShort": "Sun",
+  "@sunShort": {
+    "description": "Sunday short label"
+  },
+
+  "dailyConsumption": "Daily Consumption",
+  "@dailyConsumption": {
+    "description": "Title for daily consumption chart"
+  },
+
+  "weeklyConsumption": "Weekly Consumption",
+  "@weeklyConsumption": {
+    "description": "Title for weekly consumption chart"
+  },
+
+  "monthlyConsumption": "Monthly Consumption",
+  "@monthlyConsumption": {
+    "description": "Title for monthly consumption chart"
+  },
+
+  "weekLabel": "Week",
+  "@weekLabel": {
+    "description": "Week label for charts"
+  },
+
+  "daysLabel": "Days",
+  "@daysLabel": {
+    "description": "Days label for charts"
+  },
+
+  "mlUnit": "ml",
+  "@mlUnit": {
+    "description": "Milliliters unit abbreviation"
+  },
+
+  "extraAmount": "+{amount}ml extra",
+  "@extraAmount": {
+    "description": "Extra amount consumed beyond goal",
+    "placeholders": {
+      "amount": {
+        "type": "int"
+      }
+    }
+  },
+
+  "goalAchieved": "🎉 Goal achieved!",
+  "@goalAchieved": {
+    "description": "Goal achieved message"
+  }
+}

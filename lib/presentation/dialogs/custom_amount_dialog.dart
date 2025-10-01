@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../theme/app_theme.dart';
 import '../widgets/custom_snackbar.dart';
 
@@ -27,7 +28,7 @@ class _CustomAmountDialogState extends State<CustomAmountDialog> {
     if (text.isEmpty) {
       CustomSnackBar.showError(
         context,
-        message: 'Digite uma quantidade válida',
+        message: AppLocalizations.of(context).invalidAmount,
       );
       return;
     }
@@ -39,7 +40,7 @@ class _CustomAmountDialogState extends State<CustomAmountDialog> {
     } else {
       CustomSnackBar.showError(
         context,
-        message: 'Digite um valor entre 1 e 9999 ml',
+        message: AppLocalizations.of(context).amountTooSmall,
       );
     }
   }
@@ -48,13 +49,13 @@ class _CustomAmountDialogState extends State<CustomAmountDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      title: const Text('Quantidade Personalizada'),
+      title: Text(AppLocalizations.of(context).customAmount),
       content: TextField(
         controller: _controller,
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        decoration: const InputDecoration(
-          labelText: 'Quantidade (ml)',
+        decoration: InputDecoration(
+          labelText: AppLocalizations.of(context).amountMl,
           border: OutlineInputBorder(),
           suffixText: 'ml',
         ),
@@ -64,7 +65,7 @@ class _CustomAmountDialogState extends State<CustomAmountDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancelar'),
+          child: Text(AppLocalizations.of(context).cancel),
         ),
         ElevatedButton(
           onPressed: _handleSubmit,
@@ -74,7 +75,7 @@ class _CustomAmountDialogState extends State<CustomAmountDialog> {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          child: const Text('Adicionar'),
+          child: Text(AppLocalizations.of(context).add),
         ),
       ],
     );
