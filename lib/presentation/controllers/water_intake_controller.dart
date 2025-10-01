@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../core/events/water_intake_events.dart';
-import '../widgets/goal_achieved_dialog.dart';
+import 'celebration_ad_manager.dart';
 
 class WaterIntakeController {
   /// Processa um evento específico - método público para ser chamado do widget
-  static void handleEvent(BuildContext context, WaterIntakeEvent event) {
+  static void handleEvent(
+    BuildContext context,
+    WidgetRef ref,
+    WaterIntakeEvent event,
+  ) {
     switch (event.type) {
       case WaterIntakeEventType.goalAchieved:
-        _handleGoalAchieved(context, event);
+        _handleGoalAchieved(context, ref, event);
         break;
       case WaterIntakeEventType.goalProgressUpdated:
         _handleGoalProgressUpdated(context, event);
@@ -22,12 +27,26 @@ class WaterIntakeController {
   /// Lida com evento de meta alcançada
   static void _handleGoalAchieved(
     BuildContext context,
+    WidgetRef ref,
     WaterIntakeEvent event,
   ) {
     // Aguarda um frame para garantir que o contexto está válido
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (context.mounted) {
-        showGoalAchievedDialog(context);
+        // Mostra apenas o diálogo comemorativo com anúncio
+        // (removido o GoalAchievedDialog duplicado)
+        final goalAmount =
+            (event.data['goalAmount'] as int? ?? 2000).toDouble();
+        final achievedAmount =
+            (event.data['totalAmount'] as int? ?? goalAmount.toInt())
+                .toDouble();
+
+        await CelebrationAdManager.showGoalCompletedCelebration(
+          context,
+          ref,
+          goalAmount: goalAmount,
+          achievedAmount: achievedAmount,
+        );
       }
     });
   }

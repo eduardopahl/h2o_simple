@@ -884,6 +884,99 @@
     "description": "Continue button text"
   },
 
+  "goalCompleted": "🎉 Goal Achieved!",
+  "@goalCompleted": {
+    "description": "Goal completed celebration title"
+  },
+
+  "goalCompletedMessage": "Congratulations! You reached your daily goal of {amount}ml. Keep up the excellent hydration!",
+  "@goalCompletedMessage": {
+    "description": "Goal completed celebration message",
+    "placeholders": {
+      "amount": {
+        "type": "int",
+        "example": "2000"
+      }
+    }
+  },
+
+  "weeklyAchievement": "🗓️ Weekly Success!",
+  "@weeklyAchievement": {
+    "description": "Weekly achievement title"
+  },
+
+  "weeklyAchievementMessage": "Amazing! You completed your hydration goal {days} days this week. You're building a healthy habit!",
+  "@weeklyAchievementMessage": {
+    "description": "Weekly achievement message",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+
+  "streakMilestone": "🔥 Streak Milestone!",
+  "@streakMilestone": {
+    "description": "Streak milestone title"
+  },
+
+  "streakMilestoneMessage": "Incredible! You've maintained your hydration streak for {days} consecutive days. You're a hydration champion!",
+  "@streakMilestoneMessage": {
+    "description": "Streak milestone message",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "example": "14"
+      }
+    }
+  },
+
+  "adLabel": "Ad",
+  "@adLabel": {
+    "description": "Advertisement label"
+  },
+
+  "smartHydrationBottle": "Smart Hydration Bottle",
+  "@smartHydrationBottle": {
+    "description": "Ad title for smart bottle"
+  },
+
+  "hydrationSupplements": "Hydration+ Supplements",
+  "@hydrationSupplements": {
+    "description": "Ad title for supplements"
+  },
+
+  "premiumFitWaterApp": "FitWater Premium App",
+  "@premiumFitWaterApp": {
+    "description": "Ad title for premium app"
+  },
+
+  "hydrationProducts": "Hydration Products",
+  "@hydrationProducts": {
+    "description": "Generic ad title for hydration products"
+  },
+
+  "monitorAutomatically": "Monitor automatically without effort",
+  "@monitorAutomatically": {
+    "description": "Ad subtitle for smart bottle"
+  },
+
+  "naturalElectrolytes": "Natural electrolytes for all day",
+  "@naturalElectrolytes": {
+    "description": "Ad subtitle for supplements"
+  },
+
+  "advancedFeaturesNoAds": "Advanced features without ads",
+  "@advancedFeaturesNoAds": {
+    "description": "Ad subtitle for premium app"
+  },
+
+  "improveDailyHydration": "Improve your daily hydration",
+  "@improveDailyHydration": {
+    "description": "Generic ad subtitle"
+  },
+
   "totalConsumed": "Total consumed:",
   "@totalConsumed": {
     "description": "Total consumed label"
@@ -1195,5 +1288,80 @@
   "goalAchieved": "🎉 Goal achieved!",
   "@goalAchieved": {
     "description": "Goal achieved message"
+  },
+
+  "removeAds": "Remove Ads",
+  "@removeAds": {
+    "description": "Option to remove ads"
+  },
+
+  "premiumFeatures": "Premium Features",
+  "@premiumFeatures": {
+    "description": "Premium features section"
+  },
+
+  "removeAdsDescription": "Remove all ads for a smoother experience",
+  "@removeAdsDescription": {
+    "description": "Remove ads description"
+  },
+
+  "purchaseRemoveAds": "Purchase - Remove Ads",
+  "@purchaseRemoveAds": {
+    "description": "Purchase dialog title"
+  },
+
+  "removeAdsForever": "Remove all ads permanently for just:",
+  "@removeAdsForever": {
+    "description": "Remove ads purchase description"
+  },
+
+  "buyNow": "Buy Now",
+  "@buyNow": {
+    "description": "Buy button"
+  },
+
+  "restorePurchases": "Restore Purchases",
+  "@restorePurchases": {
+    "description": "Restore purchases button"
+  },
+
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button"
+  },
+
+  "purchaseSuccess": "Purchase successful! Ads have been removed.",
+  "@purchaseSuccess": {
+    "description": "Purchase success message"
+  },
+
+  "purchaseError": "Error processing purchase. Please try again.",
+  "@purchaseError": {
+    "description": "Purchase error message"
+  },
+
+  "restoreSuccess": "Purchases restored successfully!",
+  "@restoreSuccess": {
+    "description": "Restore success message"
+  },
+
+  "restoreError": "No purchases found to restore.",
+  "@restoreError": {
+    "description": "Message when no purchases to restore"
+  },
+
+  "purchaseNotAvailable": "Purchases not available at the moment.",
+  "@purchaseNotAvailable": {
+    "description": "Message when purchases are not available"
+  },
+
+  "premiumUser": "Premium User",
+  "@premiumUser": {
+    "description": "Premium user status"
+  },
+
+  "thanksForSupport": "Thank you for your support! 💙",
+  "@thanksForSupport": {
+    "description": "Thank you message for premium users"
   }
 }

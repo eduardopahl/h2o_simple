@@ -7,6 +7,7 @@ import 'presentation/pages/main_tab_view.dart';
 import 'presentation/providers/theme_provider.dart';
 import 'presentation/providers/language_provider.dart';
 import 'presentation/providers/notification_service_provider.dart';
+import 'presentation/providers/ad_service_provider.dart';
 import 'presentation/controllers/first_launch_controller.dart';
 import 'core/services/first_launch_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -28,8 +29,9 @@ class H2OSyncApp extends ConsumerWidget {
     final themeMode = ref.watch(themeProvider);
     final locale = ref.watch(languageProvider);
 
-    // Inicializa o notification service em background
+    // Inicializa serviços em background
     ref.watch(notificationServiceInitializerProvider);
+    ref.watch(adServiceInitializerProvider);
 
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,

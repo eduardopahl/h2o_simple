@@ -5,6 +5,7 @@ import '../../providers/daily_goal_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/notification_settings_provider.dart';
 import '../../providers/language_provider.dart';
+import '../../providers/purchase_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/custom_snackbar.dart';
 import '../../../core/services/notification_service.dart' as custom;
@@ -43,6 +44,15 @@ class SettingsTab extends ConsumerWidget {
                   _buildDarkModeTile(context, ref),
                   _buildNotificationsTile(context, ref),
                 ],
+              ),
+
+              const SizedBox(height: 20),
+
+              // Seção Premium
+              _buildSection(
+                context,
+                title: AppLocalizations.of(context).premiumFeatures,
+                children: [_buildRemoveAdsTile(context, ref)],
               ),
 
               const SizedBox(height: 20),
@@ -309,6 +319,78 @@ class SettingsTab extends ConsumerWidget {
     );
   }
 
+  Widget _buildRemoveAdsTile(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+
+    return Consumer(
+      builder: (context, ref, child) {
+        final isPremiumAsync = ref.watch(isPremiumUserProvider);
+        final purchaseService = ref.watch(purchaseServiceProvider);
+
+        return isPremiumAsync.when(
+          data: (isPremium) {
+            if (isPremium) {
+              // Usuário já é premium
+              return ListTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                    size: 20,
+                  ),
+                ),
+                title: Text(l10n.premiumUser),
+                subtitle: Text(l10n.thanksForSupport),
+              );
+            } else {
+              // Usuário não é premium - mostrar opção de compra
+              final product = purchaseService.removeAdsProduct;
+              final price = product?.price ?? 'R\$ 9,90';
+
+              return ListTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.amber.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.star, color: Colors.amber, size: 20),
+                ),
+                title: Text(l10n.removeAds),
+                subtitle: Text('${l10n.removeAdsDescription} - $price'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => _showPurchaseDialog(context, ref, price),
+              );
+            }
+          },
+          loading:
+              () => ListTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                leading: const CircularProgressIndicator(),
+                title: Text(l10n.purchaseNotAvailable),
+              ),
+          error: (error, stack) => const SizedBox.shrink(),
+        );
+      },
+    );
+  }
+
   Widget _buildAboutTile(BuildContext context) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -548,6 +630,90 @@ class SettingsTab extends ConsumerWidget {
                   foregroundColor: AppTheme.surfaceColor,
                 ),
                 child: Text(AppLocalizations.of(context).reset),
+              ),
+            ],
+          ),
+    );
+  }
+
+  void _showPurchaseDialog(BuildContext context, WidgetRef ref, String price) {
+    final l10n = AppLocalizations.of(context);
+
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text(l10n.purchaseRemoveAds),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l10n.removeAdsForever),
+                const SizedBox(height: 16),
+                Text(
+                  price,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(l10n.cancel),
+              ),
+              TextButton(
+                onPressed: () async {
+                  Navigator.of(context).pop();
+
+                  final purchaseService = ref.read(purchaseServiceProvider);
+                  final success = await purchaseService.restorePurchases();
+
+                  if (context.mounted) {
+                    if (success) {
+                      CustomSnackBar.showSuccess(
+                        context,
+                        message: l10n.restoreSuccess,
+                      );
+                    } else {
+                      CustomSnackBar.showError(
+                        context,
+                        message: l10n.restoreError,
+                      );
+                    }
+                  }
+                },
+                child: Text(l10n.restorePurchases),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context).pop();
+
+                  final purchaseService = ref.read(purchaseServiceProvider);
+                  final success = await purchaseService.buyRemoveAds();
+
+                  if (context.mounted) {
+                    if (success) {
+                      CustomSnackBar.showSuccess(
+                        context,
+                        message: l10n.purchaseSuccess,
+                      );
+                    } else {
+                      CustomSnackBar.showError(
+                        context,
+                        message: l10n.purchaseError,
+                      );
+                    }
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                ),
+                child: Text(l10n.buyNow),
               ),
             ],
           ),

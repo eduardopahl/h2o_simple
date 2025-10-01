@@ -50,7 +50,7 @@ class _DailyTabState extends ConsumerState<DailyTab> {
 
       // Processa novos eventos
       for (final event in events) {
-        WaterIntakeController.handleEvent(context, event);
+        WaterIntakeController.handleEvent(context, ref, event);
       }
 
       // Limpa eventos processados

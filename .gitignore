@@ -82,6 +82,10 @@ android/local.properties
 key.properties
 **/key.properties
 
+# AdMob configuration (sensitive IDs)
+admob.properties
+**/admob.properties
+
 # App Store Connect API
 /private_keys/
 AuthKey_*.p8
@@ -92,3 +96,6 @@ appstore.png
 
 # Store configuration documentation (contains sensitive info)
 STORE_READY_CONFIG.md
+ADS_IMPLEMENTATION.md
+LOCALIZATION_FIXED.md
+ADMOB_SECURITY.md

@@ -64,5 +64,9 @@
 	<!-- Allow notifications while app is in background -->
 	<key>UIBackgroundTaskIdentifier</key>
 	<string>water-reminder-notifications</string>
+	
+	<!-- Google AdMob App ID (obrigatório para iOS) -->
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-3940256099942544~1458002511</string>
 </dict>
 </plist>

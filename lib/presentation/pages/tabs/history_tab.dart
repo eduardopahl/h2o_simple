@@ -7,6 +7,7 @@ import '../../widgets/date_navigator.dart';
 import '../../widgets/water_chart.dart';
 import '../../widgets/daily_list_content.dart';
 import '../../widgets/period_summary.dart';
+import '../../widgets/contextual_ad_banner.dart';
 
 class HistoryTab extends ConsumerStatefulWidget {
   const HistoryTab({super.key});
@@ -136,7 +137,10 @@ class _HistoryTabState extends ConsumerState<HistoryTab> {
               waterIntakes: dayIntakes,
               selectedDate: selectedDate,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 5),
+
+            // Banner contextual discreto (também na visualização diária)
+            const ContextualAdBanner(context: 'history'),
 
             // Lista de registros do dia (com dados filtrados)
             DailyListContent(
@@ -159,7 +163,10 @@ class _HistoryTabState extends ConsumerState<HistoryTab> {
               waterIntakes: waterIntakes,
               selectedDate: selectedDate,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 5),
+
+            // Banner contextual discreto
+            const ContextualAdBanner(context: 'history'),
 
             // Resumo do período
             PeriodSummary(

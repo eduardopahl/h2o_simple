@@ -585,6 +585,36 @@
     "description": "Continue button text"
   },
 
+  "goalCompleted": "🎉 Meta Alcançada!",
+
+  "goalCompletedMessage": "Parabéns! Você atingiu sua meta diária de {amount}ml. Continue mantendo essa excelente hidratação!",
+
+  "weeklyAchievement": "🗓️ Sucesso Semanal!",
+
+  "weeklyAchievementMessage": "Incrível! Você completou sua meta de hidratação {days} dias esta semana. Você está criando um hábito saudável!",
+
+  "streakMilestone": "🔥 Marco de Sequência!",
+
+  "streakMilestoneMessage": "Incrível! Você manteve sua sequência de hidratação por {days} dias consecutivos. Você é um campeão da hidratação!",
+
+  "adLabel": "Anúncio",
+
+  "smartHydrationBottle": "Garrafa Inteligente HydroTech",
+
+  "hydrationSupplements": "Suplementos Hidratação+",
+
+  "premiumFitWaterApp": "App Premium FitWater",
+
+  "hydrationProducts": "Produtos para Hidratação",
+
+  "monitorAutomatically": "Monitore automaticamente sem esforço",
+
+  "naturalElectrolytes": "Eletrólitos naturais para o dia todo",
+
+  "advancedFeaturesNoAds": "Recursos avançados sem anúncios",
+
+  "improveDailyHydration": "Melhore sua hidratação diária",
+
   "totalConsumed": "Total consumido:",
   "@totalConsumed": {
     "description": "Total consumed label"
@@ -896,5 +926,80 @@
   "goalAchieved": "🎉 Meta atingida!",
   "@goalAchieved": {
     "description": "Mensagem de meta atingida"
+  },
+
+  "removeAds": "Remover Anúncios",
+  "@removeAds": {
+    "description": "Opção para remover anúncios"
+  },
+
+  "premiumFeatures": "Recursos Premium",
+  "@premiumFeatures": {
+    "description": "Seção de recursos premium"
+  },
+
+  "removeAdsDescription": "Remova todos os anúncios para uma experiência mais fluida",
+  "@removeAdsDescription": {
+    "description": "Descrição da remoção de anúncios"
+  },
+
+  "purchaseRemoveAds": "Comprar - Remover Anúncios",
+  "@purchaseRemoveAds": {
+    "description": "Título do diálogo de compra"
+  },
+
+  "removeAdsForever": "Remova todos os anúncios permanentemente por apenas:",
+  "@removeAdsForever": {
+    "description": "Descrição da compra de remoção de anúncios"
+  },
+
+  "buyNow": "Comprar Agora",
+  "@buyNow": {
+    "description": "Botão de compra"
+  },
+
+  "restorePurchases": "Restaurar Compras",
+  "@restorePurchases": {
+    "description": "Botão para restaurar compras"
+  },
+
+  "cancel": "Cancelar",
+  "@cancel": {
+    "description": "Botão cancelar"
+  },
+
+  "purchaseSuccess": "Compra realizada com sucesso! Os anúncios foram removidos.",
+  "@purchaseSuccess": {
+    "description": "Mensagem de sucesso da compra"
+  },
+
+  "purchaseError": "Erro ao processar a compra. Tente novamente.",
+  "@purchaseError": {
+    "description": "Mensagem de erro na compra"
+  },
+
+  "restoreSuccess": "Compras restauradas com sucesso!",
+  "@restoreSuccess": {
+    "description": "Mensagem de sucesso ao restaurar compras"
+  },
+
+  "restoreError": "Nenhuma compra encontrada para restaurar.",
+  "@restoreError": {
+    "description": "Mensagem quando não há compras para restaurar"
+  },
+
+  "purchaseNotAvailable": "Compras não disponíveis no momento.",
+  "@purchaseNotAvailable": {
+    "description": "Mensagem quando compras não estão disponíveis"
+  },
+
+  "premiumUser": "Usuário Premium",
+  "@premiumUser": {
+    "description": "Status de usuário premium"
+  },
+
+  "thanksForSupport": "Obrigado pelo seu apoio! 💙",
+  "@thanksForSupport": {
+    "description": "Mensagem de agradecimento para usuários premium"
   }
 }
