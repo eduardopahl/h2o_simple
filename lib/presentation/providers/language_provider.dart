@@ -43,7 +43,9 @@ class LanguageNotifier extends StateNotifier<Locale> {
       } else {
         // Auto-detecta baseado no sistema
         final systemLanguage = _detectSystemLanguage();
-        await setLanguage(systemLanguage);
+        state = Locale(systemLanguage.code);
+        // Salva a detecção automática
+        await prefs.setString(_storageKey, systemLanguage.code);
       }
     } catch (e) {
       // Em caso de erro, usa inglês como padrão
@@ -55,6 +57,7 @@ class LanguageNotifier extends StateNotifier<Locale> {
   SupportedLanguage _detectSystemLanguage() {
     final systemLocale = Platform.localeName;
 
+    // Verifica se o sistema está em português
     if (systemLocale.startsWith('pt')) {
       return SupportedLanguage.portuguese;
     }

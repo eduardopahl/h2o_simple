@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'presentation/theme/app_theme.dart';
 import 'presentation/pages/main_tab_view.dart';
@@ -14,8 +13,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await initializeDateFormatting('pt_BR', null);
 
   // Initialize timezone data for notifications
   tz.initializeTimeZones();
@@ -48,9 +45,18 @@ class H2OSyncApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
-        Locale('en'), // English
+        Locale('en'), // English (default)
         Locale('pt'), // Portuguese
       ],
+      // Fallback para inglês se o idioma do sistema não for suportado
+      localeResolutionCallback: (locale, supportedLocales) {
+        // Se o idioma do sistema for português, use português
+        if (locale?.languageCode == 'pt') {
+          return const Locale('pt');
+        }
+        // Para todos os outros casos, use inglês como padrão
+        return const Locale('en');
+      },
       home: const FirstLaunchWrapper(),
     );
   }
