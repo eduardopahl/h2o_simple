@@ -1001,5 +1001,25 @@
   "thanksForSupport": "Obrigado pelo seu apoio! 💙",
   "@thanksForSupport": {
     "description": "Mensagem de agradecimento para usuários premium"
+  },
+
+  "independentDeveloper": "Desenvolvedor Independente",
+  "@independentDeveloper": {
+    "description": "Rótulo para desenvolvedor independente"
+  },
+
+  "supportMessage": "Sua compra me ajuda muito a continuar desenvolvendo e melhorando o app! 🙏\n\nComo desenvolvedor independente, cada apoio faz a diferença para manter o H2OSync sempre atualizado.",
+  "@supportMessage": {
+    "description": "Mensagem de apoio para compras"
+  },
+
+  "oneTimePayment": "Pagamento único",
+  "@oneTimePayment": {
+    "description": "Rótulo para pagamento único"
+  },
+
+  "purchaseThankYou": "Obrigado pelo apoio! Anúncios removidos com sucesso! 🎉",
+  "@purchaseThankYou": {
+    "description": "Mensagem de agradecimento após compra bem-sucedida"
   }
 }

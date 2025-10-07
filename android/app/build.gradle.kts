@@ -10,9 +10,10 @@ val admobAppId = if (admobPropertiesFile.exists()) {
     admobPropertiesFile.readLines()
         .find { it.startsWith("android_app_id=") }
         ?.substringAfter("=")
-        ?: "ca-app-pub-PLACEHOLDER~PLACEHOLDER"
+        ?: "ca-app-pub-3940256099942544~3347511713"
 } else {
-    "ca-app-pub-PLACEHOLDER~PLACEHOLDER"
+    // test id
+    "ca-app-pub-3940256099942544~3347511713"
 }
 
 android {

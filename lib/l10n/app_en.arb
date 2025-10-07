@@ -1363,5 +1363,25 @@
   "thanksForSupport": "Thank you for your support! 💙",
   "@thanksForSupport": {
     "description": "Thank you message for premium users"
+  },
+
+  "independentDeveloper": "Independent Developer",
+  "@independentDeveloper": {
+    "description": "Label for independent developer"
+  },
+
+  "supportMessage": "Your purchase helps me a lot to continue developing and improving the app! 🙏\n\nAs an independent developer, every support makes a difference to keep H2OSync always updated.",
+  "@supportMessage": {
+    "description": "Support message for purchases"
+  },
+
+  "oneTimePayment": "One-time payment",
+  "@oneTimePayment": {
+    "description": "Label for one-time payment"
+  },
+
+  "purchaseThankYou": "Thank you for your support! Ads removed successfully! 🎉",
+  "@purchaseThankYou": {
+    "description": "Thank you message after successful purchase"
   }
 }

@@ -354,7 +354,7 @@ class SettingsTab extends ConsumerWidget {
             } else {
               // Usuário não é premium - mostrar opção de compra
               final product = purchaseService.removeAdsProduct;
-              final price = product?.price ?? 'R\$ 9,90';
+              final price = product?.price ?? '\$0.99';
 
               return ListTile(
                 contentPadding: const EdgeInsets.symmetric(
@@ -643,20 +643,98 @@ class SettingsTab extends ConsumerWidget {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: Text(l10n.purchaseRemoveAds),
+            title: Row(
+              children: [
+                const Icon(Icons.favorite, color: Colors.red, size: 24),
+                const SizedBox(width: 8),
+                Text(l10n.purchaseRemoveAds),
+              ],
+            ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(l10n.removeAdsForever),
-                const SizedBox(height: 16),
                 Text(
-                  price,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
+                  l10n.removeAdsForever,
+                  style: const TextStyle(fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 16),
+
+                // Texto personalizado de agradecimento
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.blue.withOpacity(0.3)),
                   ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.person,
+                            color: Colors.blue,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              l10n.independentDeveloper,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        l10n.supportMessage,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey[700],
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      price,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.green.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        l10n.oneTimePayment,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: Colors.green,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -688,7 +766,7 @@ class SettingsTab extends ConsumerWidget {
                 },
                 child: Text(l10n.restorePurchases),
               ),
-              ElevatedButton(
+              ElevatedButton.icon(
                 onPressed: () async {
                   Navigator.of(context).pop();
 
@@ -699,7 +777,7 @@ class SettingsTab extends ConsumerWidget {
                     if (success) {
                       CustomSnackBar.showSuccess(
                         context,
-                        message: l10n.purchaseSuccess,
+                        message: l10n.purchaseThankYou,
                       );
                     } else {
                       CustomSnackBar.showError(
@@ -712,8 +790,13 @@ class SettingsTab extends ConsumerWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                   foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                 ),
-                child: Text(l10n.buyNow),
+                icon: const Icon(Icons.favorite, size: 18),
+                label: Text(l10n.buyNow),
               ),
             ],
           ),
