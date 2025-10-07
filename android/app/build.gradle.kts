@@ -4,6 +4,17 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Load AdMob App ID from admob.properties
+val admobPropertiesFile = rootProject.file("admob.properties")
+val admobAppId = if (admobPropertiesFile.exists()) {
+    admobPropertiesFile.readLines()
+        .find { it.startsWith("android_app_id=") }
+        ?.substringAfter("=")
+        ?: "ca-app-pub-PLACEHOLDER~PLACEHOLDER"
+} else {
+    "ca-app-pub-PLACEHOLDER~PLACEHOLDER"
+}
+
 android {
     namespace = "com.incpahl.h2osync"
     compileSdk = 35
@@ -25,6 +36,9 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         multiDexEnabled = true
+        
+        // Inject AdMob App ID into manifest
+        manifestPlaceholders["admobAppId"] = admobAppId
     }
 
     buildTypes {

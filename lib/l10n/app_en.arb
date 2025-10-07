@@ -889,7 +889,7 @@
     "description": "Goal completed celebration title"
   },
 
-  "goalCompletedMessage": "Congratulations! You reached your daily goal of {amount}ml. Keep up the excellent hydration!",
+  "goalCompletedMessage": "Congratulations! You reached your daily goal. Keep up the excellent hydration!",
   "@goalCompletedMessage": {
     "description": "Goal completed celebration message",
     "placeholders": {
