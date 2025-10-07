@@ -48,3 +48,15 @@
 
 # Sensors Plus
 -keep class dev.fluttercommunity.plus.sensors.** { *; }
+
+# Play Core Library - required for app bundles
+-keep class com.google.android.play.core.** { *; }
+-dontwarn com.google.android.play.core.**
+
+# Flutter deferred components
+-keep class io.flutter.embedding.engine.deferredcomponents.** { *; }
+-dontwarn io.flutter.embedding.engine.deferredcomponents.**
+
+# Remove debug information to reduce size
+-printmapping proguard/mapping.txt
+-renamesourcefileattribute SourceFile

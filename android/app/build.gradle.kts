@@ -4,6 +4,9 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+import java.util.Properties
+import java.io.FileInputStream
+
 // Load AdMob App ID from admob.properties
 val admobPropertiesFile = rootProject.file("admob.properties")
 val admobAppId = if (admobPropertiesFile.exists()) {
@@ -14,6 +17,13 @@ val admobAppId = if (admobPropertiesFile.exists()) {
 } else {
     // test id
     "ca-app-pub-3940256099942544~3347511713"
+}
+
+// Load keystore properties
+val keystorePropertiesFile = rootProject.file("android/key.properties")
+val keystoreProperties = Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
 android {
@@ -38,13 +48,31 @@ android {
         versionName = flutter.versionName
         multiDexEnabled = true
         
+        // Only build for arm64-v8a to reduce size (most common architecture)
+        ndk {
+            abiFilters += listOf("arm64-v8a")
+        }
+        
         // Inject AdMob App ID into manifest
         manifestPlaceholders["admobAppId"] = admobAppId
+    }
+
+    signingConfigs {
+        create("release") {
+            if (keystorePropertiesFile.exists()) {
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+                storeFile = file("${keystoreProperties["storeFile"]}")
+                storePassword = keystoreProperties["storePassword"] as String
+            }
+        }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

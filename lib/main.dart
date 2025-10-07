@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/data/latest_10y.dart' as tz_data;
 import 'presentation/theme/app_theme.dart';
 import 'presentation/pages/main_tab_view.dart';
 import 'presentation/providers/theme_provider.dart';
@@ -15,8 +15,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize timezone data for notifications
-  tz.initializeTimeZones();
+  // Initialize timezone data for notifications (using smaller dataset)
+  tz_data.initializeTimeZones();
 
   runApp(const ProviderScope(child: H2OSyncApp()));
 }

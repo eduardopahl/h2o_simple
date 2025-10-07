@@ -1,0 +1,18 @@
+# Android Keystore Configuration Template
+# 
+# Copy this file to 'key.properties' in the android/ directory and fill with your values
+# NEVER commit the actual key.properties file to git!
+
+# Example values (replace with your actual values):
+# storePassword=your_keystore_password
+# keyPassword=your_key_password  
+# keyAlias=your_key_alias
+# storeFile=your-keystore.jks
+
+# To generate a keystore:
+# keytool -genkey -v -keystore android/app/your-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias your_alias
+
+# Note: 
+# - Keep your keystore file safe - backup it securely
+# - If you lose your keystore, you cannot update your app on Play Store
+# - The key.properties file is automatically ignored by git
