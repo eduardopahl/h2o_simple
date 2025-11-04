@@ -121,7 +121,7 @@ class PurchaseService {
     if (_products.isEmpty) {
       print('Produtos não carregados. Tentando recarregar...');
       await _loadProducts();
-      
+
       if (_products.isEmpty) {
         print('Nenhum produto disponível após recarregar');
         return false;
@@ -137,8 +137,10 @@ class PurchaseService {
         productDetails: productDetails,
       );
 
-      print('Iniciando compra do produto: ${productDetails.id} - ${productDetails.price}');
-      
+      print(
+        'Iniciando compra do produto: ${productDetails.id} - ${productDetails.price}',
+      );
+
       final bool success = await _inAppPurchase.buyNonConsumable(
         purchaseParam: purchaseParam,
       );
@@ -146,7 +148,7 @@ class PurchaseService {
       return success;
     } catch (e) {
       print('Erro ao iniciar compra: $e');
-      
+
       // Se o produto não foi encontrado, pode ser que ainda não esteja configurado
       // na Play Store. Para desenvolvimento, vamos simular uma compra bem-sucedida
       if (e.toString().contains('firstWhere')) {
@@ -156,7 +158,7 @@ class PurchaseService {
         // await _setPremiumStatus(true);
         // return true;
       }
-      
+
       return false;
     }
   }
@@ -233,7 +235,7 @@ class PurchaseService {
     if (product != null) {
       return product.price;
     }
-    
+
     // Fallback para quando o produto não está disponível
     // Isso permite testar a UI mesmo sem o produto configurado na loja
     return 'R\$ 4,99'; // Preço padrão para o Brasil

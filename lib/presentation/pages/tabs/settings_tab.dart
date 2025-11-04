@@ -56,9 +56,7 @@ class SettingsTab extends ConsumerWidget {
                 children: [
                   _buildRemoveAdsTile(context, ref),
                   // Botões de teste apenas em modo debug
-                  if (kDebugMode) ...[
-                    _buildTestPremiumTile(context, ref),
-                  ],
+                  if (kDebugMode) ...[_buildTestPremiumTile(context, ref)],
                 ],
               ),
 
@@ -402,53 +400,60 @@ class SettingsTab extends ConsumerWidget {
     return Consumer(
       builder: (context, ref, child) {
         final isPremiumAsync = ref.watch(isPremiumUserProvider);
-        
+
         return isPremiumAsync.when(
-          data: (isPremium) => ListTile(
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 8,
-            ),
-            leading: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
+          data:
+              (isPremium) => ListTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(
+                    Icons.bug_report,
+                    color: Colors.orange,
+                    size: 20,
+                  ),
+                ),
+                title: Text(
+                  '[TESTE] ${isPremium ? 'Desativar' : 'Ativar'} Premium',
+                ),
+                subtitle: const Text(
+                  'Apenas para desenvolvimento - não usar em produção',
+                ),
+                trailing: Switch(
+                  value: isPremium,
+                  onChanged: (value) async {
+                    final purchaseService = ref.read(purchaseServiceProvider);
+                    if (value) {
+                      await purchaseService.activatePremiumForTesting();
+                    } else {
+                      await purchaseService.deactivatePremiumForTesting();
+                    }
+
+                    // Força atualização do provider
+                    ref.invalidate(isPremiumUserProvider);
+
+                    if (context.mounted) {
+                      CustomSnackBar.showSuccess(
+                        context,
+                        message:
+                            'Premium ${value ? 'ativado' : 'desativado'} para testes',
+                      );
+                    }
+                  },
+                ),
               ),
-              child: const Icon(
-                Icons.bug_report,
-                color: Colors.orange,
-                size: 20,
+          loading:
+              () => const ListTile(
+                leading: CircularProgressIndicator(),
+                title: Text('[TESTE] Carregando...'),
               ),
-            ),
-            title: Text('[TESTE] ${isPremium ? 'Desativar' : 'Ativar'} Premium'),
-            subtitle: const Text('Apenas para desenvolvimento - não usar em produção'),
-            trailing: Switch(
-              value: isPremium,
-              onChanged: (value) async {
-                final purchaseService = ref.read(purchaseServiceProvider);
-                if (value) {
-                  await purchaseService.activatePremiumForTesting();
-                } else {
-                  await purchaseService.deactivatePremiumForTesting();
-                }
-                
-                // Força atualização do provider
-                ref.invalidate(isPremiumUserProvider);
-                
-                if (context.mounted) {
-                  CustomSnackBar.showSuccess(
-                    context,
-                    message: 'Premium ${value ? 'ativado' : 'desativado'} para testes',
-                  );
-                }
-              },
-            ),
-          ),
-          loading: () => const ListTile(
-            leading: CircularProgressIndicator(),
-            title: Text('[TESTE] Carregando...'),
-          ),
           error: (error, stack) => const SizedBox.shrink(),
         );
       },
