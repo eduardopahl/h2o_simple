@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Serviço para gerenciar compras in-app
 /// Permite ao usuário comprar a remoção de anúncios
 class PurchaseService {
-  static const String _removeAdsProductId = 'h2osync_premium_noads';
+  static const String _removeAdsProductId = 'h2osync-premium-noads';
   static const String _premiumStatusKey = 'is_premium_user';
 
   final InAppPurchase _inAppPurchase = InAppPurchase.instance;
