@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Serviço para gerenciar compras in-app
 /// Permite ao usuário comprar a remoção de anúncios
 class PurchaseService {
-  static const String _removeAdsProductId = 'remove_ads_forever';
+  static const String _removeAdsProductId = 'h2osync_premium_noads';
   static const String _premiumStatusKey = 'is_premium_user';
 
   final InAppPurchase _inAppPurchase = InAppPurchase.instance;
@@ -113,21 +113,32 @@ class PurchaseService {
 
   /// Inicia o processo de compra para remover anúncios
   Future<bool> buyRemoveAds() async {
-    if (!_isAvailable || _products.isEmpty) {
-      print('Compras não disponíveis ou produtos não carregados');
+    if (!_isAvailable) {
+      print('Compras não disponíveis no dispositivo');
       return false;
     }
 
-    final ProductDetails productDetails = _products.firstWhere(
-      (product) => product.id == _removeAdsProductId,
-      orElse: () => throw Exception('Produto não encontrado'),
-    );
+    if (_products.isEmpty) {
+      print('Produtos não carregados. Tentando recarregar...');
+      await _loadProducts();
+      
+      if (_products.isEmpty) {
+        print('Nenhum produto disponível após recarregar');
+        return false;
+      }
+    }
 
     try {
+      final ProductDetails productDetails = _products.firstWhere(
+        (product) => product.id == _removeAdsProductId,
+      );
+
       final PurchaseParam purchaseParam = PurchaseParam(
         productDetails: productDetails,
       );
 
+      print('Iniciando compra do produto: ${productDetails.id} - ${productDetails.price}');
+      
       final bool success = await _inAppPurchase.buyNonConsumable(
         purchaseParam: purchaseParam,
       );
@@ -135,6 +146,17 @@ class PurchaseService {
       return success;
     } catch (e) {
       print('Erro ao iniciar compra: $e');
+      
+      // Se o produto não foi encontrado, pode ser que ainda não esteja configurado
+      // na Play Store. Para desenvolvimento, vamos simular uma compra bem-sucedida
+      if (e.toString().contains('firstWhere')) {
+        print('Produto não encontrado - modo de desenvolvimento');
+        // Em produção, isso deve retornar false
+        // Para testes, podemos ativar o premium temporariamente
+        // await _setPremiumStatus(true);
+        // return true;
+      }
+      
       return false;
     }
   }
@@ -197,8 +219,24 @@ class PurchaseService {
         (product) => product.id == _removeAdsProductId,
       );
     } catch (e) {
+      // Se o produto não for encontrado, retorna null
+      // Isso pode acontecer se o app ainda não foi publicado na Play Store
+      // ou se o produto ainda não foi configurado no Google Play Console
+      print('Produto não encontrado: $_removeAdsProductId');
       return null;
     }
+  }
+
+  /// Obtém o preço do produto com fallback
+  String get removeAdsPrice {
+    final product = removeAdsProduct;
+    if (product != null) {
+      return product.price;
+    }
+    
+    // Fallback para quando o produto não está disponível
+    // Isso permite testar a UI mesmo sem o produto configurado na loja
+    return 'R\$ 4,99'; // Preço padrão para o Brasil
   }
 
   /// Verifica se as compras estão disponíveis
@@ -206,6 +244,20 @@ class PurchaseService {
 
   /// Verifica se há compras pendentes
   bool get purchasesPending => _purchasesPending;
+
+  /// [DESENVOLVIMENTO] Ativa premium manualmente para testes
+  /// Este método deve ser removido em produção
+  Future<void> activatePremiumForTesting() async {
+    await _setPremiumStatus(true);
+    print('Premium ativado para testes');
+  }
+
+  /// [DESENVOLVIMENTO] Desativa premium manualmente para testes
+  /// Este método deve ser removido em produção
+  Future<void> deactivatePremiumForTesting() async {
+    await _setPremiumStatus(false);
+    print('Premium desativado para testes');
+  }
 
   /// Dispõe dos recursos
   void dispose() {
