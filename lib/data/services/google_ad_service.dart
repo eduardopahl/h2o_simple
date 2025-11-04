@@ -30,20 +30,14 @@ class GoogleAdService implements AdService {
       // Só inicializa MobileAds se tivermos configuração válida
       if (_hasValidAdIds()) {
         await MobileAds.instance.initialize();
-        print('GoogleAdService: Inicializado com sucesso');
 
         // Pré-carrega anúncios
         await loadNativeBanner();
         await _loadInterstitial();
-      } else {
-        print(
-          'GoogleAdService: IDs inválidos, pulando inicialização de anúncios',
-        );
       }
 
       _isInitialized = true;
     } catch (e) {
-      print('GoogleAdService: Erro na inicialização: $e');
       _isInitialized = true; // Marca como inicializado mesmo com erro
     }
   }
@@ -70,8 +64,6 @@ class GoogleAdService implements AdService {
 
     if (_bannerAd != null || !_hasValidAdIds()) return;
 
-    print('GoogleAdService.loadNativeBanner(): criando BannerAd...'); // DEBUG
-
     try {
       _bannerAd = BannerAd(
         adUnitId: _getBannerAdUnitId(),
@@ -79,10 +71,9 @@ class GoogleAdService implements AdService {
         request: const AdRequest(),
         listener: BannerAdListener(
           onAdLoaded: (ad) {
-            print('Banner ad carregado com sucesso');
+            // Banner ad carregado com sucesso
           },
           onAdFailedToLoad: (ad, error) {
-            print('Banner ad falhou ao carregar: $error');
             ad.dispose();
             _bannerAd = null;
           },
@@ -91,7 +82,6 @@ class GoogleAdService implements AdService {
 
       await _bannerAd!.load();
     } catch (e) {
-      print('Erro ao carregar banner: $e');
       _bannerAd?.dispose();
       _bannerAd = null;
     }
@@ -178,18 +168,15 @@ class GoogleAdService implements AdService {
         request: const AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (ad) {
-            print('Interstitial ad carregado com sucesso');
             _interstitialAd = ad;
             _interstitialAd!.setImmersiveMode(true);
           },
           onAdFailedToLoad: (error) {
-            print('Interstitial ad falhou ao carregar: $error');
             _interstitialAd = null;
           },
         ),
       );
     } catch (e) {
-      print('Erro ao carregar interstitial: $e');
       _interstitialAd = null;
     }
   }

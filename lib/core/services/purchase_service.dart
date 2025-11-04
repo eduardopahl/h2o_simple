@@ -41,10 +41,7 @@ class PurchaseService {
         // Isso garante que usuários que reinstalaram o app mantenham o premium
         await _restoreAndCheckPurchases();
       }
-
-      print('PurchaseService: Inicializado (disponível: $_isAvailable)');
     } catch (e) {
-      print('Erro ao inicializar PurchaseService: $e');
       _isAvailable = false;
     }
   }
@@ -58,13 +55,12 @@ class PurchaseService {
           .queryProductDetails(productIds);
 
       if (response.notFoundIDs.isNotEmpty) {
-        print('Produtos não encontrados: ${response.notFoundIDs}');
+        // Produtos não encontrados - normal em desenvolvimento
       }
 
       _products = response.productDetails;
-      print('Produtos carregados: ${_products.length}');
     } catch (e) {
-      print('Erro ao carregar produtos: $e');
+      // Erro ao carregar produtos
     }
   }
 
@@ -78,7 +74,7 @@ class PurchaseService {
         _subscription.cancel();
       },
       onError: (error) {
-        print('Erro no stream de compras: $error');
+        // Erro no stream de compras
       },
     );
   }
@@ -92,13 +88,12 @@ class PurchaseService {
         _purchasesPending = true;
       } else {
         if (purchaseDetails.status == PurchaseStatus.error) {
-          print('Erro na compra: ${purchaseDetails.error}');
+          // Erro na compra
         } else if (purchaseDetails.status == PurchaseStatus.purchased ||
             purchaseDetails.status == PurchaseStatus.restored) {
           // Verifica se é o produto de remoção de anúncios
           if (purchaseDetails.productID == _removeAdsProductId) {
             await _setPremiumStatus(true);
-            print('Compra realizada: Anúncios removidos');
           }
         }
 
@@ -114,20 +109,16 @@ class PurchaseService {
   /// Inicia o processo de compra para remover anúncios
   Future<bool> buyRemoveAds() async {
     if (!_isAvailable) {
-      print('Compras não disponíveis no dispositivo');
       return false;
     }
 
     if (_products.isEmpty) {
-      print('Produtos não carregados. Tentando recarregar...');
       await _loadProducts();
 
       if (_products.isEmpty) {
-        print('Nenhum produto disponível após recarregar');
         return false;
       }
     }
-
     try {
       final ProductDetails productDetails = _products.firstWhere(
         (product) => product.id == _removeAdsProductId,
@@ -147,12 +138,9 @@ class PurchaseService {
 
       return success;
     } catch (e) {
-      print('Erro ao iniciar compra: $e');
-
       // Se o produto não foi encontrado, pode ser que ainda não esteja configurado
       // na Play Store. Para desenvolvimento, vamos simular uma compra bem-sucedida
       if (e.toString().contains('firstWhere')) {
-        print('Produto não encontrado - modo de desenvolvimento');
         // Em produção, isso deve retornar false
         // Para testes, podemos ativar o premium temporariamente
         // await _setPremiumStatus(true);
@@ -166,15 +154,13 @@ class PurchaseService {
   /// Restaura compras anteriores (automaticamente na inicialização)
   Future<void> _restoreAndCheckPurchases() async {
     try {
-      print('Verificando compras anteriores...');
-
       // Restaura compras silenciosamente
       await _inAppPurchase.restorePurchases();
 
       // A verificação será feita automaticamente no _handlePurchaseUpdate
       // quando as compras restauradas chegarem
     } catch (e) {
-      print('Erro ao verificar compras anteriores: $e');
+      // Erro ao verificar compras anteriores
     }
   }
 
@@ -188,7 +174,6 @@ class PurchaseService {
       await _inAppPurchase.restorePurchases();
       return true;
     } catch (e) {
-      print('Erro ao restaurar compras: $e');
       return false;
     }
   }
@@ -224,7 +209,6 @@ class PurchaseService {
       // Se o produto não for encontrado, retorna null
       // Isso pode acontecer se o app ainda não foi publicado na Play Store
       // ou se o produto ainda não foi configurado no Google Play Console
-      print('Produto não encontrado: $_removeAdsProductId');
       return null;
     }
   }
@@ -246,20 +230,6 @@ class PurchaseService {
 
   /// Verifica se há compras pendentes
   bool get purchasesPending => _purchasesPending;
-
-  /// [DESENVOLVIMENTO] Ativa premium manualmente para testes
-  /// Este método deve ser removido em produção
-  Future<void> activatePremiumForTesting() async {
-    await _setPremiumStatus(true);
-    print('Premium ativado para testes');
-  }
-
-  /// [DESENVOLVIMENTO] Desativa premium manualmente para testes
-  /// Este método deve ser removido em produção
-  Future<void> deactivatePremiumForTesting() async {
-    await _setPremiumStatus(false);
-    print('Premium desativado para testes');
-  }
 
   /// Dispõe dos recursos
   void dispose() {

@@ -17,12 +17,14 @@ final adServiceProvider = Provider<AdService>((ref) {
 /// Provider para inicializar o AdService de forma segura
 final adServiceInitializerProvider = FutureProvider<void>((ref) async {
   try {
-    final service = ref.watch(adServiceProvider);
-    await service.initialize();
-    print('AdService inicializado com sucesso');
+    final adService = GoogleAdService();
+    await adService.initialize();
+
+    // Configura PurchaseService se disponível
+    final purchaseService = ref.read(purchaseServiceProvider);
+    adService.configurePurchaseService(purchaseService);
   } catch (e) {
-    print('Erro ao inicializar AdService: $e');
-    // Não propaga o erro para não crashar o app
+    // Erro ao inicializar AdService - não quebra o app
   }
 });
 
