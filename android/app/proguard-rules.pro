@@ -57,6 +57,16 @@
 -keep class io.flutter.embedding.engine.deferredcomponents.** { *; }
 -dontwarn io.flutter.embedding.engine.deferredcomponents.**
 
+# Google Mobile Ads
+-keep class com.google.android.gms.ads.** { *; }
+-keep class com.google.ads.** { *; }
+-dontwarn com.google.android.gms.ads.**
+
+# In-App Purchase / Google Play Billing
+-keep class com.android.billingclient.** { *; }
+-dontwarn com.android.billingclient.**
+-keep class com.android.vending.billing.** { *; }
+
 # Remove debug information to reduce size
 -printmapping proguard/mapping.txt
 -renamesourcefileattribute SourceFile
