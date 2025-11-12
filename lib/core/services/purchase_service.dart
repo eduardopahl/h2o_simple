@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Serviço para gerenciar compras in-app
 /// Permite ao usuário comprar a remoção de anúncios
 class PurchaseService {
-  static const String _removeAdsProductId = 'h2osync-premium-noads';
+  static const String _removeAdsProductId = 'h2osync_premium_noads';
   static const String _premiumStatusKey = 'is_premium_user';
 
   final InAppPurchase _inAppPurchase = InAppPurchase.instance;
@@ -109,16 +109,20 @@ class PurchaseService {
   /// Inicia o processo de compra para remover anúncios
   Future<bool> buyRemoveAds() async {
     if (!_isAvailable) {
+      print('Compras não estão disponíveis neste dispositivo');
       return false;
     }
 
     if (_products.isEmpty) {
+      print('Produtos não carregados, tentando carregar...');
       await _loadProducts();
 
       if (_products.isEmpty) {
+        print('Nenhum produto encontrado após carregar');
         return false;
       }
     }
+
     try {
       final ProductDetails productDetails = _products.firstWhere(
         (product) => product.id == _removeAdsProductId,
@@ -138,13 +142,12 @@ class PurchaseService {
 
       return success;
     } catch (e) {
-      // Se o produto não foi encontrado, pode ser que ainda não esteja configurado
-      // na Play Store. Para desenvolvimento, vamos simular uma compra bem-sucedida
+      print('Erro na compra: $e');
+
+      // Se o produto não foi encontrado
       if (e.toString().contains('firstWhere')) {
-        // Em produção, isso deve retornar false
-        // Para testes, podemos ativar o premium temporariamente
-        // await _setPremiumStatus(true);
-        // return true;
+        print('Produto $_removeAdsProductId não encontrado na loja');
+        return false;
       }
 
       return false;
@@ -171,8 +174,22 @@ class PurchaseService {
         return false;
       }
 
+      // Verifica o status atual antes da restauração
+      final wasPremiusBefore = await isPremiumUser();
+
+      // Executa a restauração
       await _inAppPurchase.restorePurchases();
-      return true;
+
+      // Aguarda um momento para que o processo de restauração complete
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      // Verifica se agora é premium após a restauração
+      final isPremiusAfter = await isPremiumUser();
+
+      // Retorna true se:
+      // 1. Já era premium antes (confirmando que tem compras válidas), ou
+      // 2. Tornou-se premium após a restauração
+      return wasPremiusBefore || isPremiusAfter;
     } catch (e) {
       return false;
     }
@@ -222,7 +239,7 @@ class PurchaseService {
 
     // Fallback para quando o produto não está disponível
     // Isso permite testar a UI mesmo sem o produto configurado na loja
-    return 'R\$ 4,99'; // Preço padrão para o Brasil
+    return '\$0.99'; // Preço padrão em dólares
   }
 
   /// Verifica se as compras estão disponíveis
@@ -230,6 +247,12 @@ class PurchaseService {
 
   /// Verifica se há compras pendentes
   bool get purchasesPending => _purchasesPending;
+
+  /// Reset premium status (apenas para testes)
+  Future<void> resetPremiumStatus() async {
+    await _setPremiumStatus(false);
+    print('MODO DEBUG: Premium status resetado para teste');
+  }
 
   /// Dispõe dos recursos
   void dispose() {

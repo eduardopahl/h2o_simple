@@ -188,6 +188,16 @@ class NotificationSettingsNotifier extends StateNotifier<NotificationSettings> {
     required String title,
     required String body,
   }) async {
+    // Verifica se tem permissões
+    final hasPermissions = await _notificationService.hasPermissions();
+
+    if (!hasPermissions) {
+      final granted = await _notificationService.requestPermissions();
+      if (!granted) {
+        return;
+      }
+    }
+
     await _notificationService.showInstantNotification(
       title: title,
       body: body,

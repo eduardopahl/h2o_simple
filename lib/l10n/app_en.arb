@@ -1383,5 +1383,15 @@
   "purchaseThankYou": "Thank you for your support! Ads removed successfully! 🎉",
   "@purchaseThankYou": {
     "description": "Thank you message after successful purchase"
+  },
+
+  "processingPurchase": "Processing purchase...",
+  "@processingPurchase": {
+    "description": "Message shown while processing the purchase"
+  },
+
+  "dataResetError": "Error resetting data. Please try again.",
+  "@dataResetError": {
+    "description": "Error message when resetting data fails"
   }
 }

@@ -6,6 +6,7 @@ import '../../providers/theme_provider.dart';
 import '../../providers/notification_settings_provider.dart';
 import '../../providers/language_provider.dart';
 import '../../providers/purchase_provider.dart';
+import '../../controllers/data_reset_controller.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/custom_snackbar.dart';
 import '../../../core/services/notification_service.dart' as custom;
@@ -617,12 +618,26 @@ class SettingsTab extends ConsumerWidget {
                 child: Text(AppLocalizations.of(context).cancel),
               ),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   Navigator.of(context).pop();
-                  CustomSnackBar.showWarning(
-                    context,
-                    message: AppLocalizations.of(context).dataResetSuccess,
-                  );
+
+                  // Usar o controller para resetar dados
+                  final controller = ref.read(dataResetControllerProvider);
+                  final success = await controller.resetAllData();
+
+                  if (context.mounted) {
+                    if (success) {
+                      CustomSnackBar.showSuccess(
+                        context,
+                        message: AppLocalizations.of(context).dataResetSuccess,
+                      );
+                    } else {
+                      CustomSnackBar.showError(
+                        context,
+                        message: AppLocalizations.of(context).dataResetError,
+                      );
+                    }
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.warningColor,
@@ -770,6 +785,16 @@ class SettingsTab extends ConsumerWidget {
                   Navigator.of(context).pop();
 
                   final purchaseService = ref.read(purchaseServiceProvider);
+
+                  // Mostra indicador de carregamento
+                  if (context.mounted) {
+                    CustomSnackBar.show(
+                      context,
+                      message: l10n.processingPurchase,
+                      type: SnackBarType.info,
+                    );
+                  }
+
                   final success = await purchaseService.buyRemoveAds();
 
                   if (context.mounted) {
@@ -779,10 +804,24 @@ class SettingsTab extends ConsumerWidget {
                         message: l10n.purchaseThankYou,
                       );
                     } else {
-                      CustomSnackBar.showError(
-                        context,
-                        message: l10n.purchaseError,
-                      );
+                      // Verifica se é um problema de produto não encontrado
+                      if (!purchaseService.isAvailable) {
+                        CustomSnackBar.showError(
+                          context,
+                          message: 'Compras não disponíveis neste dispositivo',
+                        );
+                      } else if (purchaseService.removeAdsProduct == null) {
+                        CustomSnackBar.showError(
+                          context,
+                          message:
+                              'Produto ainda não configurado na loja. Tente novamente mais tarde.',
+                        );
+                      } else {
+                        CustomSnackBar.showError(
+                          context,
+                          message: l10n.purchaseError,
+                        );
+                      }
                     }
                   }
                 },

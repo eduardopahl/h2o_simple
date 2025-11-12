@@ -1021,5 +1021,15 @@
   "purchaseThankYou": "Obrigado pelo apoio! Anúncios removidos com sucesso! 🎉",
   "@purchaseThankYou": {
     "description": "Mensagem de agradecimento após compra bem-sucedida"
+  },
+
+  "processingPurchase": "Processando compra...",
+  "@processingPurchase": {
+    "description": "Mensagem exibida durante o processamento da compra"
+  },
+
+  "dataResetError": "Erro ao resetar dados. Tente novamente.",
+  "@dataResetError": {
+    "description": "Mensagem de erro ao resetar dados"
   }
 }
