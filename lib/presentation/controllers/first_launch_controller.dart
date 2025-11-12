@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:h2osync/generated/l10n/app_localizations.dart';
 import '../../core/services/first_launch_service.dart';
 import '../../data/models/personal_data_model.dart';
 import '../../data/repositories/daily_goal_repository_impl.dart';

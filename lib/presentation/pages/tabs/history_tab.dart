@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:h2osync/generated/l10n/app_localizations.dart';
 import '../../providers/history_water_intake_provider.dart';
 import '../../widgets/period_selector.dart';
 import '../../widgets/date_navigator.dart';

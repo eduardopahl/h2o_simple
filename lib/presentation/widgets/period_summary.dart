@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:h2osync/generated/l10n/app_localizations.dart';
 import 'period_selector.dart';
 
 class PeriodSummary extends StatelessWidget {

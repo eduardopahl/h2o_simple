@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:h2osync/generated/l10n/app_localizations.dart';
 
 class WaterProgressDisplay extends StatefulWidget {
   final int todayTotal;

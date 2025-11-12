@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:h2osync/generated/l10n/app_localizations.dart';
 import 'tabs/daily_tab.dart';
 import 'tabs/history_tab.dart';
 import 'tabs/settings_tab.dart';

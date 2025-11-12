@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:h2osync/generated/l10n/app_localizations.dart';
 import '../../providers/daily_goal_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/notification_settings_provider.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:h2osync/generated/l10n/app_localizations.dart';
 import 'package:h2osync/presentation/theme/app_theme.dart';
 
 /// Helper class to create test widgets with all necessary providers and localizations
@@ -19,7 +19,7 @@ class TestHelper {
         home: child,
         locale: locale,
         theme: AppTheme.lightTheme,
-        localizationsDelegates: const [
+        localizationsDelegates: [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
@@ -40,7 +40,7 @@ class TestHelper {
       child: MaterialApp(
         locale: locale,
         theme: AppTheme.lightTheme,
-        localizationsDelegates: const [
+        localizationsDelegates: [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,

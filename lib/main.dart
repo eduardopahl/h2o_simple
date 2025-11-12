@@ -10,7 +10,7 @@ import 'presentation/providers/notification_service_provider.dart';
 import 'presentation/providers/ad_service_provider.dart';
 import 'presentation/controllers/first_launch_controller.dart';
 import 'core/services/first_launch_service.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:h2osync/generated/l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

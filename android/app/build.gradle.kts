@@ -28,7 +28,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.incpahl.h2osync"
-    compileSdk = 35
+    compileSdk = 36
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
