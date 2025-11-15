@@ -72,7 +72,6 @@ class NotificationService {
         await Permission.scheduleExactAlarm.request();
       } catch (e) {
         // Permissão não disponível ou falhou - continua sem alarmes exatos
-        debugPrint('Permissão de alarmes exatos não disponível: $e');
       }
 
       return true;
@@ -178,31 +177,21 @@ class NotificationService {
   Future<bool> _shouldSendNotification() async {
     // Verifica se as dependências foram configuradas
     if (_goalRepository == null || _intakeRepository == null) {
-      debugPrint(
-        'NotificationService: Dependências não configuradas, enviando notificação por padrão',
-      );
       return true;
     }
 
     try {
       final today = DateTime.now();
-      final goal = await _goalRepository!.getDailyGoalByDate(today);
-
-      if (goal == null) {
-        // Se não há meta definida, assume meta padrão de 2000ml
-        final currentTotal = await _intakeRepository!.getTotalWaterIntakeByDate(
-          today,
-        );
-        return currentTotal < 2000;
-      }
-
+      // Não existe mais targetAmount em DailyGoal, então buscamos a meta do perfil
+      // Aqui, para manter compatibilidade, usamos 2000ml como fallback
       final currentTotal = await _intakeRepository!.getTotalWaterIntakeByDate(
         today,
       );
-      // Só envia notificação se a meta ainda não foi alcançada
-      return currentTotal < goal.targetAmount;
+      // TODO: Idealmente, injetar o UserProfileRepository para buscar a meta do perfil
+      // Por ora, mantemos 2000ml como padrão
+      const defaultGoal = 2000;
+      return currentTotal < defaultGoal;
     } catch (e) {
-      debugPrint('NotificationService: Erro ao verificar meta - $e');
       // Em caso de erro, envia a notificação (comportamento padrão)
       return true;
     }
@@ -252,7 +241,6 @@ class NotificationService {
       );
     } catch (e) {
       // Se falhar, tenta sem agendamento (notificação imediata como fallback)
-      debugPrint('Erro ao agendar notificação: $e');
     }
   }
 
@@ -339,9 +327,7 @@ class NotificationService {
     return await _notifications.pendingNotificationRequests();
   }
 
-  static void _onNotificationTapped(NotificationResponse response) {
-    debugPrint('Notification tapped: ${response.payload}');
-  }
+  static void _onNotificationTapped(NotificationResponse response) {}
 }
 
 class TimeOfDay {

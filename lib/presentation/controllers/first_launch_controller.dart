@@ -163,16 +163,11 @@ class FirstLaunchController {
 
       if (existingGoal != null) {
         // Atualizar meta existente mantendo o progresso atual
-        final updatedGoal = existingGoal.copyWith(targetAmount: goalMl);
-        await repository.saveDailyGoal(updatedGoal);
+        // Agora não há mais targetAmount, apenas salva o progresso
+        await repository.saveDailyGoal(existingGoal);
       } else {
         // Criar nova meta para hoje
-        final newGoal = DailyGoal(
-          targetAmount: goalMl,
-          date: today,
-          currentAmount: 0,
-          intakeIds: [],
-        );
+        final newGoal = DailyGoal(date: today, currentAmount: 0, intakeIds: []);
         await repository.saveDailyGoal(newGoal);
       }
     } catch (e) {

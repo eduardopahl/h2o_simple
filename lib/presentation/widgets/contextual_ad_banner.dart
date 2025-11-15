@@ -22,28 +22,38 @@ class ContextualAdBanner extends ConsumerWidget {
     // Verifica se o usuário é premium
     final isPremiumAsync = ref.watch(isPremiumUserProvider);
 
+    // ...
+
     return isPremiumAsync.when(
       data: (isPremium) {
-        // Se for premium, não mostra anúncios
-        if (isPremium) return const SizedBox.shrink();
+        // ...
+        if (isPremium) {
+          // ...
+          return const SizedBox.shrink();
+        }
 
         final adService = ref.watch(adServiceProvider);
+        // ...
 
-        // Não mostra se não pode mostrar anúncio
         if (!adService.canShowAd('banner')) {
           return const SizedBox.shrink();
         }
 
-        // Se for GoogleAdService, tenta mostrar o banner do Google Ads
         if (adService is GoogleAdService && adService.bannerAd != null) {
           return _buildGoogleAdBanner(adService.bannerAd!);
         }
 
-        // Fallback: banner nativo personalizado
+        // ...
         return _buildNativeBanner(this.context);
       },
-      loading: () => const SizedBox.shrink(),
-      error: (error, stack) => const SizedBox.shrink(),
+      loading: () {
+        // ...
+        return const SizedBox.shrink();
+      },
+      error: (error, stack) {
+        // ...
+        return const SizedBox.shrink();
+      },
     );
   }
 

@@ -109,16 +109,13 @@ class PurchaseService {
   /// Inicia o processo de compra para remover anúncios
   Future<bool> buyRemoveAds() async {
     if (!_isAvailable) {
-      print('Compras não estão disponíveis neste dispositivo');
       return false;
     }
 
     if (_products.isEmpty) {
-      print('Produtos não carregados, tentando carregar...');
       await _loadProducts();
 
       if (_products.isEmpty) {
-        print('Nenhum produto encontrado após carregar');
         return false;
       }
     }
@@ -132,21 +129,14 @@ class PurchaseService {
         productDetails: productDetails,
       );
 
-      print(
-        'Iniciando compra do produto: ${productDetails.id} - ${productDetails.price}',
-      );
-
       final bool success = await _inAppPurchase.buyNonConsumable(
         purchaseParam: purchaseParam,
       );
 
       return success;
     } catch (e) {
-      print('Erro na compra: $e');
-
       // Se o produto não foi encontrado
       if (e.toString().contains('firstWhere')) {
-        print('Produto $_removeAdsProductId não encontrado na loja');
         return false;
       }
 
@@ -251,7 +241,6 @@ class PurchaseService {
   /// Reset premium status (apenas para testes)
   Future<void> resetPremiumStatus() async {
     await _setPremiumStatus(false);
-    print('MODO DEBUG: Premium status resetado para teste');
   }
 
   /// Dispõe dos recursos

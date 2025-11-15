@@ -5,7 +5,6 @@ part 'daily_goal_model.g.dart';
 
 @JsonSerializable()
 class DailyGoalModel {
-  final int targetAmount;
   @JsonKey(
     name: 'date',
     fromJson: _dateTimeFromMilliseconds,
@@ -16,7 +15,6 @@ class DailyGoalModel {
   final List<String> intakeIds;
 
   const DailyGoalModel({
-    required this.targetAmount,
     required this.date,
     this.currentAmount = 0,
     this.intakeIds = const [],
@@ -29,7 +27,6 @@ class DailyGoalModel {
 
   DailyGoal toEntity() {
     return DailyGoal(
-      targetAmount: targetAmount,
       date: date,
       currentAmount: currentAmount,
       intakeIds: intakeIds,
@@ -38,7 +35,6 @@ class DailyGoalModel {
 
   factory DailyGoalModel.fromEntity(DailyGoal entity) {
     return DailyGoalModel(
-      targetAmount: entity.targetAmount,
       date: entity.date,
       currentAmount: entity.currentAmount,
       intakeIds: entity.intakeIds,

@@ -24,10 +24,9 @@ class CelebrationAdManager {
       color: Colors.amber,
     );
 
-    // Só mostra anúncio se NÃO for usuário premium e puder mostrar anúncios
     if (adService.canShowAd('celebration')) {
       await adService.showCelebrationAd('daily_goal_completed');
-    }
+    } else {}
   }
 
   static Future<void> showWeeklyAchievement(

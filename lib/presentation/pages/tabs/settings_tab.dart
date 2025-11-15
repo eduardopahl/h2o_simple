@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:h2osync/generated/l10n/app_localizations.dart';
 import '../../providers/daily_goal_provider.dart';
+import '../../providers/user_profile_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/notification_settings_provider.dart';
 import '../../providers/language_provider.dart';
@@ -16,8 +17,8 @@ class SettingsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentGoal = ref.watch(currentDailyGoalProvider);
-    final goalAmount = currentGoal?.targetAmount.toDouble() ?? 2000.0;
+    final userProfile = ref.watch(currentUserProfileProvider);
+    final goalAmount = userProfile?.defaultDailyGoal.toDouble() ?? 2000.0;
 
     return Scaffold(
       body: SafeArea(
@@ -43,7 +44,7 @@ class SettingsTab extends ConsumerWidget {
                   _buildDailyGoalTile(context, ref, goalAmount),
                   _buildLanguageTile(context, ref),
                   _buildDarkModeTile(context, ref),
-                  _buildNotificationsTile(context, ref),
+                  // _buildNotificationsTile(context, ref),
                 ],
               ),
 
@@ -68,6 +69,7 @@ class SettingsTab extends ConsumerWidget {
                 ],
               ),
 
+              /*
               const SizedBox(height: 20),
 
               // Seção Dados
@@ -76,7 +78,7 @@ class SettingsTab extends ConsumerWidget {
                 title: AppLocalizations.of(context).data,
                 children: [_buildResetDataTile(context, ref)],
               ),
-
+              */
               const SizedBox(height: 40),
             ],
           ),
@@ -440,7 +442,7 @@ class SettingsTab extends ConsumerWidget {
         AppLocalizations.of(context).version,
         style: Theme.of(context).textTheme.titleMedium,
       ),
-      subtitle: Text('1.0.0', style: Theme.of(context).textTheme.bodyMedium),
+      subtitle: Text('1.0.3', style: Theme.of(context).textTheme.bodyMedium),
     );
   }
 

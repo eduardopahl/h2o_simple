@@ -18,7 +18,6 @@ class DailyGoalNotifier extends StateNotifier<AsyncValue<DailyGoal?>> {
     try {
       final today = DateTime.now();
       final goal = await _repository.getDailyGoalByDate(today);
-
       if (goal == null) {
         await _createDefaultGoalForToday();
       } else {
@@ -30,25 +29,15 @@ class DailyGoalNotifier extends StateNotifier<AsyncValue<DailyGoal?>> {
   }
 
   Future<void> _createDefaultGoalForToday() async {
-    final userProfile = _ref.read(currentUserProfileProvider);
     final today = DateTime.now();
-
-    final defaultTarget = userProfile?.defaultDailyGoal ?? 2000;
     final currentTotal = _ref.read(todayWaterTotalProvider);
-
-    final newGoal = DailyGoal(
-      targetAmount: defaultTarget,
-      date: today,
-      currentAmount: currentTotal,
-    );
-
+    final newGoal = DailyGoal(date: today, currentAmount: currentTotal);
     await _repository.saveDailyGoal(newGoal);
     state = AsyncValue.data(newGoal);
   }
 
   Future<void> _updateGoalWithCurrentTotal(DailyGoal goal) async {
     final currentTotal = _ref.read(todayWaterTotalProvider);
-
     if (goal.currentAmount != currentTotal) {
       final updatedGoal = goal.copyWith(currentAmount: currentTotal);
       await _repository.saveDailyGoal(updatedGoal);
@@ -59,11 +48,12 @@ class DailyGoalNotifier extends StateNotifier<AsyncValue<DailyGoal?>> {
   }
 
   Future<void> updateDailyTarget(int newTarget) async {
-    final currentGoal = state.value;
-    if (currentGoal != null) {
-      final updatedGoal = currentGoal.copyWith(targetAmount: newTarget);
-      await _repository.saveDailyGoal(updatedGoal);
-      state = AsyncValue.data(updatedGoal);
+    // Agora só atualiza o perfil do usuário
+    final userProfile = _ref.read(currentUserProfileProvider);
+    if (userProfile != null) {
+      final updatedProfile = userProfile.copyWith(defaultDailyGoal: newTarget);
+      final notifier = _ref.read(userProfileProvider.notifier);
+      await notifier.updateUserProfile(updatedProfile);
     }
   }
 
@@ -81,17 +71,16 @@ final dailyGoalProvider =
 final currentDailyGoalProvider = Provider<DailyGoal?>((ref) {
   final goalAsync = ref.watch(dailyGoalProvider);
   final waterTotal = ref.watch(todayWaterTotalProvider);
-
   final goal = goalAsync.value;
   if (goal == null) return null;
-
+  // A meta diária agora é sempre a do perfil, mas mantemos o objeto DailyGoal para data e progresso
   return goal.copyWith(currentAmount: waterTotal);
 });
 
 final dailyProgressProvider = Provider<double>((ref) {
   final goal = ref.watch(currentDailyGoalProvider);
-
-  if (goal == null || goal.targetAmount <= 0) return 0.0;
-
-  return (goal.currentAmount / goal.targetAmount).clamp(0.0, 1.0);
+  final userProfile = ref.watch(currentUserProfileProvider);
+  final target = userProfile?.defaultDailyGoal ?? 2000;
+  if (goal == null || target <= 0) return 0.0;
+  return (goal.currentAmount / target).clamp(0.0, 1.0);
 });

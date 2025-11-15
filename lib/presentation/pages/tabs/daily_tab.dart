@@ -4,6 +4,7 @@ import 'package:h2osync/generated/l10n/app_localizations.dart';
 import '../../../domain/entities/water_intake.dart';
 import '../../providers/daily_water_intake_provider.dart';
 import '../../providers/daily_goal_provider.dart';
+import '../../providers/user_profile_provider.dart';
 import '../../controllers/water_intake_controller.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/physics_water_container.dart';
@@ -63,7 +64,6 @@ class _DailyTabState extends ConsumerState<DailyTab> {
         body: Consumer(
           builder: (context, ref, child) {
             final todayTotalAsync = ref.watch(dailyWaterIntakeProvider);
-            final currentGoalAsync = ref.watch(dailyGoalProvider);
 
             return todayTotalAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
@@ -117,9 +117,9 @@ class _DailyTabState extends ConsumerState<DailyTab> {
                   0,
                   (total, intake) => total + intake.amount,
                 );
-                final currentGoal = currentGoalAsync.valueOrNull;
+                final userProfile = ref.watch(currentUserProfileProvider);
                 final goalAmount =
-                    currentGoal?.targetAmount.toDouble() ?? 2000.0;
+                    userProfile?.defaultDailyGoal.toDouble() ?? 2000.0;
                 final progress = (todayTotal / goalAmount).clamp(0.0, 1.0);
                 final isOverGoal = todayTotal > goalAmount;
 

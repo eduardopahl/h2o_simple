@@ -24,17 +24,16 @@ class GoogleAdService implements AdService {
     if (_isInitialized) return;
 
     try {
-      // Inicializa configuração do AdMob primeiro
+      // ...
       await _config.initialize();
+      // ...
 
-      // Só inicializa MobileAds se tivermos configuração válida
       if (_hasValidAdIds()) {
+        // ...
         await MobileAds.instance.initialize();
-
-        // Pré-carrega anúncios
         await loadNativeBanner();
         await _loadInterstitial();
-      }
+      } else {}
 
       _isInitialized = true;
     } catch (e) {
@@ -56,13 +55,19 @@ class GoogleAdService implements AdService {
 
   @override
   Future<void> loadNativeBanner() async {
-    // Verificação assíncrona de premium
     if (_purchaseService != null) {
       final isPremium = await _purchaseService!.isPremiumUser();
-      if (isPremium) return;
+      if (isPremium) {
+        return;
+      }
     }
 
-    if (_bannerAd != null || !_hasValidAdIds()) return;
+    if (_bannerAd != null) {
+      return;
+    }
+    if (!_hasValidAdIds()) {
+      return;
+    }
 
     try {
       _bannerAd = BannerAd(
@@ -70,9 +75,7 @@ class GoogleAdService implements AdService {
         size: AdSize.banner,
         request: const AdRequest(),
         listener: BannerAdListener(
-          onAdLoaded: (ad) {
-            // Banner ad carregado com sucesso
-          },
+          onAdLoaded: (ad) {},
           onAdFailedToLoad: (ad, error) {
             ad.dispose();
             _bannerAd = null;
@@ -89,21 +92,36 @@ class GoogleAdService implements AdService {
 
   @override
   Future<void> showCelebrationAd(String achievement) async {
-    // Verificação assíncrona de premium usando o serviço
     if (_purchaseService != null) {
       final isPremium = await _purchaseService!.isPremiumUser();
-      if (isPremium) return;
+      if (isPremium) {
+        return;
+      }
     }
 
-    if (!canShowAd('celebration') ||
-        _interstitialAd == null ||
-        !_hasValidAdIds())
+    if (!canShowAd('celebration')) {
       return;
+    }
+    if (_interstitialAd == null) {
+      await _loadInterstitial();
+      // Aguarda o carregamento (máximo 2s)
+      for (int i = 0; i < 10; i++) {
+        await Future.delayed(const Duration(milliseconds: 200));
+        if (_interstitialAd != null) {
+          break;
+        }
+      }
+      if (_interstitialAd == null) {
+        return;
+      }
+    }
+    if (!_hasValidAdIds()) {
+      return;
+    }
 
     await _interstitialAd!.show();
     markAdShown('celebration');
 
-    // Recarrega para próxima vez
     _interstitialAd = null;
     await _loadInterstitial();
   }
@@ -154,13 +172,19 @@ class GoogleAdService implements AdService {
   }
 
   Future<void> _loadInterstitial() async {
-    // Verificação assíncrona de premium
     if (_purchaseService != null) {
       final isPremium = await _purchaseService!.isPremiumUser();
-      if (isPremium) return;
+      if (isPremium) {
+        return;
+      }
     }
 
-    if (_interstitialAd != null || !_hasValidAdIds()) return;
+    if (_interstitialAd != null) {
+      return;
+    }
+    if (!_hasValidAdIds()) {
+      return;
+    }
 
     try {
       await InterstitialAd.load(
@@ -168,6 +192,15 @@ class GoogleAdService implements AdService {
         request: const AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (ad) {
+            ad.fullScreenContentCallback = FullScreenContentCallback(
+              onAdShowedFullScreenContent: (ad) {},
+              onAdDismissedFullScreenContent: (ad) {
+                ad.dispose();
+              },
+              onAdFailedToShowFullScreenContent: (ad, error) {
+                ad.dispose();
+              },
+            );
             _interstitialAd = ad;
             _interstitialAd!.setImmersiveMode(true);
           },

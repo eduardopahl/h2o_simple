@@ -30,17 +30,17 @@ class WaterIntakeController {
     WidgetRef ref,
     WaterIntakeEvent event,
   ) {
+    // ...
     // Aguarda um frame para garantir que o contexto está válido
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (context.mounted) {
-        // Mostra apenas o diálogo comemorativo com anúncio
-        // (removido o GoalAchievedDialog duplicado)
         final goalAmount =
             (event.data['goalAmount'] as int? ?? 2000).toDouble();
         final achievedAmount =
             (event.data['totalAmount'] as int? ?? goalAmount.toInt())
                 .toDouble();
 
+        // ...
         await CelebrationAdManager.showGoalCompletedCelebration(
           context,
           ref,
@@ -61,9 +61,7 @@ class WaterIntakeController {
     final goalAmount = event.data['goalAmount'] as int;
     final progress = event.data['progress'] as double;
 
-    debugPrint(
-      'Progresso da meta: ${(progress * 100).toStringAsFixed(1)}% ($totalAmount/$goalAmount ml)',
-    );
+    // ...
   }
 
   /// Lida com erros
@@ -74,7 +72,7 @@ class WaterIntakeController {
     final localizedMessage = _getLocalizedErrorMessage(context, messageKey);
 
     // Mostra erro para o usuário (pode usar SnackBar customizado aqui se necessário)
-    debugPrint('Erro no water intake: $localizedMessage');
+    // ...
 
     // Aqui poderia mostrar um SnackBar de erro se necessário
     // CustomSnackBar.showError(context, message: localizedMessage);

@@ -7,6 +7,7 @@ import '../../core/events/water_intake_events.dart';
 import 'repository_providers.dart';
 import 'use_case_providers.dart';
 import 'notification_service_provider.dart';
+import 'user_profile_provider.dart';
 
 class DailyWaterIntakeNotifier
     extends StateNotifier<AsyncValue<List<WaterIntake>>> {
@@ -132,14 +133,21 @@ class DailyWaterIntakeNotifier
       // Verifica se a meta foi alcançada para disparar evento
       final currentData = state.asData?.value ?? [];
       final totalToday = currentData.totalAmount;
-      const goalAmount = 2000; // Meta padrão
+      // Busca a meta dinâmica do perfil do usuário
+      final userProfile = _ref.read(currentUserProfileProvider);
+      final goalAmount = userProfile?.defaultDailyGoal ?? 2000;
+
+      // ...
 
       // Dispara evento de progresso atualizado
       _addEvent(
         WaterIntakeEvent.goalProgressUpdated(
           totalAmount: totalToday,
           goalAmount: goalAmount,
-          progress: (totalToday / goalAmount).clamp(0.0, 1.0),
+          progress:
+              (goalAmount > 0
+                  ? (totalToday / goalAmount).clamp(0.0, 1.0)
+                  : 0.0),
         ),
       );
 
@@ -151,7 +159,7 @@ class DailyWaterIntakeNotifier
           _previousTotal < goalAmount &&
           !_goalAchievedToday) {
         _goalAchievedToday = true;
-
+        // ...
         _addEvent(
           WaterIntakeEvent.goalAchieved(
             totalAmount: totalToday,

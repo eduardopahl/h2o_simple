@@ -272,11 +272,11 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
             AppLocalizations.of(context).personalizedGoal,
             AppLocalizations.of(context).basedOnWeightAgeActivity,
           ),
-          _buildFeatureItem(
-            Icons.notifications_outlined,
-            AppLocalizations.of(context).intelligentReminders,
-            AppLocalizations.of(context).notificationsToKeepHydrated,
-          ),
+          // _buildFeatureItem(
+          //   Icons.notifications_outlined,
+          //   AppLocalizations.of(context).intelligentReminders,
+          //   AppLocalizations.of(context).notificationsToKeepHydrated,
+          // ),
           _buildFeatureItem(
             Icons.analytics_outlined,
             AppLocalizations.of(context).tracking,
@@ -532,6 +532,7 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
 
           const SizedBox(height: 20),
 
+          /*
           // Notificações
           Card(
             child: Padding(
@@ -569,6 +570,7 @@ class _FirstLaunchSetupDialogState extends State<FirstLaunchSetupDialog> {
               ),
             ),
           ),
+          */
         ],
       ),
     );

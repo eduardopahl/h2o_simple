@@ -20,14 +20,10 @@ class AdMobConfig {
       final configString = await rootBundle.loadString('admob.properties');
       _config = _parseProperties(configString);
       _isLoaded = true;
-      print('AdMob Config: Carregado com sucesso');
     } catch (e) {
       // Se não conseguir carregar, usa IDs de teste como fallback
       _config = _getTestConfig();
       _isLoaded = true;
-      print(
-        'AdMob Config: Erro ao carregar arquivo ($e) - usando fallback seguro',
-      );
     }
   }
 

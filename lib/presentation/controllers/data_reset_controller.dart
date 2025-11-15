@@ -39,7 +39,7 @@ class DataResetController {
       return true;
     } catch (e) {
       // Log do erro (em produção, usar um logger apropriado)
-      print('Erro ao resetar dados: $e');
+      // ...
       return false;
     }
   }
