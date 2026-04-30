@@ -1,0 +1,16 @@
+# AdMob Configuration
+# Copy this file to admob.properties and fill in your real IDs.
+# admob.properties is gitignored — never commit it with real IDs.
+
+# Android AdMob IDs
+android_app_id=ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX
+android_banner_id=ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX
+android_interstitial_id=ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX
+
+# iOS AdMob IDs
+ios_app_id=ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX
+ios_banner_id=ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX
+ios_interstitial_id=ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX
+
+# Set to true during development to use Google's public test IDs
+is_testing=true

@@ -64,7 +64,12 @@
 	<!-- Allow notifications while app is in background -->
 	<key>UIBackgroundTaskIdentifier</key>
 	<string>water-reminder-notifications</string>
-	
+
+	<!-- Google Mobile Ads - required by plugin even when not publishing on iOS -->
+	<!-- Using Google's public test App ID since this app is Android-only -->
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-3940256099942544~1458002511</string>
+
 </dict>
 </plist>
 </dict>

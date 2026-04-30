@@ -8,12 +8,12 @@ H2OSync is a hydration tracking app that helps you keep your water levels on tra
 
 ### ✨ Features
 
-- 📊 **Daily Tracking**: Log and visualize your water intake
+- 💧 **Daily Tracking**: Log and visualize your water intake
 - 📈 **Complete History**: View your progress over days, weeks, and months
 - 🎯 **Customizable Goals**: Set your daily hydration target based on personal data
-- � **Smart Notifications**: Intelligent reminders to stay hydrated
+- 🔔 **Smart Notifications**: Intelligent reminders to stay hydrated
 - 🌍 **Multi-language Support**: Full internationalization (English/Portuguese)
-- �📱 **Material 3 Interface**: Modern and responsive design
+- 📱 **Material 3 Interface**: Modern and responsive design
 - 🌊 **Smooth Animations**: Fluid and pleasant visual experience
 - 📊 **Interactive Charts**: Visual progress tracking with detailed analytics
 
@@ -117,7 +117,38 @@ flutter build apk --release
 flutter build ios --release
 ```
 
-For detailed iOS setup instructions, see [IOS_SETUP.md](IOS_SETUP.md)
+## ⚙️ Local Configuration
+
+These files are **gitignored** — you must create them locally before building.
+
+### Android Signing (`key.properties`)
+
+Create `key.properties` at the project root:
+
+```properties
+storePassword=your_store_password
+keyPassword=your_key_password
+keyAlias=your_key_alias
+storeFile=path/to/your-keystore.jks
+```
+
+See [key.properties.example](key.properties.example) for reference.
+
+### AdMob (`admob.properties`)
+
+Create `admob.properties` at the project root:
+
+```properties
+android_app_id=ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX
+android_banner_id=ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX
+android_interstitial_id=ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX
+ios_app_id=ca-app-pub-XXXXXXXXXXXXXXXX~XXXXXXXXXX
+ios_banner_id=ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX
+ios_interstitial_id=ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX
+is_testing=true
+```
+
+See [admob.properties.example](admob.properties.example) for reference. Set `is_testing=true` during development — the build falls back to Google's public test IDs if the file is absent.
 
 ## 🤝 Contributing
 
