@@ -16,6 +16,7 @@ H2OSync is a hydration tracking app that helps you keep your water levels on tra
 - 📱 **Material 3 Interface**: Modern and responsive design
 - 🌊 **Smooth Animations**: Fluid and pleasant visual experience
 - 📊 **Interactive Charts**: Visual progress tracking with detailed analytics
+- 💳 **In-App Purchases**: Premium features via in-app purchase
 
 ## 🏗️ Architecture
 
@@ -40,15 +41,19 @@ The app features complete internationalization support using Flutter's official 
 ```
 lib/
 ├── core/
+│   ├── config/           # App configuration
+│   ├── enums/            # Shared enumerations
 │   ├── events/           # Domain events
 │   ├── extensions/       # Utility extensions
 │   └── services/         # Core services
 ├── data/
 │   ├── models/           # Data models
-│   └── repositories/     # Repository implementations
+│   ├── repositories/     # Repository implementations
+│   └── services/         # Data layer services
 ├── domain/
 │   ├── entities/         # Business entities
 │   ├── repositories/     # Repository contracts
+│   ├── services/         # Domain service contracts
 │   └── use_cases/        # Use cases
 ├── generated/l10n/       # Auto-generated localization files
 ├── l10n/                 # Translation resource files (ARB)
@@ -67,8 +72,8 @@ lib/
 
 ### Prerequisites
 
-- Flutter SDK (>=3.0.0)
-- Dart SDK (>=3.0.0)
+- Flutter SDK (>=3.7.0)
+- Dart SDK (>=3.7.0)
 - Android Studio / VS Code
 - Android/iOS device or emulator
 
@@ -104,6 +109,9 @@ flutter run
 - **fl_chart**: Interactive charts and data visualization
 - **flutter_local_notifications**: Smart hydration reminders
 - **timezone**: Timezone handling for notifications
+- **google_mobile_ads**: AdMob ads integration
+- **in_app_purchase**: In-app purchase support
+- **permission_handler**: Runtime permissions management
 
 ## 📦 Build
 
@@ -148,7 +156,7 @@ ios_interstitial_id=ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX
 is_testing=true
 ```
 
-See [admob.properties.example](admob.properties.example) for reference. Set `is_testing=true` during development — the build falls back to Google's public test IDs if the file is absent.
+See [admob.properties.example](admob.properties.example) for reference. Set `is_testing=true` during development to use Google's public test ad IDs.
 
 ## 🤝 Contributing
 
@@ -167,10 +175,6 @@ See [admob.properties.example](admob.properties.example) for reference. Set `is_
 3. Add new locale to `supportedLocales` in `main.dart`
 4. Run `flutter gen-l10n` to generate localization classes
 5. Test the new language thoroughly
-
-## 📝 License
-
-This project is under the MIT license. See the [LICENSE](LICENSE) file for more details.
 
 ## 👨‍💻 Author
 
