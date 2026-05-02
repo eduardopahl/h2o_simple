@@ -64,25 +64,25 @@ class NotificationSettings {
   );
 }
 
-class NotificationSettingsNotifier extends StateNotifier<NotificationSettings> {
-  final NotificationService _notificationService;
-
-  NotificationSettingsNotifier(this._notificationService)
-    : super(NotificationSettings.defaultSettings) {
+class NotificationSettingsNotifier extends Notifier<NotificationSettings> {
+  @override
+  NotificationSettings build() {
     _loadSettings();
+    return NotificationSettings.defaultSettings;
   }
+
+  NotificationService get _notificationService =>
+      ref.read(notificationServiceProvider);
 
   Future<void> _loadSettings() async {
     try {
       final prefs = await SharedPreferences.getInstance();
 
-      // Verifica se é um usuário novo que concedeu permissão no primeiro lançamento
       final wasPermissionRequested =
           await FirstLaunchService.wasNotificationPermissionRequested();
-      final hasActualPermission = await _notificationService.hasPermissions();
+      final hasActualPermission =
+          await _notificationService.hasPermissions();
 
-      // Se a permissão foi solicitada e o usuário tem permissões ativas,
-      // mas ainda não temos configurações salvas, ative as notificações por padrão
       bool defaultEnabled = false;
       if (wasPermissionRequested && hasActualPermission) {
         final hasExistingSettings = prefs.containsKey('notification_enabled');
@@ -104,7 +104,6 @@ class NotificationSettingsNotifier extends StateNotifier<NotificationSettings> {
 
       state = settings;
 
-      // Se as notificações foram ativadas por padrão, salva as configurações
       if (defaultEnabled && !prefs.containsKey('notification_enabled')) {
         await _saveSettings();
       }
@@ -113,7 +112,6 @@ class NotificationSettingsNotifier extends StateNotifier<NotificationSettings> {
         await _scheduleNotifications();
       }
     } catch (e) {
-      // If loading fails, keep default settings
       state = NotificationSettings.defaultSettings;
     }
   }
@@ -188,7 +186,6 @@ class NotificationSettingsNotifier extends StateNotifier<NotificationSettings> {
     required String title,
     required String body,
   }) async {
-    // Verifica se tem permissões
     final hasPermissions = await _notificationService.hasPermissions();
 
     if (!hasPermissions) {
@@ -228,9 +225,6 @@ final notificationServiceProvider = Provider<NotificationService>((ref) {
 });
 
 final notificationSettingsProvider =
-    StateNotifierProvider<NotificationSettingsNotifier, NotificationSettings>((
-      ref,
-    ) {
-      final notificationService = ref.watch(notificationServiceProvider);
-      return NotificationSettingsNotifier(notificationService);
-    });
+    NotifierProvider<NotificationSettingsNotifier, NotificationSettings>(
+      NotificationSettingsNotifier.new,
+    );

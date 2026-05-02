@@ -10,11 +10,9 @@ class TestHelper {
   /// Creates a Material App wrapper with all dependencies for testing widgets
   static Widget createTestApp({
     required Widget child,
-    List<Override>? overrides,
     Locale locale = const Locale('en'),
   }) {
     return ProviderScope(
-      overrides: overrides ?? [],
       child: MaterialApp(
         home: child,
         locale: locale,
@@ -32,11 +30,9 @@ class TestHelper {
 
   /// Creates a test app for full app testing
   static Widget createFullTestApp({
-    List<Override>? overrides,
     Locale locale = const Locale('en'),
   }) {
     return ProviderScope(
-      overrides: overrides ?? [],
       child: MaterialApp(
         locale: locale,
         theme: AppTheme.lightTheme,

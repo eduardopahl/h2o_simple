@@ -125,7 +125,6 @@ class WaterChart extends StatelessWidget {
             touchTooltipData: BarTouchTooltipData(
               getTooltipColor:
                   (group) => Theme.of(context).colorScheme.inverseSurface,
-              tooltipRoundedRadius: 8,
               tooltipPadding: const EdgeInsets.symmetric(
                 horizontal: 8,
                 vertical: 4,
@@ -321,7 +320,6 @@ class WaterChart extends StatelessWidget {
             touchTooltipData: BarTouchTooltipData(
               getTooltipColor:
                   (group) => Theme.of(context).colorScheme.inverseSurface,
-              tooltipRoundedRadius: 8,
               tooltipPadding: const EdgeInsets.symmetric(
                 horizontal: 8,
                 vertical: 4,
@@ -536,7 +534,6 @@ class WaterChart extends StatelessWidget {
             touchTooltipData: BarTouchTooltipData(
               getTooltipColor:
                   (group) => Theme.of(context).colorScheme.inverseSurface,
-              tooltipRoundedRadius: 8,
               tooltipPadding: const EdgeInsets.symmetric(
                 horizontal: 8,
                 vertical: 4,

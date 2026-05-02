@@ -1,28 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/user_profile.dart';
-import '../../domain/repositories/user_profile_repository.dart';
 import 'repository_providers.dart';
 
-class UserProfileNotifier extends StateNotifier<AsyncValue<UserProfile?>> {
-  UserProfileNotifier(this._repository) : super(const AsyncValue.loading()) {
-    _loadUserProfile();
-  }
-
-  final UserProfileRepository _repository;
-
-  Future<void> _loadUserProfile() async {
-    try {
-      final profile = await _repository.getUserProfile();
-      state = AsyncValue.data(profile);
-    } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
-    }
+class UserProfileNotifier extends AsyncNotifier<UserProfile?> {
+  @override
+  Future<UserProfile?> build() async {
+    final repository = ref.watch(userProfileRepositoryProvider);
+    return await repository.getUserProfile();
   }
 
   Future<void> saveUserProfile(UserProfile profile) async {
     state = const AsyncValue.loading();
     try {
-      await _repository.saveUserProfile(profile);
+      final repository = ref.read(userProfileRepositoryProvider);
+      await repository.saveUserProfile(profile);
       state = AsyncValue.data(profile);
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
@@ -31,7 +22,8 @@ class UserProfileNotifier extends StateNotifier<AsyncValue<UserProfile?>> {
 
   Future<void> updateUserProfile(UserProfile profile) async {
     try {
-      await _repository.updateUserProfile(profile);
+      final repository = ref.read(userProfileRepositoryProvider);
+      await repository.updateUserProfile(profile);
       state = AsyncValue.data(profile);
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
@@ -40,7 +32,8 @@ class UserProfileNotifier extends StateNotifier<AsyncValue<UserProfile?>> {
 
   Future<void> deleteUserProfile() async {
     try {
-      await _repository.deleteUserProfile();
+      final repository = ref.read(userProfileRepositoryProvider);
+      await repository.deleteUserProfile();
       state = const AsyncValue.data(null);
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
@@ -48,16 +41,16 @@ class UserProfileNotifier extends StateNotifier<AsyncValue<UserProfile?>> {
   }
 
   Future<bool> hasUserProfile() async {
-    return await _repository.hasUserProfile();
+    final repository = ref.read(userProfileRepositoryProvider);
+    return await repository.hasUserProfile();
   }
 }
 
 final userProfileProvider =
-    StateNotifierProvider<UserProfileNotifier, AsyncValue<UserProfile?>>((ref) {
-      final repository = ref.watch(userProfileRepositoryProvider);
-      return UserProfileNotifier(repository);
-    });
+    AsyncNotifierProvider<UserProfileNotifier, UserProfile?>(
+      UserProfileNotifier.new,
+    );
 
 final currentUserProfileProvider = Provider<UserProfile?>((ref) {
-  return ref.watch(userProfileProvider).valueOrNull;
+  return ref.watch(userProfileProvider).value;
 });

@@ -1,33 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/theme_settings.dart';
-import '../../domain/repositories/theme_settings_repository.dart';
 import 'repository_providers.dart';
 
-class ThemeNotifier extends StateNotifier<ThemeMode> {
-  final ThemeSettingsRepository _repository;
-
-  ThemeNotifier(this._repository) : super(ThemeMode.light) {
+class ThemeNotifier extends Notifier<ThemeMode> {
+  @override
+  ThemeMode build() {
     _loadTheme();
+    return ThemeMode.light;
   }
 
   Future<void> _loadTheme() async {
     try {
-      final settings = await _repository.getThemeSettings();
+      final repository = ref.read(themeSettingsRepositoryProvider);
+      final settings = await repository.getThemeSettings();
       state = settings.themeMode;
     } catch (e) {
-      // Se houver erro ao carregar, mantém o tema claro como padrão
       state = ThemeMode.light;
     }
   }
 
   Future<void> setThemeMode(ThemeMode themeMode) async {
     try {
+      final repository = ref.read(themeSettingsRepositoryProvider);
       final settings = ThemeSettings(themeMode: themeMode);
-      await _repository.saveThemeSettings(settings);
+      await repository.saveThemeSettings(settings);
       state = themeMode;
     } catch (e) {
-      // Em caso de erro, apenas atualiza o estado sem persistir
       state = themeMode;
     }
   }
@@ -42,7 +41,6 @@ class ThemeNotifier extends StateNotifier<ThemeMode> {
   bool get isLightMode => state == ThemeMode.light;
 }
 
-final themeProvider = StateNotifierProvider<ThemeNotifier, ThemeMode>((ref) {
-  final repository = ref.watch(themeSettingsRepositoryProvider);
-  return ThemeNotifier(repository);
-});
+final themeProvider = NotifierProvider<ThemeNotifier, ThemeMode>(
+  ThemeNotifier.new,
+);

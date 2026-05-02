@@ -95,7 +95,7 @@ class _PhysicsWaterContainerState extends State<PhysicsWaterContainer>
 
   void _startAccelerometer() {
     // Throttle do acelerômetro para economizar bateria
-    _accelerometerSubscription = accelerometerEvents.listen((
+    _accelerometerSubscription = accelerometerEventStream().listen((
       AccelerometerEvent event,
     ) {
       if (!mounted) return;

@@ -48,7 +48,7 @@ class NotificationService {
     );
 
     await _notifications.initialize(
-      initSettings,
+      settings: initSettings,
       onDidReceiveNotificationResponse: _onNotificationTapped,
     );
 
@@ -228,16 +228,13 @@ class NotificationService {
     );
 
     try {
-      // Usa alarmes inexatos para melhor compatibilidade
       await _notifications.zonedSchedule(
-        id,
-        title,
-        body,
-        tz.TZDateTime.from(scheduledTime, tz.local),
-        details,
+        id: id,
+        title: title,
+        body: body,
+        scheduledDate: tz.TZDateTime.from(scheduledTime, tz.local),
+        notificationDetails: details,
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
       );
     } catch (e) {
       // Se falhar, tenta sem agendamento (notificação imediata como fallback)
@@ -282,10 +279,10 @@ class NotificationService {
     );
 
     await _notifications.show(
-      999, // ID fixo para notificações instantâneas
-      title,
-      body,
-      details,
+      id: 999,
+      title: title,
+      body: body,
+      notificationDetails: details,
     );
   }
 
@@ -310,7 +307,7 @@ class NotificationService {
     for (final notification in pendingNotifications) {
       // Como não podemos verificar o horário agendado diretamente,
       // vamos cancelar e reagendar todas as notificações
-      await _notifications.cancel(notification.id);
+      await _notifications.cancel(id: notification.id);
     }
   }
 
